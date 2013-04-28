@@ -1,0 +1,15 @@
+﻿<Properties>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Player Controls\DontGoThroughThings.cs">
+    <Files>
+      <File FileName="Assets\Scripts\Networked Player Creation\ServerPlayerController.cs" Line="294" Column="26" />
+      <File FileName="Assets\Scripts\Player Controls\BulletScript.cs" Line="43" Column="55" />
+      <File FileName="Assets\Scripts\Player Controls\DontGoThroughThings.cs" Line="5" Column="62" />
+      <File FileName="Assets\Scripts\Networked Player Creation\GameServer.cs" Line="73" Column="1" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>

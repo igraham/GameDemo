@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+	<Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+	<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+	<ProductVersion>10.0.20506</ProductVersion>
+	<SchemaVersion>2.0</SchemaVersion>
+	<ProjectGuid>{2D70B51D-2BE1-6B1B-6053-07C581E6B421}</ProjectGuid>
+	<OutputType>Library</OutputType>
+	<AppDesignerFolder>Properties</AppDesignerFolder>
+	<RootNamespace></RootNamespace>
+	<AssemblyName>Assembly-CSharp</AssemblyName>
+	<TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+	<FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+	<DebugSymbols>true</DebugSymbols>
+	<DebugType>full</DebugType>
+	<Optimize>false</Optimize>
+	<OutputPath>Temp\bin\Debug\</OutputPath>
+	<DefineConstants>DEBUG;TRACE;UNITY_STANDALONE_WIN;ENABLE_MICROPHONE;ENABLE_IMAGEEFFECTS;ENABLE_WEBCAM;ENABLE_AUDIO_FMOD;UNITY_STANDALONE;ENABLE_NETWORK;ENABLE_MONO;ENABLE_PHYSICS;ENABLE_TERRAIN;ENABLE_CACHING;ENABLE_SUBSTANCE;ENABLE_GENERICS;ENABLE_CLOTH;ENABLE_MOVIES;ENABLE_AUDIO;ENABLE_WWW;ENABLE_SHADOWS;ENABLE_DUCK_TYPING;UNITY_4_1_2;UNITY_4_1;DEVELOPMENT_BUILD;ENABLE_PROFILER;UNITY_EDITOR</DefineConstants>
+	<ErrorReport>prompt</ErrorReport>
+	<WarningLevel>4</WarningLevel>
+	<NoWarn>0169</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+	<DebugType>pdbonly</DebugType>
+	<Optimize>true</Optimize>
+	<OutputPath>Temp\bin\Release\</OutputPath>
+	<DefineConstants>TRACE</DefineConstants>
+	<ErrorReport>prompt</ErrorReport>
+	<WarningLevel>4</WarningLevel>
+	<NoWarn>0169</NoWarn>
+  </PropertyGroup>
+  <ItemGroup>
+	<Reference Include="System" />
+    <Reference Include="System.XML" />
+	<Reference Include="System.Core" />
+	<Reference Include="UnityEngine">
+	  <HintPath>C:/Program Files (x86)/Unity/Editor/Data/Managed/UnityEngine.dll</HintPath>
+	</Reference>
+	<Reference Include="UnityEditor">
+	  <HintPath>C:/Program Files (x86)/Unity/Editor/Data/Managed/UnityEditor.dll</HintPath>
+	</Reference>
+  </ItemGroup>
+  <ItemGroup>
+     <Compile Include="Assets\Detonator Explosion Framework\System\Detonator.cs" />
+     <Compile Include="Assets\Detonator Explosion Framework\System\DetonatorBurstEmitter.cs" />
+     <Compile Include="Assets\Detonator Explosion Framework\System\DetonatorCloudRing.cs" />
+     <Compile Include="Assets\Detonator Explosion Framework\System\DetonatorFireball.cs" />
+     <Compile Include="Assets\Detonator Explosion Framework\System\DetonatorForce.cs" />
+     <Compile Include="Assets\Detonator Explosion Framework\System\DetonatorGlow.cs" />
+     <Compile Include="Assets\Detonator Explosion Framework\System\DetonatorHeatwave.cs" />
+     <Compile Include="Assets\Detonator Explosion Framework\System\DetonatorLight.cs" />
+     <Compile Include="Assets\Detonator Explosion Framework\System\DetonatorShockwave.cs" />
+     <Compile Include="Assets\Detonator Explosion Framework\System\DetonatorSmoke.cs" />
+     <Compile Include="Assets\Detonator Explosion Framework\System\DetonatorSound.cs" />
+     <Compile Include="Assets\Detonator Explosion Framework\System\DetonatorSparks.cs" />
+     <Compile Include="Assets\Detonator Explosion Framework\System\DetonatorSpray.cs" />
+     <Compile Include="Assets\Scripts\AI Controls\Durability.cs" />
+     <Compile Include="Assets\Scripts\AI Controls\EnemyDeath.cs" />
+     <Compile Include="Assets\Scripts\AI Controls\EnemyGenerator.cs" />
+     <Compile Include="Assets\Scripts\AI Controls\EnemyKamikazeScript.cs" />
+     <Compile Include="Assets\Scripts\AI Controls\ExampleMover.cs" />
+     <Compile Include="Assets\Scripts\GUI\GUITextureCorrect.cs" />
+     <Compile Include="Assets\Scripts\GUI\SplashController.cs" />
+     <Compile Include="Assets\Scripts\Game Controls\DefeatTimer.cs" />
+     <Compile Include="Assets\Scripts\Game Controls\ObjectiveController.cs" />
+     <Compile Include="Assets\Scripts\Game Controls\VictoryController.cs" />
+     <Compile Include="Assets\Scripts\Harvesting\EnterResourceArea.cs" />
+     <Compile Include="Assets\Scripts\Harvesting\HarvestButtonGUI.cs" />
+     <Compile Include="Assets\Scripts\Harvesting\NodeGameState.cs" />
+     <Compile Include="Assets\Scripts\Harvesting\ResourceNodeScript.cs" />
+     <Compile Include="Assets\Scripts\Harvesting\TurretController.cs" />
+     <Compile Include="Assets\Scripts\Networked Player Creation\ClientPlayerController.cs" />
+     <Compile Include="Assets\Scripts\Networked Player Creation\GameClient.cs" />
+     <Compile Include="Assets\Scripts\Networked Player Creation\GameServer.cs" />
+     <Compile Include="Assets\Scripts\Networked Player Creation\ServerPlayerController.cs" />
+     <Compile Include="Assets\Scripts\Pathing\AIMovement.cs" />
+     <Compile Include="Assets\Scripts\Pathing\AIPath.cs" />
+     <Compile Include="Assets\Scripts\Pathing\PathFinder.cs" />
+     <Compile Include="Assets\Scripts\Player Controls\BulletScript.cs" />
+     <Compile Include="Assets\Scripts\Player Controls\DontGoThroughThings.cs" />
+     <Compile Include="Assets\Scripts\Player Controls\Hovering.cs" />
+     <Compile Include="Assets\Scripts\Player Controls\MovementScript.cs" />
+     <Compile Include="Assets\Scripts\Player Controls\PlayerGameState.cs" />
+     <Compile Include="Assets\Scripts\Player Controls\ShootScript.cs" />
+     <Compile Include="Assets\Scripts\Player Controls\TurretRotation.cs" />
+     <None Include="Assets\Detonator Explosion Framework\Resources\Detonator\Textures\HeatDistort.shader" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+	   Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  
+</Project>

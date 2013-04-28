@@ -1,0 +1,574 @@
+fileFormatVersion: 2
+guid: b613ed690f5d74448822d77431748d99
+ModelImporter:
+  serializedVersion: 15
+  fileIDToRecycleName:
+    100000: cone
+    100002: cone 1
+    100004: cone 10
+    100006: cone 11
+    100008: cone 12
+    100010: cone 13
+    100012: cone 14
+    100014: cone 15
+    100016: cone 16
+    100018: cone 17
+    100020: cone 18
+    100022: cone 19
+    100024: cone 2
+    100026: cone 20
+    100028: cone 21
+    100030: cone 22
+    100032: cone 23
+    100034: cone 24
+    100036: cone 25
+    100038: cone 26
+    100040: cone 27
+    100042: cone 28
+    100044: cone 29
+    100046: cone 3
+    100048: cone 30
+    100050: cone 31
+    100052: cone 32
+    100054: cone 33
+    100056: cone 34
+    100058: cone 35
+    100060: cone 36
+    100062: cone 37
+    100064: cone 38
+    100066: cone 39
+    100068: cone 4
+    100070: cone 40
+    100072: cone 41
+    100074: cone 42
+    100076: cone 43
+    100078: cone 44
+    100080: cone 45
+    100082: cone 46
+    100084: cone 47
+    100086: cone 48
+    100088: cone 49
+    100090: cone 5
+    100092: cone 50
+    100094: cone 51
+    100096: cone 52
+    100098: cone 53
+    100100: cone 54
+    100102: cone 55
+    100104: cone 56
+    100106: cone 57
+    100108: cone 58
+    100110: cone 59
+    100112: cone 6
+    100114: cone 60
+    100116: cone 61
+    100118: cone 62
+    100120: cone 63
+    100122: cone 64
+    100124: cone 65
+    100126: cone 66
+    100128: cone 67
+    100130: cone 68
+    100132: cone 69
+    100134: cone 7
+    100136: cone 70
+    100138: cone 71
+    100140: cone 72
+    100142: cone 73
+    100144: cone 74
+    100146: cone 75
+    100148: cone 76
+    100150: cone 77
+    100152: cone 78
+    100154: cone 79
+    100156: cone 8
+    100158: cone 80
+    100160: cone 81
+    100162: cone 82
+    100164: cone 83
+    100166: cone 84
+    100168: cone 85
+    100170: cone 9
+    100172: //RootNode
+    100174: ID619
+    100176: ID627
+    100178: ID635
+    100180: ID641
+    100182: ID647
+    100184: ID655
+    100186: ID661
+    100188: ID667
+    100190: ID675
+    100192: ID681
+    100194: ID687
+    100196: ID693
+    100198: ID699
+    100200: ID705
+    100202: ID711
+    100204: ID717
+    400000: cone
+    400002: cone 1
+    400004: cone 10
+    400006: cone 11
+    400008: cone 12
+    400010: cone 13
+    400012: cone 14
+    400014: cone 15
+    400016: cone 16
+    400018: cone 17
+    400020: cone 18
+    400022: cone 19
+    400024: cone 2
+    400026: cone 20
+    400028: cone 21
+    400030: cone 22
+    400032: cone 23
+    400034: cone 24
+    400036: cone 25
+    400038: cone 26
+    400040: cone 27
+    400042: cone 28
+    400044: cone 29
+    400046: cone 3
+    400048: cone 30
+    400050: cone 31
+    400052: cone 32
+    400054: cone 33
+    400056: cone 34
+    400058: cone 35
+    400060: cone 36
+    400062: cone 37
+    400064: cone 38
+    400066: cone 39
+    400068: cone 4
+    400070: cone 40
+    400072: cone 41
+    400074: cone 42
+    400076: cone 43
+    400078: cone 44
+    400080: cone 45
+    400082: cone 46
+    400084: cone 47
+    400086: cone 48
+    400088: cone 49
+    400090: cone 5
+    400092: cone 50
+    400094: cone 51
+    400096: cone 52
+    400098: cone 53
+    400100: cone 54
+    400102: cone 55
+    400104: cone 56
+    400106: cone 57
+    400108: cone 58
+    400110: cone 59
+    400112: cone 6
+    400114: cone 60
+    400116: cone 61
+    400118: cone 62
+    400120: cone 63
+    400122: cone 64
+    400124: cone 65
+    400126: cone 66
+    400128: cone 67
+    400130: cone 68
+    400132: cone 69
+    400134: cone 7
+    400136: cone 70
+    400138: cone 71
+    400140: cone 72
+    400142: cone 73
+    400144: cone 74
+    400146: cone 75
+    400148: cone 76
+    400150: cone 77
+    400152: cone 78
+    400154: cone 79
+    400156: cone 8
+    400158: cone 80
+    400160: cone 81
+    400162: cone 82
+    400164: cone 83
+    400166: cone 84
+    400168: cone 85
+    400170: cone 9
+    400172: //RootNode
+    400174: ID619
+    400176: ID627
+    400178: ID635
+    400180: ID641
+    400182: ID647
+    400184: ID655
+    400186: ID661
+    400188: ID667
+    400190: ID675
+    400192: ID681
+    400194: ID687
+    400196: ID693
+    400198: ID699
+    400200: ID705
+    400202: ID711
+    400204: ID717
+    2300000: cone
+    2300002: cone 1
+    2300004: cone 10
+    2300006: cone 11
+    2300008: cone 12
+    2300010: cone 13
+    2300012: cone 14
+    2300014: cone 15
+    2300016: cone 16
+    2300018: cone 17
+    2300020: cone 18
+    2300022: cone 19
+    2300024: cone 2
+    2300026: cone 20
+    2300028: cone 21
+    2300030: cone 22
+    2300032: cone 23
+    2300034: cone 24
+    2300036: cone 25
+    2300038: cone 26
+    2300040: cone 27
+    2300042: cone 28
+    2300044: cone 29
+    2300046: cone 3
+    2300048: cone 30
+    2300050: cone 31
+    2300052: cone 32
+    2300054: cone 33
+    2300056: cone 34
+    2300058: cone 35
+    2300060: cone 36
+    2300062: cone 37
+    2300064: cone 38
+    2300066: cone 39
+    2300068: cone 4
+    2300070: cone 40
+    2300072: cone 41
+    2300074: cone 42
+    2300076: cone 43
+    2300078: cone 44
+    2300080: cone 45
+    2300082: cone 46
+    2300084: cone 47
+    2300086: cone 48
+    2300088: cone 49
+    2300090: cone 5
+    2300092: cone 50
+    2300094: cone 51
+    2300096: cone 52
+    2300098: cone 53
+    2300100: cone 54
+    2300102: cone 55
+    2300104: cone 56
+    2300106: cone 57
+    2300108: cone 58
+    2300110: cone 59
+    2300112: cone 6
+    2300114: cone 60
+    2300116: cone 61
+    2300118: cone 62
+    2300120: cone 63
+    2300122: cone 64
+    2300124: cone 65
+    2300126: cone 66
+    2300128: cone 67
+    2300130: cone 68
+    2300132: cone 69
+    2300134: cone 7
+    2300136: cone 70
+    2300138: cone 71
+    2300140: cone 72
+    2300142: cone 73
+    2300144: cone 74
+    2300146: cone 75
+    2300148: cone 76
+    2300150: cone 77
+    2300152: cone 78
+    2300154: cone 79
+    2300156: cone 8
+    2300158: cone 80
+    2300160: cone 81
+    2300162: cone 82
+    2300164: cone 83
+    2300166: cone 84
+    2300168: cone 85
+    2300170: cone 9
+    2300172: //RootNode
+    2300174: ID619
+    2300176: ID627
+    2300178: ID635
+    2300180: ID641
+    2300182: ID647
+    2300184: ID655
+    2300186: ID661
+    2300188: ID667
+    2300190: ID675
+    2300192: ID681
+    2300194: ID687
+    2300196: ID693
+    2300198: ID699
+    2300200: ID705
+    2300202: ID711
+    2300204: ID717
+    3300000: cone
+    3300002: cone 1
+    3300004: cone 10
+    3300006: cone 11
+    3300008: cone 12
+    3300010: cone 13
+    3300012: cone 14
+    3300014: cone 15
+    3300016: cone 16
+    3300018: cone 17
+    3300020: cone 18
+    3300022: cone 19
+    3300024: cone 2
+    3300026: cone 20
+    3300028: cone 21
+    3300030: cone 22
+    3300032: cone 23
+    3300034: cone 24
+    3300036: cone 25
+    3300038: cone 26
+    3300040: cone 27
+    3300042: cone 28
+    3300044: cone 29
+    3300046: cone 3
+    3300048: cone 30
+    3300050: cone 31
+    3300052: cone 32
+    3300054: cone 33
+    3300056: cone 34
+    3300058: cone 35
+    3300060: cone 36
+    3300062: cone 37
+    3300064: cone 38
+    3300066: cone 39
+    3300068: cone 4
+    3300070: cone 40
+    3300072: cone 41
+    3300074: cone 42
+    3300076: cone 43
+    3300078: cone 44
+    3300080: cone 45
+    3300082: cone 46
+    3300084: cone 47
+    3300086: cone 48
+    3300088: cone 49
+    3300090: cone 5
+    3300092: cone 50
+    3300094: cone 51
+    3300096: cone 52
+    3300098: cone 53
+    3300100: cone 54
+    3300102: cone 55
+    3300104: cone 56
+    3300106: cone 57
+    3300108: cone 58
+    3300110: cone 59
+    3300112: cone 6
+    3300114: cone 60
+    3300116: cone 61
+    3300118: cone 62
+    3300120: cone 63
+    3300122: cone 64
+    3300124: cone 65
+    3300126: cone 66
+    3300128: cone 67
+    3300130: cone 68
+    3300132: cone 69
+    3300134: cone 7
+    3300136: cone 70
+    3300138: cone 71
+    3300140: cone 72
+    3300142: cone 73
+    3300144: cone 74
+    3300146: cone 75
+    3300148: cone 76
+    3300150: cone 77
+    3300152: cone 78
+    3300154: cone 79
+    3300156: cone 8
+    3300158: cone 80
+    3300160: cone 81
+    3300162: cone 82
+    3300164: cone 83
+    3300166: cone 84
+    3300168: cone 85
+    3300170: cone 9
+    3300172: //RootNode
+    3300174: ID619
+    3300176: ID627
+    3300178: ID635
+    3300180: ID641
+    3300182: ID647
+    3300184: ID655
+    3300186: ID661
+    3300188: ID667
+    3300190: ID675
+    3300192: ID681
+    3300194: ID687
+    3300196: ID693
+    3300198: ID699
+    3300200: ID705
+    3300202: ID711
+    3300204: ID717
+    4300000: SketchUp
+    4300002: ID619
+    4300004: ID627
+    4300006: ID635
+    4300008: ID641
+    4300010: ID647
+    4300012: ID655
+    4300014: ID661
+    4300016: ID667
+    4300018: ID675
+    4300020: ID681
+    4300022: ID687
+    4300024: ID693
+    4300026: ID699
+    4300028: ID705
+    4300030: ID711
+    4300032: ID717
+    4300034: cone
+    4300036: cone
+    4300038: cone
+    4300040: cone
+    4300042: cone
+    4300044: cone
+    4300046: cone
+    4300048: cone
+    4300050: cone
+    4300052: cone
+    4300054: cone
+    4300056: cone
+    4300058: cone
+    4300060: cone
+    4300062: cone
+    4300064: cone
+    4300066: cone
+    4300068: cone
+    4300070: cone
+    4300072: cone
+    4300074: cone
+    4300076: cone
+    4300078: cone
+    4300080: cone
+    4300082: cone
+    4300084: cone
+    4300086: cone
+    4300088: cone
+    4300090: cone
+    4300092: cone
+    4300094: cone
+    4300096: cone
+    4300098: cone
+    4300100: cone
+    4300102: cone
+    4300104: cone
+    4300106: cone
+    4300108: cone
+    4300110: cone
+    4300112: cone
+    4300114: cone
+    4300116: cone
+    4300118: cone
+    4300120: cone
+    4300122: cone
+    4300124: cone
+    4300126: cone
+    4300128: cone
+    4300130: cone
+    4300132: cone
+    4300134: cone
+    4300136: cone
+    4300138: cone
+    4300140: cone
+    4300142: cone
+    4300144: cone
+    4300146: cone
+    4300148: cone
+    4300150: cone
+    4300152: cone
+    4300154: cone
+    4300156: cone
+    4300158: cone
+    4300160: cone
+    4300162: cone
+    4300164: cone
+    4300166: cone
+    4300168: cone
+    4300170: cone
+    4300172: cone
+    4300174: cone
+    4300176: cone
+    4300178: cone
+    4300180: cone
+    4300182: cone
+    4300184: cone
+    4300186: cone
+    4300188: cone
+    4300190: cone
+    4300192: cone
+    4300194: cone
+    4300196: cone
+    4300198: cone
+    4300200: cone
+    4300202: cone
+    4300204: cone
+    9500000: //RootNode
+    11100000: //RootNode
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    animationCompression: 1
+    animationRotationError: .5
+    animationPositionError: .5
+    animationScaleError: .5
+    animationWrapMode: 0
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: .00999999978
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+  tangentSpace:
+    normalSmoothAngle: 60
+    splitTangentsAcrossUV: 1
+    normalImportMode: 0
+    tangentImportMode: 1
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    handles: []
+    armTwist: .5
+    foreArmTwist: .5
+    upperLegTwist: .5
+    legTwist: .5
+    armStretch: .0500000007
+    legStretch: .0500000007
+    feetSpacing: 0
+    rootMotionBoneName: 
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  additionalBone: 1
+  animationType: 1
+  userData: 
