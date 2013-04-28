@@ -63,12 +63,22 @@ public class ClientPlayerController : MonoBehaviour
 		if(player == Network.player)
 		{
 			enabled = true;
-			
-			
-			
 		}
 		else
 		{
+			GameObject radar = gameObject.transform.FindChild("Radar").gameObject;
+			if(radar.GetComponent<Camera>())
+			{
+				radar.GetComponent<Camera>().enabled = false;
+			}
+			if(radar.GetComponent<AudioListener>())
+			{
+				radar.GetComponent<AudioListener>().enabled = false;
+			}
+			if(radar.GetComponent<GUILayer>())
+			{
+				radar.GetComponent<GUILayer>().enabled = false;
+			}
 			if(gameObject.GetComponentInChildren<Camera>())
 			{
 				gameObject.GetComponentInChildren<Camera>().enabled = false;
@@ -86,20 +96,10 @@ public class ClientPlayerController : MonoBehaviour
 	
 	void Awake()
 	{
-		
-		
-		
 		if(Network.isClient)
 		{
 			enabled = false;
 		}
-		
-		
-	}
-	
-	void Start()
-	{
-		
 	}
 	
 	[RPC]
