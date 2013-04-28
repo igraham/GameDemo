@@ -18,7 +18,7 @@ public class BulletScript : MonoBehaviour {
 			{
 				temp = obj;
 				dist = Vector3.Distance(transform.position, obj.transform.position);
-				gunLocation = temp.transform.FindChild("Main Camera").FindChild("Turret").FindChild ("Gun Barrel").position;
+				gunLocation = temp.transform.FindChild("Main Camera").FindChild("Turret").FindChild ("GunBarrel").position;
 			}
 		}
 	}
