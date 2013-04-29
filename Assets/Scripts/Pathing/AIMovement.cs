@@ -1,70 +1,53 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class AIMovement : MonoBehaviour
 {
 	
 	public float currentHeight = 0f;
-	public float hoverHeight = 1.5f;
+	public float hoverHeight = 2.5f;
 	public float hoverForceMultiplier = 0f;
-	public float hoverForce = 15f;
+	public float hoverForce = 30f;
 	public float speed = 7f;
 	PathFinder pathFinder;
 	public Vector3 hoverForceApplied = Vector3.zero;
-	public Vector3 pathPoint = Vector3.zero;
-	public Vector3 destination = Vector3.zero;
-	public GameObject target;
+	public Vector3 currentDestination = Vector3.zero;
+	public Vector3 nextDestination = Vector3.zero;
+	public Transform finalDestination;
 	GameObject[] targetList;
+	public List<Vector3> path = null;
 	
 	void Start ()
 	{
 		pathFinder = GetComponent<PathFinder> ();
 		targetList = GameObject.FindGameObjectsWithTag ("HasDrones");
-		target = targetList [Random.Range (0, targetList.Length)];
-		destination = target.transform.position + Vector3.up * 1.5f;
+		finalDestination = targetList [Random.Range (0, targetList.Length)].transform;
+		path = pathFinder.getPath(transform.position, finalDestination.position);
 	}
 	
 	public void setTarget (Transform target)
 	{
-		this.target = target.gameObject;
+		finalDestination = target;
 	}
 	
 	void FixedUpdate ()
 	{
-		destination = target.transform.position + Vector3.up * 1.5f;
-		pathPoint = pathFinder.getPath (transform.position, destination);
-		if (Vector3.Distance (destination, transform.position) > 4) {
-			rigidbody.isKinematic = false;
-			transform.LookAt (pathPoint);
-			rigidbody.MovePosition (transform.position + transform.forward * Time.deltaTime * speed);
-  
-			RaycastHit rayHit;
-			if (Physics.Raycast (transform.position + transform.forward.normalized, Vector3.down, out rayHit)) {
-				currentHeight = rayHit.distance;
-				hoverForceApplied = (Vector3.up * Physics.gravity.magnitude);
-				if (rigidbody.velocity.magnitude < 1f) {
-					transform.position += Vector3.up + transform.forward;
-				}
-				if (currentHeight < hoverHeight - 1f) {
-					rigidbody.AddForce (new Vector3 (0f, -rigidbody.velocity.y, 0f));
-				}
-				if (currentHeight - Time.deltaTime < hoverHeight) {
-					hoverForceMultiplier = (hoverHeight - currentHeight) / hoverHeight;
-					hoverForceApplied += (Vector3.up * hoverForce * hoverForceMultiplier);
-				} else if (currentHeight > hoverHeight + (hoverHeight * 0.5f)) {
-					hoverForceApplied = Vector3.zero;
-				} else if ((currentHeight - hoverHeight - Time.deltaTime) < (hoverHeight / 2)) {
-					hoverForceApplied *= ((hoverHeight - (currentHeight - hoverHeight)) / hoverHeight);
-				}
-				rigidbody.AddForce (hoverForceApplied);
-			}
-		} else {
-			if (!(rigidbody.isKinematic)) {
-				transform.LookAt (new Vector3 (pathPoint.x, transform.position.y, pathPoint.z));
-				rigidbody.velocity = Vector3.zero;
-				rigidbody.isKinematic = true;
-			}
+		//check if path is null, if path is empty, 
+		//or if the last waypoint in path can't see the destination
+		if(path == null || path.Count <= 0 
+			|| !(PathFinder.lineOfSight(path.FindLast(_unused => true), finalDestination.position)))
+		{
+			path = pathFinder.getPath (transform.position, finalDestination.position);
+		}
+		
+		//other code to go here
+		
+		if(Vector3.Distance (currentDestination, transform.position) > 4)
+		{
+			//rigidbody.isKinematic = false;
+			transform.LookAt(currentDestination);
+			rigidbody.MovePosition(transform.position + transform.forward * Time.deltaTime * speed);
 		}
 	}
-	
 }
