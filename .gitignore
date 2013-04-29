@@ -3,6 +3,8 @@
 *.csproj
 *.pidb
 *.unityproj
+*.exe
+*.txt
 .DS_Store
 /obj
 /Temp
