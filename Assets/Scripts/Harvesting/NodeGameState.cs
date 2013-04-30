@@ -516,6 +516,8 @@ public class NodeGameState : MonoBehaviour
 		if(nodes.Contains(sortedNodeList[nodeKey]) == false)
 		{
 			setOwnership();
+			HarvestButtonGUI buttons = (HarvestButtonGUI) main.GetComponent(typeof(HarvestButtonGUI));
+			buttons.setOwnership();
 			if(Network.player == n)
 				nodes.Add (sortedNodeList[nodeKey]);
 		}
@@ -530,6 +532,8 @@ public class NodeGameState : MonoBehaviour
 		if(nodes.Contains(sortedNodeList[nodeKey]) == true)
 			{
 			setOwnership();
+			HarvestButtonGUI buttons = (HarvestButtonGUI) main.GetComponent(typeof(HarvestButtonGUI));
+			buttons.setOwnership();
 			if(Network.player == n)
 				nodes.Remove (sortedNodeList[nodeKey]);
 		}

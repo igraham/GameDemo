@@ -13,9 +13,6 @@ public class HarvestButtonGUI : MonoBehaviour {
 	NetworkPlayer n;
 	// Use this for initialization
 	void Start () {
-		state = (NodeGameState) gameState.GetComponent (typeof(NodeGameState));
-		ClientPlayerController cpc = (ClientPlayerController) transform.parent.GetComponent(typeof(ClientPlayerController));
-		n =  cpc.getOwner();
 		//print ("Harvest Button tests" + n.ToString() + " " + Network.player.ToString());
 	}
 	
@@ -70,10 +67,17 @@ public class HarvestButtonGUI : MonoBehaviour {
 				state.confirmButtonPressed = true;
 			
 		}
-
+		
+		
+		
 		// End the group we started above. This is very important to remember!
 		GUI.EndGroup ();
 	}
 	
-	
+	public void setOwnership()
+		{
+			state = (NodeGameState) gameState.GetComponent (typeof(NodeGameState));
+			ClientPlayerController cpc = (ClientPlayerController) transform.parent.GetComponent(typeof(ClientPlayerController));
+			n =  cpc.getOwner();
+		}
 }
