@@ -94,6 +94,20 @@ public class ClientPlayerController : MonoBehaviour
 			if(transform.parent.transform.FindChild("HUDElements") != null)
 			{
 				GameObject hud = transform.parent.transform.FindChild("HUDElements").gameObject;
+				
+				if(hud.GetComponentInChildren<Camera>())
+				{
+					hud.GetComponentInChildren<Camera>().enabled = false;
+				}
+				if(hud.GetComponentInChildren<AudioListener>())
+				{
+					hud.GetComponentInChildren<AudioListener>().enabled = false;
+				}
+				if(hud.GetComponentInChildren<GUILayer>())
+				{
+					hud.GetComponentInChildren<GUILayer>().enabled = false;
+				}
+				
 				Component[] hudTexts = hud.GetComponentsInChildren<GUIText> ();
 				foreach (GUIText text in hudTexts) {
 					text.enabled = false;

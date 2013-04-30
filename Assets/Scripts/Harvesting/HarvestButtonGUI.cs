@@ -22,7 +22,10 @@ public class HarvestButtonGUI : MonoBehaviour {
 		
 		// All rectangles are now adjusted to the group. (0,0) is the topleft corner of the group.
 		
-		if(showCommandButtons)
+		ClientPlayerController cpc = (ClientPlayerController) transform.parent.GetComponent(typeof(ClientPlayerController));
+		NetworkPlayer n =  cpc.getOwner();
+		
+		if(showCommandButtons && Network.player == n)
 		{
 		// We'll make a box so you can see where the group is on-screen.
 			GUI.Box (new Rect (0,0,540,100), "Commands");
@@ -39,7 +42,7 @@ public class HarvestButtonGUI : MonoBehaviour {
 				state.reproduceButtonPressed = true;
 		}
 		
-		if(showNodeButtons)
+		if(showNodeButtons && Network.player == n)
 		{
 		// We'll make a box so you can see where the group is on-screen.
 			GUI.Box (new Rect (0,0,550,100), "Nodes");
@@ -58,7 +61,7 @@ public class HarvestButtonGUI : MonoBehaviour {
 		}
 		
 		
-		if(showConfirmButton)
+		if(showConfirmButton && Network.player == n)
 		{
 		// We'll make a box so you can see where the group is on-screen.
 			GUI.Box (new Rect (0,0,550,100), "Confirmation");

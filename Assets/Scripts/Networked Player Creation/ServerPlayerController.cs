@@ -74,7 +74,13 @@ public class ServerPlayerController : MonoBehaviour
 	
 	void Start ()
 	{
-		
+		if(Network.isServer)
+		{
+			if(gameObject.GetComponentInChildren<GUILayer>())
+			{
+				gameObject.GetComponentInChildren<GUILayer>().enabled = false;
+			}
+		}
 	}
 	
 	[RPC]
