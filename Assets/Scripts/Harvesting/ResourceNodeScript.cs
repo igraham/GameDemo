@@ -200,7 +200,7 @@ public class ResourceNodeScript : MonoBehaviour
 		}	
 	}
 	
-	
+	[RPC]
 	public void damageNode(int damage)
 	{
 		if(isNode)

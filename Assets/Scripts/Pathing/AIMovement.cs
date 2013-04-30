@@ -5,24 +5,27 @@ using System.Collections.Generic;
 public class AIMovement : MonoBehaviour
 {
 	
-	public float currentHeight = 0f;
-	public float hoverHeight = 2.5f;
-	public float hoverForceMultiplier = 0f;
-	public float hoverForce = 30f;
 	public float speed = 7f;
 	PathFinder pathFinder;
 	public Vector3 hoverForceApplied = Vector3.zero;
 	public Vector3 currentDestination = Vector3.zero;
 	public Vector3 nextDestination = Vector3.zero;
 	public Transform finalDestination; //sounds like a movie name
-	GameObject[] targetList;
+	List<GameObject> targetList = new List<GameObject>();
 	public List<Vector3> path = null;
 	
 	void Start ()
 	{
 		pathFinder = GetComponent<PathFinder> ();
-		targetList = GameObject.FindGameObjectsWithTag ("HasDrones");
-		finalDestination = targetList [Random.Range (0, targetList.Length)].transform;
+		foreach(GameObject obj in GameObject.FindGameObjectsWithTag("HasDrones"))
+		{
+			targetList.Add(obj);
+		}
+		foreach(GameObject obj in GameObject.FindGameObjectsWithTag("Player"))
+		{
+			targetList.Add(obj);
+		}
+		finalDestination = targetList [Random.Range (0, targetList.Count)].transform;
 		path = pathFinder.getPath(transform.position, finalDestination.position);
 		//set initial current and next destination
 		if(path.Count > 0)
@@ -83,7 +86,7 @@ public class AIMovement : MonoBehaviour
 			//remove remaining waypoints from the path (no longer needed)
 			if(path.Count > 0)
 				path.RemoveAll(_unused => true);
-			//then set next destination to null (we won't have another next with this list)
+			//then set next destination to Vector3.zero (we won't have another next with this list)
 			if(nextDestination != Vector3.zero)
 				nextDestination = Vector3.zero;
 		}
