@@ -91,9 +91,7 @@ public class NodeGameState : MonoBehaviour
 	void Start ()
 	{
 		//main = GameObject.Find ("Main Camera").camera;
-		GameObject tank = transform.parent.parent.parent.FindChild("NewTank").gameObject;
-		cpc = (ClientPlayerController) tank.GetComponent(typeof(ClientPlayerController));
-		n =  cpc.getOwner();
+		
 		
 		
 		nodeTexts.Add (this.guiText);
@@ -515,21 +513,36 @@ public class NodeGameState : MonoBehaviour
 	[RPC]
 	void addNode (int nodeKey)
 	{
-		if(nodes.Contains(sortedNodeList[nodeKey]) == false && Network.player == n)
-			nodes.Add (sortedNodeList[nodeKey]);
+		if(nodes.Contains(sortedNodeList[nodeKey]) == false)
+		{
+			setOwnership();
+			if(Network.player == n)
+				nodes.Add (sortedNodeList[nodeKey]);
+		}
 		//nodes.Add(serverController.sortedNodeList[nodeKey]);
-		print ("Node Added to NodeGameState "+ nodes.Count);
-		print ("Ownership NodeGameState "+ n.ToString() + " "+ Network.player.ToString());
+		//print ("Node Added to NodeGameState "+ nodes.Count);
+		//print ("Ownership NodeGameState "+ n.ToString() + " "+ Network.player.ToString());
 	}
 	
 	[RPC]
 	void removeNode (int nodeKey)
 	{
-		if(nodes.Contains(sortedNodeList[nodeKey]) == true && Network.player == n)
-			nodes.Remove (sortedNodeList[nodeKey]);
+		if(nodes.Contains(sortedNodeList[nodeKey]) == true)
+			{
+			setOwnership();
+			if(Network.player == n)
+				nodes.Remove (sortedNodeList[nodeKey]);
+		}
 		//nodes.Remove(serverController.sortedNodeList[nodeKey]);
-		print ("Node Removed to NodeGameState "+ nodes.Count);
-		print ("Ownership NodeGameState "+ n.ToString() + " "+ Network.player.ToString());
+		//print ("Node Removed to NodeGameState "+ nodes.Count);
+		//print ("Ownership NodeGameState "+ n.ToString() + " "+ Network.player.ToString());
+	}
+	
+	void setOwnership()
+	{
+		GameObject tank = transform.parent.parent.parent.FindChild("NewTank").gameObject;
+		cpc = (ClientPlayerController) tank.GetComponent(typeof(ClientPlayerController));
+		n =  cpc.getOwner();
 	}
 	
 	private void nodeCommandResponse (ResourceNodeScript nodeScript)

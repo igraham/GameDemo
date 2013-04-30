@@ -9,21 +9,21 @@ public class HarvestButtonGUI : MonoBehaviour {
 	public bool showNodeButtons = false;
 	public bool showConfirmButton = false;
 	public GUIText gameState;
+	NodeGameState state;
+	NetworkPlayer n;
 	// Use this for initialization
 	void Start () {
-	
+		state = (NodeGameState) gameState.GetComponent (typeof(NodeGameState));
+		ClientPlayerController cpc = (ClientPlayerController) transform.parent.GetComponent(typeof(ClientPlayerController));
+		n =  cpc.getOwner();
+		//print ("Harvest Button tests" + n.ToString() + " " + Network.player.ToString());
 	}
 	
 	void OnGUI () {
 		// Make a group on the center of the screen
 		GUI.BeginGroup (new Rect (125, 0, 540, 50));
 		
-		NodeGameState state = (NodeGameState) gameState.GetComponent (typeof(NodeGameState));
-		
 		// All rectangles are now adjusted to the group. (0,0) is the topleft corner of the group.
-		
-		ClientPlayerController cpc = (ClientPlayerController) transform.parent.GetComponent(typeof(ClientPlayerController));
-		NetworkPlayer n =  cpc.getOwner();
 		
 		if(showCommandButtons && Network.player == n)
 		{
