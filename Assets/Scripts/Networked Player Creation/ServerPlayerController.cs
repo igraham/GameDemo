@@ -77,6 +77,7 @@ public class ServerPlayerController : MonoBehaviour
 		
 	}
 	
+	
 	[RPC]
 	void setClientTurretControls (float mouseX, float mouseY)
 	{
@@ -246,12 +247,14 @@ public class ServerPlayerController : MonoBehaviour
 			playerCamera.transform.rotation = Quaternion.Slerp (playerCamera.transform.rotation, 
 															   		   turret.transform.rotation, 
 															   		   Time.deltaTime * 3f);
+			
 		}
 		//move backwards
 		if (reverse) {
 			rigidbody.AddForce (-1f * transform.forward.normalized * speed);
 			if (rigidbody.velocity.magnitude > maxSpeed) {
 				rigidbody.velocity = rigidbody.velocity.normalized * maxSpeed;
+				
 			}
 		}
 		//rotate right
@@ -297,6 +300,9 @@ public class ServerPlayerController : MonoBehaviour
 			Destroy (prefab, 5f);
 			shotTimer = false;
 			Invoke ("ShotTimer", .5f);
+			//gameObject.transform.FindChild("mortarSound").GetComponent<MortarPlayer>().playMortar();
+			NetworkView netView = gameObject.transform.FindChild("mortarSound").gameObject.networkView;
+			netView.RPC("networkplayMortar",RPCMode.All);
 		}
 	}
 	

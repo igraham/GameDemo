@@ -36,7 +36,7 @@ public class ScrollnFade : MonoBehaviour {
 		Application.LoadLevel("Splashscreen");	
 		
 		}
-		if(Time.time > 30f)
+		if(Time.time > 50f)
 		{
 		  Application.LoadLevel("Splashscreen");
 		}
