@@ -18,41 +18,11 @@ public class ClientPlayerController : MonoBehaviour
 	ResourceNodeScript node;
 	PlayerGameState player;
 	
-	//All the GUI elements that need instantiating and assigning in scripts
-	/*public GUIText playerStatus;
-	public GameObject playerLifeBar;*/ 
-	
-	
-	
 	public GUIText resourceCommandsText;
 	
-	
-	void OnNetworkInstantiate (NetworkMessageInfo info)
+	void OnNetworkInstantiate(NetworkMessageInfo info)
 	{
-			/*Network.Instantiate(playerStatus,playerStatus.transform.position,playerStatus.transform.rotation,0);
-			Network.Instantiate(resourceCommandsText,resourceCommandsText.transform.position,resourceCommandsText.transform.rotation,0);
-			Network.Instantiate(playerLifeBar,playerLifeBar.transform.position,playerLifeBar.transform.rotation,0);
-			
-			playerStatus.enabled = false;
-			resourceCommandsText.enabled = false;
-			playerLifeBar.SetActive(false);
-			
-			
-			
-			if(playerStatus.networkView.isMine)
-				playerStatus.enabled = true;
-			
-			if(resourceCommandsText.networkView.isMine)
-				resourceCommandsText.enabled = true;
-			
-			if(playerLifeBar.networkView.isMine)
-				playerLifeBar.SetActive(true);
-			
-			PlayerGameState pGState = (PlayerGameState) GetComponent (typeof(PlayerGameState));
-			pGState.playerStatus = this.playerStatus;
-			pGState.playerLifeBar = playerLifeBar.transform.FindChild("ProgressBarFrame").guiTexture;
-			pGState.lifebarText =  playerLifeBar.transform.FindChild("ProgressType").guiText;*/
-
+		//may need in the future?
 	}
 	
 	[RPC]
@@ -70,14 +40,6 @@ public class ClientPlayerController : MonoBehaviour
 			if(radar.GetComponent<Camera>())
 			{
 				radar.GetComponent<Camera>().enabled = false;
-			}
-			if(radar.GetComponent<AudioListener>())
-			{
-				radar.GetComponent<AudioListener>().enabled = false;
-			}
-			if(radar.GetComponent<GUILayer>())
-			{
-				radar.GetComponent<GUILayer>().enabled = false;
 			}
 			if(gameObject.GetComponentInChildren<Camera>())
 			{
@@ -129,19 +91,16 @@ public class ClientPlayerController : MonoBehaviour
 				networkView.RPC("setClientMovementControls", RPCMode.Server, forward, reverse, rotateRight, 
 																			rotateLeft, strRight, strLeft);
 			}
-			
 			if(mouseX!=mouseH || mouseY!=mouseV)
 			{
 				//RPC to server to send mouse controls (separate from movement, performance reasons)
 				networkView.RPC("setClientTurretControls", RPCMode.Server, mouseH, mouseV);
 			}
-			
 			if(shoot!=shooting)
 			{
 				//RPC to server to send mouse click for shooting.
 				networkView.RPC("setClientShootingState", RPCMode.Server, shoot);
 			}
-			
 			if(colliding && node.nodeMode ==0)
 			{
 				player = (PlayerGameState) gameObject.GetComponent(typeof(PlayerGameState));
@@ -160,7 +119,6 @@ public class ClientPlayerController : MonoBehaviour
 				}
 			}
 			
-			
 			//store history
 			f = forward;
 			r = reverse;
@@ -172,24 +130,24 @@ public class ClientPlayerController : MonoBehaviour
 			mouseY = mouseV;
 			shooting = shoot;
 		}
-		
-		
 	}
 	
-	void OnTriggerStay(Collider other) {
-		
+	void OnTriggerStay(Collider other)
+	{
 		//if(node.nodeMode ==0)
 			resourceCommandsText.text = "Hit C to add a drone \n"+
 										"Hit Z to remove a drone \n"+
 										"Hit X to collect mined resources";	
 	}
 	
-	void OnTriggerEnter(Collider other) {
+	void OnTriggerEnter(Collider other)
+	{
 		colliding = true;
 		node = (ResourceNodeScript) other.collider.gameObject.GetComponent(typeof(ResourceNodeScript));
 	}
 	
-	void OnTriggerExit(Collider other) {
+	void OnTriggerExit(Collider other)
+	{
 		resourceCommandsText.text ="";
 		colliding = false;
 	}

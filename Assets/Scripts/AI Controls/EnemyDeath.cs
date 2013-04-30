@@ -7,11 +7,23 @@ public class EnemyDeath : MonoBehaviour
 	
 	public int durability = 25;
 	
-	public void damageDurability(int damage)
+	public Detonator normal;
+	public Detonator insanity;
+	
+	[RPC]
+	void noTargetsDetonation()
+	{
+		Network.Instantiate(insanity, transform.position, Quaternion.identity,0);
+		Network.Destroy(gameObject);
+	}
+	
+	[RPC]
+	void damageEnemy(int damage)
 	{
 		durability = durability-damage;
 		if(durability <= 0)
 		{
+			Network.Instantiate(normal, transform.position, Quaternion.identity,0);
 			Network.Destroy(gameObject);
 		}
 	}

@@ -13,19 +13,37 @@ public class AIMovement : MonoBehaviour
 	public Transform finalDestination; //sounds like a movie name
 	List<GameObject> targetList = new List<GameObject>();
 	public List<Vector3> path = null;
+	int targetIndex = -1;
 	
-	void Start ()
+	void Start()
 	{
-		pathFinder = GetComponent<PathFinder> ();
-		foreach(GameObject obj in GameObject.FindGameObjectsWithTag("HasDrones"))
+		pathFinder = GetComponent<PathFinder>();
+		if(gameObject.name.Equals("Enemy(Clone)"))
 		{
-			targetList.Add(obj);
+			foreach(GameObject obj in GameObject.FindGameObjectsWithTag("HasDrones"))
+			{
+				targetList.Add(obj);
+			}
+			foreach(GameObject obj in GameObject.FindGameObjectsWithTag("Player"))
+			{
+				targetList.Add(obj);
+			}
+			//if no targets are found, blow up using detonator insanity.
+			if(targetList.Count == 0)
+			{
+				gameObject.networkView.RPC("noTargetsDetonation", RPCMode.AllBuffered);
+			}
 		}
-		foreach(GameObject obj in GameObject.FindGameObjectsWithTag("Player"))
+		else if(gameObject.name.Equals("Drone(Clone)"))
 		{
-			targetList.Add(obj);
+			//set the target manually
+			
+			//may be an issue, we get the target by being next to it on the tank.
+			//however, finding said target is difficult, and this code is executed in Start.
+			//additionally, resources need a "spawn point" next to it to avoid spawning
+			//drones inside the terrain.
 		}
-		finalDestination = targetList [Random.Range (0, targetList.Count)].transform;
+		setRandomTargetFromList();
 		path = pathFinder.getPath(transform.position, finalDestination.position);
 		//set initial current and next destination
 		if(path.Count > 0)
@@ -38,18 +56,40 @@ public class AIMovement : MonoBehaviour
 		}
 	}
 	
+	//used when finding a new random target (i.e, target was destroyed before enemy could reach it,
+	//player disconnected, connection lost, etc.)
+	public void setRandomTargetFromList()
+	{
+		targetIndex = Random.Range(0,targetList.Count);
+		finalDestination = targetList[targetIndex].transform;
+	}
+	
 	//use this to change the transform being used as the final destination
 	//when it is changed the model with this script attached will begin to follow the new target.
-	public void setTarget (Transform target)
+	public void setTarget(Transform target)
 	{
 		finalDestination = target;
 	}
 	
 	void FixedUpdate ()
 	{
+		//before anything else, determine whether there are any targets to follow.
+		if(targetList.Count == 0)
+		{
+			gameObject.networkView.RPC("noTargetsDetonation", RPCMode.AllBuffered);
+		}
+		//check to see whether the final destination is no longer a valid target
+		if(!finalDestination)
+		{
+			//if it is not, then generate a new target.
+			//for enemies, remove the old target from the targetList and generate a new random target
+			//removing a destroyed object works because the list only has a reference
+			targetList.RemoveAt(targetIndex);
+			setRandomTargetFromList();
+		}
 		//check if path is null, if path is empty (and can't see the destination currently), 
 		//or if the last waypoint in path can't see the destination
-		if(path == null 
+		if(path == null
 			|| (path.Count <= 0 
 				&& !(PathFinder.lineOfSight(transform.position, finalDestination.position)))
 			|| (path.Count > 0 
