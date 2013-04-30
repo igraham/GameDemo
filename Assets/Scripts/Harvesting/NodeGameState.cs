@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class NodeGameState : MonoBehaviour
 {
@@ -66,11 +67,21 @@ public class NodeGameState : MonoBehaviour
 	
 	public bool confirmButtonPressed = false;
 	
+	public Dictionary<int,GameObject> sortedNodeList = new Dictionary<int,GameObject> ();
+	
+	public GameObject[] resourceNodes;
 	
 	// Use this for initialization
 	void Start ()
 	{
-		main = GameObject.Find ("Main Camera").camera;
+		//main = GameObject.Find ("Main Camera").camera;
+		
+		resourceNodes = GameObject.FindGameObjectsWithTag ("ResourceNode");
+		foreach (GameObject node in resourceNodes) {
+			ResourceNodeScript nodeScript = (ResourceNodeScript)node.GetComponent (typeof(ResourceNodeScript));
+			sortedNodeList.Add (nodeScript.resourceNodeNumber, node);
+			//print ("NodeGameState Nodes dictionary: "+nodeScript.resourceNodeNumber);
+		}
 		
 		nodeTexts.Add (this.guiText);
 		nodeTexts.Add (nodeText2);
@@ -488,14 +499,22 @@ public class NodeGameState : MonoBehaviour
 	
 	}
 	
-	public void addNode (GameObject node)
+	[RPC]
+	void addNode (int nodeKey)
 	{
-		nodes.Add (node);
+		//if(sortedNodeList.ContainsKey(nodeKey) == false)
+			nodes.Add (sortedNodeList[nodeKey]);
+		//nodes.Add(serverController.sortedNodeList[nodeKey]);
+		print ("Node Added to NodeGameState "+ nodes.Count);
 	}
 	
-	public void removeNode (GameObject node)
+	[RPC]
+	void removeNode (int nodeKey)
 	{
-		nodes.Remove (node);
+		//if(sortedNodeList.ContainsKey(nodeKey) == true)
+			nodes.Remove (sortedNodeList[nodeKey]);
+		//nodes.Remove(serverController.sortedNodeList[nodeKey]);
+		print ("Node Removed to NodeGameState "+ nodes.Count);
 	}
 	
 	private void nodeCommandResponse (ResourceNodeScript nodeScript)

@@ -119,13 +119,17 @@ public class ServerPlayerController : MonoBehaviour
 	{
 		if (sortedNodeList.ContainsKey (nodeNumber)) {	
 			ResourceNodeScript nodeScript = (ResourceNodeScript)sortedNodeList [nodeNumber].gameObject.GetComponent (typeof(ResourceNodeScript));
-			/*if(nodeScript.isNode == false)
-			{
-				gState.addNode(sortedNodeList[nodeNumber]);
-			}*/
+			
 			
 			sortedNodeList [nodeNumber].networkView.RPC ("addDrone", RPCMode.AllBuffered);
-			
+			if(nodeScript.isNode == false)
+			{
+				
+				GUIText nodeText1 = transform.parent.transform.FindChild("HUDElements").transform.FindChild("NodeTexts").transform.FindChild("NodeText1").guiText;
+				NodeGameState nGState = (NodeGameState)nodeText1.GetComponent(typeof(NodeGameState));
+				
+				nGState.networkView.RPC ("addNode",RPCMode.AllBuffered,nodeNumber);
+			}
 			//PlayerGameState player = (PlayerGameState) gameObject.GetComponent(typeof(PlayerGameState));
 			networkView.RPC ("playerRemoveDrone", RPCMode.AllBuffered);
 			
@@ -140,10 +144,12 @@ public class ServerPlayerController : MonoBehaviour
 			sortedNodeList [nodeNumber].networkView.RPC ("removeDrone", RPCMode.AllBuffered);
 			ResourceNodeScript nodeScript = (ResourceNodeScript)sortedNodeList [nodeNumber].gameObject.GetComponent (typeof(ResourceNodeScript));
 			
-			/*if(nodeScript.droneCount <= 0)
+			if(nodeScript.droneCount <= 0)
 			{
-				gState.removeNode(sortedNodeList[nodeNumber]);
-			}*/
+				GUIText nodeText1 = transform.parent.transform.FindChild("HUDElements").transform.FindChild("NodeTexts").transform.FindChild("NodeText1").guiText;
+				NodeGameState nGState = (NodeGameState)nodeText1.GetComponent(typeof(NodeGameState));
+				nGState.networkView.RPC ("removeNode",RPCMode.AllBuffered,nodeNumber);
+			}
 			
 			networkView.RPC ("playerAddDrone", RPCMode.AllBuffered);
 		}
@@ -153,8 +159,6 @@ public class ServerPlayerController : MonoBehaviour
 	void requestToCollectResources (int nodeNumber)
 	{
 		if (sortedNodeList.ContainsKey (nodeNumber)) {
-			
-			PlayerGameState player = (PlayerGameState)gameObject.GetComponent (typeof(PlayerGameState));
 			
 			sortedNodeList [nodeNumber].networkView.RPC ("extractResources", RPCMode.AllBuffered);
 			ResourceNodeScript nodeScript = (ResourceNodeScript)sortedNodeList [nodeNumber].gameObject.GetComponent (typeof(ResourceNodeScript));

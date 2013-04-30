@@ -91,6 +91,19 @@ public class ClientPlayerController : MonoBehaviour
 			{
 				gameObject.GetComponentInChildren<GUILayer>().enabled = false;
 			}
+			if(transform.parent.transform.FindChild("HUDElements") != null)
+			{
+				GameObject hud = transform.parent.transform.FindChild("HUDElements").gameObject;
+				Component[] hudTexts = hud.GetComponentsInChildren<GUIText> ();
+				foreach (GUIText text in hudTexts) {
+					text.enabled = false;
+				}
+				
+				Component[] hudTextures = hud.GetComponentsInChildren<GUITexture> ();
+				foreach (GUITexture texture in hudTextures) {
+					texture.enabled = false;
+				}
+			}
 		}
 	}
 	
