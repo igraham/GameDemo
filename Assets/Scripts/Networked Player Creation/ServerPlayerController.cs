@@ -38,7 +38,8 @@ public class ServerPlayerController : MonoBehaviour
 		//Finds all the nodes
 		//print ("Test Run1");
 		resourceNodes = GameObject.FindGameObjectsWithTag ("ResourceNode");
-		foreach (GameObject node in resourceNodes) {
+		foreach (GameObject node in resourceNodes)
+		{
 			ResourceNodeScript nodeScript = (ResourceNodeScript)node.GetComponent (typeof(ResourceNodeScript));
 			sortedNodeList.Add (nodeScript.resourceNodeNumber, node);
 			
@@ -49,8 +50,10 @@ public class ServerPlayerController : MonoBehaviour
 		if (resourceNodes.Length == 0)
 			print ("Empty");
 		float dist = float.MaxValue;
-		foreach (GameObject obj in spawns) {
-			if (Vector3.Distance (obj.transform.position, transform.position) < dist) {
+		foreach (GameObject obj in spawns)
+		{
+			if (Vector3.Distance (obj.transform.position, transform.position) < dist)
+			{
 				dist = Vector3.Distance (obj.transform.position, transform.position);
 				spawnLocation = obj;
 			}
@@ -58,23 +61,19 @@ public class ServerPlayerController : MonoBehaviour
 		
 		//Change the color of the tank's main pieces
 		Color c;
-		for (int i = 0; i< spawns.Length; i++) {
+		for (int i = 0; i< spawns.Length; i++)
+		{
 			Debug.Log ("here");
-			if (spawns [i] == spawnLocation) {
+			if (spawns [i] == spawnLocation)
+			{
 				Debug.Log ("here2");
 				c = tankColor [i];
-				foreach (GameObject obj in pieceChange) {
+				foreach (GameObject obj in pieceChange)
+				{
 					obj.renderer.material.color = c;
 				}
 			}
-		}	
-		
-		
-	}
-	
-	void Start ()
-	{
-		
+		}
 	}
 	
 	[RPC]

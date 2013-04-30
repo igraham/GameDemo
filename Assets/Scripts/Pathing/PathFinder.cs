@@ -168,7 +168,7 @@ public class PathFinder : MonoBehaviour {
 				goal.neighbors.Add(wp);
 			}
 		}
-		checkWayPointVision();		
+		checkWayPointVision();
 		wayPoints.Add(start);
 		wayPoints.Add(goal);
 
@@ -198,6 +198,8 @@ public class PathFinder : MonoBehaviour {
 		}
 		buildStartAndGoal(origin, destination);
 		checkWayPointVision();
+		path.Remove(start);
+		path.Remove(goal);
 		foreach(WayPoint p in path)
 		{
 			pathPoints.Add(p.position);
