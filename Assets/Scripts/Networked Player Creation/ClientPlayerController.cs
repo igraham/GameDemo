@@ -53,6 +53,33 @@ public class ClientPlayerController : MonoBehaviour
 			{
 				gameObject.GetComponentInChildren<GUILayer>().enabled = false;
 			}
+			if(transform.parent.transform.FindChild("HUDElements") != null)
+			{
+				GameObject hud = transform.parent.transform.FindChild("HUDElements").gameObject;
+				
+				if(hud.GetComponentInChildren<Camera>())
+				{
+					hud.GetComponentInChildren<Camera>().enabled = false;
+				}
+				if(hud.GetComponentInChildren<AudioListener>())
+				{
+					hud.GetComponentInChildren<AudioListener>().enabled = false;
+				}
+				if(hud.GetComponentInChildren<GUILayer>())
+				{
+					hud.GetComponentInChildren<GUILayer>().enabled = false;
+				}
+				
+				Component[] hudTexts = hud.GetComponentsInChildren<GUIText> ();
+				foreach (GUIText text in hudTexts) {
+					text.enabled = false;
+				}
+				
+				Component[] hudTextures = hud.GetComponentsInChildren<GUITexture> ();
+				foreach (GUITexture texture in hudTextures) {
+					texture.enabled = false;
+				}
+			}
 		}
 	}
 	
@@ -101,7 +128,7 @@ public class ClientPlayerController : MonoBehaviour
 				//RPC to server to send mouse click for shooting.
 				networkView.RPC("setClientShootingState", RPCMode.Server, shoot);
 			}
-			if(colliding && node.nodeMode ==0)
+			if(colliding && node.nodeMode ==0 && node.isBusy == false)
 			{
 				player = (PlayerGameState) gameObject.GetComponent(typeof(PlayerGameState));
 			
@@ -134,7 +161,7 @@ public class ClientPlayerController : MonoBehaviour
 	
 	void OnTriggerStay(Collider other)
 	{
-		//if(node.nodeMode ==0)
+		if(node.isBusy ==false)
 			resourceCommandsText.text = "Hit C to add a drone \n"+
 										"Hit Z to remove a drone \n"+
 										"Hit X to collect mined resources";	

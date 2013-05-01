@@ -24,7 +24,8 @@ public class ResourceNodeScript : MonoBehaviour
 	public int previousNodeMode = 0;
 	public bool acceptCommands = true;
 	public int resourceNodeNumber = 0;
-	public int extractable = 0;
+	public int extractable =0;
+	public bool isBusy =false;
 //	public GameObject turretModel;
 	
 	void Start ()
@@ -85,6 +86,8 @@ public class ResourceNodeScript : MonoBehaviour
 				{
 					r.enabled = false;
 				}	
+			
+				isBusy =false;
 				/*Component[] turretRenderers = turretModel.GetComponentsInChildren<Renderer> ();
 				foreach (Renderer r in turretRenderers)
 				{
@@ -101,6 +104,7 @@ public class ResourceNodeScript : MonoBehaviour
 		{
 			if(nodeMode ==0)
 			{
+				isBusy =false;
 				if (minedAmount < resourceCapacity && isNode)
 				{
 					timer += Time.deltaTime * droneCount;
@@ -113,7 +117,7 @@ public class ResourceNodeScript : MonoBehaviour
 			{
 				timer += Time.deltaTime * droneCount;
 				progress = Mathf.RoundToInt (timer);
-				
+				isBusy = true;
 				if(progress >= calculatedCapacityUpgradeCost())
 				{
 					minedAmount = minedAmount - calculatedCapacityUpgradeCost();
@@ -128,7 +132,7 @@ public class ResourceNodeScript : MonoBehaviour
 			{
 				timer += Time.deltaTime * droneCount;
 				progress = Mathf.RoundToInt (timer);
-				
+				isBusy = true;
 				if(progress >= calculatedDurabilityUpgradeCost())
 				{
 					minedAmount = minedAmount - calculatedDurabilityUpgradeCost();
@@ -144,7 +148,7 @@ public class ResourceNodeScript : MonoBehaviour
 			{
 				timer += Time.deltaTime * droneCount;
 				progress = Mathf.RoundToInt (timer);
-				
+				isBusy = true;
 				if(progress >= calculatedDefenseUpgradeCost())
 				{
 					//nodeDurability = nodeDurability + 50;
@@ -159,7 +163,7 @@ public class ResourceNodeScript : MonoBehaviour
 			{
 				timer += Time.deltaTime * droneCount;
 				progress = Mathf.RoundToInt (timer);
-				
+				isBusy = true;
 				if(progress >= calculatedReproductionUpgradeCost())
 				{
 					addDrone();
@@ -201,12 +205,15 @@ public class ResourceNodeScript : MonoBehaviour
 	[RPC]
 	public void extractResources()
 	{
+		
 		resourceAmount = getRemainingResource();
 		int extracted = minedAmount;
 		//Debug.Log(""+ minedAmount);
 		timer = 0;
 		minedAmount = 0;
 		extractable = extracted;
+		
+			
 		//networkView.RPC("setExtractionAmount",RPCMode.AllBuffered,extracted,extracted);
 	}
 	
