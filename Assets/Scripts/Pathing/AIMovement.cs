@@ -104,20 +104,23 @@ public class AIMovement : MonoBehaviour
 		//determine whether we need a new current and next destination
 		if(nextDestination != Vector3.zero && PathFinder.lineOfSight(transform.position, nextDestination))
 		{
-			//determine what the currentDestination and nextDestination are.
-			//remove the current destination from the path
-			path.RemoveAt(0);
-			//and then set the current destination to the next destination.
-			currentDestination = nextDestination;
-			//check to see if there is a valid next destination.
-			if(path.Count > 1)
+			if(path.Count > 0)
 			{
-				nextDestination = path[1];
-			}
-			else if(path.Count == 1)
-			{
-				//if there are no more waypoints set the next destination to the final destination
-				nextDestination = finalDestination.position;
+				//determine what the currentDestination and nextDestination are.
+				//remove the current destination from the path
+				path.RemoveAt(0);
+				//and then set the current destination to the next destination.
+				currentDestination = nextDestination;
+				//check to see if there is a valid next destination.
+				if(path.Count > 1)
+				{
+					nextDestination = path[1];
+				}
+				else if(path.Count == 1)
+				{
+					//if there are no more waypoints set the next destination to the final destination
+					nextDestination = finalDestination.position;
+				}
 			}
 		}
 		//If the final destination is in line of sight...
