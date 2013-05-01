@@ -23,105 +23,96 @@ public class ResourceNodeScript : MonoBehaviour
 	public int progress = 0;
 	public int previousNodeMode = 0;
 	public bool acceptCommands = true;
-	public int resourceNodeNumber =0;
-	public int extractable =0;
+	public int resourceNodeNumber = 0;
+	public int extractable = 0;
 //	public GameObject turretModel;
 	
-	
-	
-	
-	
-	// Use this for initialization
 	void Start ()
 	{
-		
-		
-		Component[] nodeRenderers = nodeModel.GetComponentsInChildren<Renderer> ();
-		foreach (Renderer r in nodeRenderers) {
+		Component[] nodeRenderers = nodeModel.GetComponentsInChildren<Renderer>();
+		foreach (Renderer r in nodeRenderers)
+		{
 			r.enabled = false;
 		}
 		/*Component[] turretRenderers = turretModel.GetComponentsInChildren<Renderer> ();
 		foreach (Renderer r in turretRenderers) {
 			r.enabled = false;
 		}*/
-	
 	}
 	
-	// Update is called once per frame
 	void Update ()
 	{
-		
 		if(nodeHealth <= 0)
 			droneCount =0;
-		
 		//NodeGameState gState = (NodeGameState)gameState.GetComponent (typeof(NodeGameState));
 		//if (gState.nodes.Count < 6) {
-			if (droneCount > 0 && isNode == false) {
+			if (droneCount > 0 && isNode == false)
+			{
 				Component[] resourcRenderers = rawResourceModel.GetComponentsInChildren<Renderer> ();
-				foreach (Renderer r in resourcRenderers) {
+				foreach (Renderer r in resourcRenderers)
+				{
 					r.enabled = false;
 				}
 				Component[] nodeRenderers = nodeModel.GetComponentsInChildren<Renderer> ();
-				foreach (Renderer r in nodeRenderers) {
+				foreach (Renderer r in nodeRenderers)
+				{
 					r.enabled = true;
 				}
 				//gState.addNode (this.gameObject);
 				isNode = true;
 				
 				gameObject.tag = "HasDrones";
-				
 				if(turretLevel >1)
 				{
 					/*TurretController tcontrol = (TurretController) turretModel.GetComponent(typeof(TurretController));
 					tcontrol.turretActive = true;
-					Component[] turretRenderers = turretModel.GetComponentsInChildren<Renderer> ();
-					foreach (Renderer r in turretRenderers) 
+					Component[] turretRenderers = turretModel.GetComponentsInChildren<Renderer>();
+					foreach (Renderer r in turretRenderers)
 					{
 						r.enabled = true;
 					}*/
 				}
 			}
-			if (droneCount <= 0 && isNode) {
-				Component[] resourcRenderers = rawResourceModel.GetComponentsInChildren<Renderer> ();
-				foreach (Renderer r in resourcRenderers) {
+			if (droneCount <= 0 && isNode)
+			{
+				Component[] resourcRenderers = rawResourceModel.GetComponentsInChildren<Renderer>();
+				foreach (Renderer r in resourcRenderers)
+				{
 					r.enabled = true;
 				}
-				Component[] nodeRenderers = nodeModel.GetComponentsInChildren<Renderer> ();
-				foreach (Renderer r in nodeRenderers) {
+				Component[] nodeRenderers = nodeModel.GetComponentsInChildren<Renderer>();
+				foreach (Renderer r in nodeRenderers)
+				{
 					r.enabled = false;
 				}	
 				/*Component[] turretRenderers = turretModel.GetComponentsInChildren<Renderer> ();
-				foreach (Renderer r in turretRenderers) {
-				r.enabled = false;
+				foreach (Renderer r in turretRenderers)
+				{
+					r.enabled = false;
 				}
-				
 				TurretController tcontrol = (TurretController) turretModel.GetComponent(typeof(TurretController));
 				tcontrol.turretActive = false;*/
-				
 				//gState.removeNode (this.gameObject);
 				isNode = false;
-				
 				gameObject.tag = "Untagged";
 			}
 		//}
-		if (isNode) {
-			
+		if (isNode)
+		{
 			if(nodeMode ==0)
 			{
-				if (minedAmount < resourceCapacity && isNode) {
+				if (minedAmount < resourceCapacity && isNode)
+				{
 					timer += Time.deltaTime * droneCount;
 					minedAmount = Mathf.RoundToInt (timer);
 				}
-		
 				if (minedAmount > resourceCapacity)
 					minedAmount = resourceCapacity;
 			}
-			
 			if(nodeMode ==1)
 			{
 				timer += Time.deltaTime * droneCount;
 				progress = Mathf.RoundToInt (timer);
-				
 				
 				if(progress >= calculatedCapacityUpgradeCost())
 				{
@@ -131,17 +122,12 @@ public class ResourceNodeScript : MonoBehaviour
 					increaseCapacityLevel();
 					setModeZero();
 					acceptCommands = true;
-					
-					
 				}
-				
 			}
-			
 			if(nodeMode ==2)
 			{
 				timer += Time.deltaTime * droneCount;
 				progress = Mathf.RoundToInt (timer);
-				
 				
 				if(progress >= calculatedDurabilityUpgradeCost())
 				{
@@ -152,16 +138,12 @@ public class ResourceNodeScript : MonoBehaviour
 					increaseDurabilityLevel();
 					setModeZero();
 					acceptCommands = true;
-					
 				}
-				
 			}
-			
 			if(nodeMode ==3)
 			{
 				timer += Time.deltaTime * droneCount;
 				progress = Mathf.RoundToInt (timer);
-				
 				
 				if(progress >= calculatedDefenseUpgradeCost())
 				{
@@ -171,16 +153,12 @@ public class ResourceNodeScript : MonoBehaviour
 					increaseTurretLevel();
 					setModeZero();
 					acceptCommands = true;
-					
 				}
-				
 			}
-			
 			if(nodeMode ==4)
 			{
 				timer += Time.deltaTime * droneCount;
 				progress = Mathf.RoundToInt (timer);
-				
 				
 				if(progress >= calculatedReproductionUpgradeCost())
 				{
@@ -190,43 +168,38 @@ public class ResourceNodeScript : MonoBehaviour
 					setModeZero();
 					acceptCommands = true;
 				}
-				
 			}
-			
-		
-		
-			
-	
 		}	
 	}
 	
-	
+	[RPC]
 	public void damageNode(int damage)
 	{
 		if(isNode)
 			nodeHealth -= damage;
 	}
-	public int getRemainingResource ()
+	
+	public int getRemainingResource()
 	{
 		return resourceAmount - minedAmount;
 	}
 	
 	[RPC]
-	public void addDrone ()
+	public void addDrone()
 	{
 		if (droneCount < 10)
 			droneCount++;
 	}
 	
 	[RPC]
-	public void removeDrone ()
+	public void removeDrone()
 	{
-		if (droneCount > 0)
+		if(droneCount > 0)
 			droneCount--;
 	}
 	
 	[RPC]
-	public void extractResources ()
+	public void extractResources()
 	{
 		resourceAmount = getRemainingResource();
 		int extracted = minedAmount;
@@ -254,7 +227,6 @@ public class ResourceNodeScript : MonoBehaviour
 	{
 		previousNodeMode = nodeMode;
 		nodeMode = 0;
-		
 		if(previousNodeMode != nodeMode)
 		{
 			timer = 0+minedAmount;
@@ -295,5 +267,4 @@ public class ResourceNodeScript : MonoBehaviour
 	{
 		return 50+25*droneCount;
 	}
-	
 }
