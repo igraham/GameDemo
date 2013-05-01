@@ -26,6 +26,7 @@ public class ResourceNodeScript : MonoBehaviour
 	public int resourceNodeNumber = 0;
 	public int extractable =0;
 	public bool isBusy =false;
+	int reprodCost =0;
 //	public GameObject turretModel;
 	
 	void Start ()
@@ -164,11 +165,11 @@ public class ResourceNodeScript : MonoBehaviour
 				timer += Time.deltaTime * droneCount;
 				progress = Mathf.RoundToInt (timer);
 				isBusy = true;
-				if(progress >= calculatedReproductionUpgradeCost())
+				if(progress >= reprodCost)
 				{
 					addDrone();
-					minedAmount = minedAmount - calculatedReproductionUpgradeCost();
-					resourceAmount = resourceAmount - calculatedReproductionUpgradeCost();
+					minedAmount = minedAmount - reprodCost;
+					resourceAmount = resourceAmount - reprodCost;
 					setModeZero();
 					acceptCommands = true;
 				}
@@ -270,8 +271,13 @@ public class ResourceNodeScript : MonoBehaviour
 		return 50+Mathf.RoundToInt(Mathf.Pow(2,turretLevel));
 	}
 	
-	public int calculatedReproductionUpgradeCost()
+	public int calculatedReproductionUpgradeCost(int totalDrones)
 	{
-		return 50+25*droneCount;
+		int cost =0;
+		cost = 150+(totalDrones-10)*25;
+		if(cost < 150)
+			cost=150;
+			reprodCost = cost;
+		return cost;
 	}
 }
