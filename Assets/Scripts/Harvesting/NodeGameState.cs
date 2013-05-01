@@ -229,7 +229,7 @@ public class NodeGameState : MonoBehaviour
 					
 					progress.pixelInset = new Rect (progress.pixelInset.x,
 						progress.pixelInset.y, minProgressBarWidth + (maxProgressBarWidth - minProgressBarWidth) * 
-						((float)nodeScript.progress / (float)nodeScript.calculatedReproductionUpgradeCost ()), progress.pixelInset.height);
+						((float)nodeScript.progress / (float)nodeScript.calculatedReproductionUpgradeCost (getTotalDrones())), progress.pixelInset.height);
 					
 					progText.text = (string)nodeModes [nodeScript.nodeMode] + " " + (nodeScript.droneCount + 1);
 				}
@@ -507,8 +507,8 @@ public class NodeGameState : MonoBehaviour
 				nodes.Add (sortedNodeList [nodeKey]);
 		}
 		//nodes.Add(serverController.sortedNodeList[nodeKey]);
-		//print ("Node Added to NodeGameState "+ nodes.Count);
-		//print ("Ownership NodeGameState "+ n.ToString() + " "+ Network.player.ToString());
+		print ("Node Added to NodeGameState "+ nodes.Count);
+		print ("Ownership NodeGameState "+ n.ToString() + " "+ Network.player.ToString());
 	}
 	
 	[RPC]
@@ -592,9 +592,9 @@ public class NodeGameState : MonoBehaviour
 				}
 			}
 			if (nodeMode == 4) {
-				if (nodeScript.minedAmount >= nodeScript.calculatedReproductionUpgradeCost ()) {
+				if (nodeScript.minedAmount >= nodeScript.calculatedReproductionUpgradeCost (getTotalDrones())) {
 					commandTimer = 0f;
-					commandText.text = "Cost: " + (nodeScript.calculatedReproductionUpgradeCost ()) + "\n" + 
+					commandText.text = "Cost: " + (nodeScript.calculatedReproductionUpgradeCost (getTotalDrones())) + "\n" + 
 								"Hit ` Key again To Commit Command\n" +
 								"Benefit: 1 Drone";	
 					nodeSelected = true;
@@ -641,6 +641,20 @@ public class NodeGameState : MonoBehaviour
 			
 		}
 			
+	}
+	
+	public int getTotalDrones()
+	{
+		int nodeDroneCount = 0;
+		for (int i =0; i<nodes.Count; i++)
+		{
+			GameObject node = (GameObject)nodes [i];
+			ResourceNodeScript nodeScript = (ResourceNodeScript)node.GetComponent (typeof(ResourceNodeScript));
+			nodeDroneCount =nodeDroneCount +nodeScript.droneCount;
+		}
+		GameObject tank = transform.parent.parent.parent.FindChild ("NewTank").gameObject;
+		PlayerGameState pgs = (PlayerGameState)tank.GetComponent (typeof(PlayerGameState));
+		return nodeDroneCount+pgs.playerDroneCount;
 	}
 	
 }

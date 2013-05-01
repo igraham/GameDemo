@@ -20,7 +20,7 @@ public class HarvestButtonGUI : MonoBehaviour {
 	void OnGUI () {
 		// Make a group on the center of the screen
 		GUI.BeginGroup (new Rect (125, 0, 540, 50));
-		
+		print ("harvest buttons " + n.ToString() + " " + Network.player.ToString());
 		// All rectangles are now adjusted to the group. (0,0) is the topleft corner of the group.
 		
 		if(showCommandButtons && Network.player == n)
@@ -80,5 +80,6 @@ public class HarvestButtonGUI : MonoBehaviour {
 			state = (NodeGameState) gameState.GetComponent (typeof(NodeGameState));
 			ClientPlayerController cpc = (ClientPlayerController) transform.parent.GetComponent(typeof(ClientPlayerController));
 			n =  cpc.getOwner();
+			
 		}
 }
