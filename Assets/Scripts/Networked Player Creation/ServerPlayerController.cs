@@ -324,6 +324,7 @@ public class ServerPlayerController : MonoBehaviour
 			print ("motarTimer = " + motarTimer);
 		}
 		
+		//checks to see if the charge is at full capacity
 		if(motarTimer >= max)
 		{
 			motarTimer = max;
