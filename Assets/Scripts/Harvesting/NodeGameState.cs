@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class NodeGameState : MonoBehaviour
 {
@@ -66,11 +67,32 @@ public class NodeGameState : MonoBehaviour
 	
 	public bool confirmButtonPressed = false;
 	
+	public Dictionary<int,GameObject> sortedNodeList = new Dictionary<int,GameObject> ();
+	
+	public GameObject[] resourceNodes;
+	
+	ClientPlayerController cpc;
+	public NetworkPlayer n;
+	
+	void OnNetworkInstantiate (NetworkMessageInfo info)
+	{
+		resourceNodes = GameObject.FindGameObjectsWithTag ("ResourceNode");
+		foreach (GameObject node in resourceNodes) 
+		{
+			ResourceNodeScript nodeScript = (ResourceNodeScript)node.GetComponent (typeof(ResourceNodeScript));
+			sortedNodeList.Add (nodeScript.resourceNodeNumber, node);
+			//print ("NodeGameState Nodes dictionary: "+nodeScript.resourceNodeNumber);
+		}
+		
+
+	}
 	
 	// Use this for initialization
 	void Start ()
 	{
-		main = GameObject.Find ("Main Camera").camera;
+		//main = GameObject.Find ("Main Camera").camera;
+		
+		
 		
 		nodeTexts.Add (this.guiText);
 		nodeTexts.Add (nodeText2);
@@ -139,7 +161,7 @@ public class NodeGameState : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
 	{
-		if (nodes.Count > 0) {
+		if (nodes.Count > 0 && Network.player == n) {
 			HarvestButtonGUI buttons = (HarvestButtonGUI) main.GetComponent(typeof(HarvestButtonGUI));
 			buttons.showCommandButtons = true;
 			buttons.showNodeButtons = false;
@@ -488,14 +510,43 @@ public class NodeGameState : MonoBehaviour
 	
 	}
 	
-	public void addNode (GameObject node)
+	[RPC]
+	void addNode (int nodeKey)
 	{
-		nodes.Add (node);
+		if(nodes.Contains(sortedNodeList[nodeKey]) == false)
+		{
+			setOwnership();
+			HarvestButtonGUI buttons = (HarvestButtonGUI) main.GetComponent(typeof(HarvestButtonGUI));
+			buttons.setOwnership();
+			if(Network.player == n)
+				nodes.Add (sortedNodeList[nodeKey]);
+		}
+		//nodes.Add(serverController.sortedNodeList[nodeKey]);
+		//print ("Node Added to NodeGameState "+ nodes.Count);
+		//print ("Ownership NodeGameState "+ n.ToString() + " "+ Network.player.ToString());
 	}
 	
-	public void removeNode (GameObject node)
+	[RPC]
+	void removeNode (int nodeKey)
 	{
-		nodes.Remove (node);
+		if(nodes.Contains(sortedNodeList[nodeKey]) == true)
+			{
+			setOwnership();
+			HarvestButtonGUI buttons = (HarvestButtonGUI) main.GetComponent(typeof(HarvestButtonGUI));
+			buttons.setOwnership();
+			if(Network.player == n)
+				nodes.Remove (sortedNodeList[nodeKey]);
+		}
+		//nodes.Remove(serverController.sortedNodeList[nodeKey]);
+		//print ("Node Removed to NodeGameState "+ nodes.Count);
+		//print ("Ownership NodeGameState "+ n.ToString() + " "+ Network.player.ToString());
+	}
+	
+	void setOwnership()
+	{
+		GameObject tank = transform.parent.parent.parent.FindChild("NewTank").gameObject;
+		cpc = (ClientPlayerController) tank.GetComponent(typeof(ClientPlayerController));
+		n =  cpc.getOwner();
 	}
 	
 	private void nodeCommandResponse (ResourceNodeScript nodeScript)
