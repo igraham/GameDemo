@@ -54,8 +54,6 @@ public class PlayerGameState : MonoBehaviour {
 		{
 			//Application.LoadLevel("Defeat");
 		}
-		
-		
 	}
 	
 	[RPC]
