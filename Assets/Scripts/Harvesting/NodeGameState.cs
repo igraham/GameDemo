@@ -9,11 +9,10 @@ public class NodeGameState : MonoBehaviour
 	public ArrayList nodeTexts = new ArrayList ();
 	public ArrayList nodeModes = new ArrayList ();
 	public ArrayList nodeTypes = new ArrayList ();
-	public ArrayList progressBars = new ArrayList();
-	public ArrayList progressBarTexts = new ArrayList();
-	public ArrayList healthBars = new ArrayList();
-	public ArrayList healthBarTexts = new ArrayList();
-	
+	public ArrayList progressBars = new ArrayList ();
+	public ArrayList progressBarTexts = new ArrayList ();
+	public ArrayList healthBars = new ArrayList ();
+	public ArrayList healthBarTexts = new ArrayList ();
 	public GUIText nodeText2;
 	public GUIText nodeText3;
 	public GUIText nodeText4;
@@ -25,60 +24,48 @@ public class NodeGameState : MonoBehaviour
 	private bool nodeSelected = false;
 	private int selectedNode = 0;
 	public Camera main;
-	
 	private float maxProgressBarWidth = 100f;
 	private float minProgressBarWidth = 0f;
-	
 	public GUITexture progressBar1;
 	public GUITexture progressBar2;
 	public GUITexture progressBar3;
 	public GUITexture progressBar4;
 	public GUITexture progressBar5;
-	
 	public GUIText progressBarText1;
 	public GUIText progressBarText2;
 	public GUIText progressBarText3;
 	public GUIText progressBarText4;
 	public GUIText progressBarText5;
-	
 	public GUITexture nodeHealthBar1;
 	public GUITexture nodeHealthBar2;
 	public GUITexture nodeHealthBar3;
 	public GUITexture nodeHealthBar4;
 	public GUITexture nodeHealthBar5;
-	
 	public GUIText nodeHealthBarText1;
 	public GUIText nodeHealthBarText2;
 	public GUIText nodeHealthBarText3;
 	public GUIText nodeHealthBarText4;
 	public GUIText nodeHealthBarText5;
-	
 	public bool mineButtonPressed = false;
 	public bool expandButtonPressed = false;
 	public bool fortifyButtonPressed = false;
 	public bool defendButtonPressed = false;
 	public bool reproduceButtonPressed = false;
-	
 	public bool node1ButtonPressed = false;
 	public bool node2ButtonPressed = false;
 	public bool node3ButtonPressed = false;
 	public bool node4ButtonPressed = false;
 	public bool node5ButtonPressed = false;
-	
 	public bool confirmButtonPressed = false;
-	
 	public Dictionary<int,GameObject> sortedNodeList = new Dictionary<int,GameObject> ();
-	
 	public GameObject[] resourceNodes;
-	
 	ClientPlayerController cpc;
 	public NetworkPlayer n;
 	
 	void OnNetworkInstantiate (NetworkMessageInfo info)
 	{
 		resourceNodes = GameObject.FindGameObjectsWithTag ("ResourceNode");
-		foreach (GameObject node in resourceNodes) 
-		{
+		foreach (GameObject node in resourceNodes) {
 			ResourceNodeScript nodeScript = (ResourceNodeScript)node.GetComponent (typeof(ResourceNodeScript));
 			sortedNodeList.Add (nodeScript.resourceNodeNumber, node);
 			//print ("NodeGameState Nodes dictionary: "+nodeScript.resourceNodeNumber);
@@ -129,23 +116,22 @@ public class NodeGameState : MonoBehaviour
 		healthBars.Add (nodeHealthBar5);
 
 	
-		healthBarTexts.Add(nodeHealthBarText1);
-		healthBarTexts.Add(nodeHealthBarText2);
-		healthBarTexts.Add(nodeHealthBarText3);
-		healthBarTexts.Add(nodeHealthBarText4);
-		healthBarTexts.Add(nodeHealthBarText5);
+		healthBarTexts.Add (nodeHealthBarText1);
+		healthBarTexts.Add (nodeHealthBarText2);
+		healthBarTexts.Add (nodeHealthBarText3);
+		healthBarTexts.Add (nodeHealthBarText4);
+		healthBarTexts.Add (nodeHealthBarText5);
 	
 		
-		for(int i =0;i<5;i++)
-		{
-			GUIText progBarText = (GUIText) progressBarTexts[i];
-			GUITexture progBar = (GUITexture) progressBars[i];
-			GUIText healthBarText = (GUIText) healthBarTexts[i];
+		for (int i =0; i<5; i++) {
+			GUIText progBarText = (GUIText)progressBarTexts [i];
+			GUITexture progBar = (GUITexture)progressBars [i];
+			GUIText healthBarText = (GUIText)healthBarTexts [i];
 			
 			
 			progBarText.material.color = Color.grey;
-			progBar.pixelInset = new Rect(progBar.pixelInset.x,
-			progBar.pixelInset.y,minProgressBarWidth,progBar.pixelInset.height);
+			progBar.pixelInset = new Rect (progBar.pixelInset.x,
+			progBar.pixelInset.y, minProgressBarWidth, progBar.pixelInset.height);
 			
 			healthBarText.material.color = Color.black;
 			
@@ -162,7 +148,7 @@ public class NodeGameState : MonoBehaviour
 	void Update ()
 	{
 		if (nodes.Count > 0 && Network.player == n) {
-			HarvestButtonGUI buttons = (HarvestButtonGUI) main.GetComponent(typeof(HarvestButtonGUI));
+			HarvestButtonGUI buttons = (HarvestButtonGUI)main.GetComponent (typeof(HarvestButtonGUI));
 			buttons.showCommandButtons = true;
 			buttons.showNodeButtons = false;
 			buttons.showConfirmButton = false;
@@ -170,13 +156,13 @@ public class NodeGameState : MonoBehaviour
 			for (int i =0; i<nodes.Count; i++) {
 				GUIText text = (GUIText)nodeTexts [i];
 				GameObject node = (GameObject)nodes [i];
-				GUITexture progress = (GUITexture)progressBars[i];
-				GUIText progText = (GUIText) progressBarTexts[i];
-				GUITexture health = (GUITexture)healthBars[i];
-				GUIText healthText = (GUIText) healthBarTexts[i];
+				GUITexture progress = (GUITexture)progressBars [i];
+				GUIText progText = (GUIText)progressBarTexts [i];
+				GUITexture health = (GUITexture)healthBars [i];
+				GUIText healthText = (GUIText)healthBarTexts [i];
 				ResourceNodeScript nodeScript = (ResourceNodeScript)node.GetComponent (typeof(ResourceNodeScript));
 				
-				healthText.text = "Durability: "+ nodeScript.nodeHealth + "/" + nodeScript.nodeDurability;
+				healthText.text = "Durability: " + nodeScript.nodeHealth + "/" + nodeScript.nodeDurability;
 				
 				Component[] healChildren = health.GetComponentsInChildren<GUITexture> ();
 				foreach (GUITexture g in healChildren) 
@@ -188,29 +174,30 @@ public class NodeGameState : MonoBehaviour
 				
 				
 				
-				health.pixelInset = new Rect(health.pixelInset.x,
-						health.pixelInset.y,(maxProgressBarWidth - minProgressBarWidth) * 
-						((float)nodeScript.nodeHealth/(float)nodeScript.nodeDurability),progress.pixelInset.height);
+				health.pixelInset = new Rect (health.pixelInset.x,
+						health.pixelInset.y, (maxProgressBarWidth - minProgressBarWidth) * 
+						((float)nodeScript.nodeHealth / (float)nodeScript.nodeDurability), progress.pixelInset.height);
 					
 				
 				if (nodeScript.nodeMode == 0) {
 					text.text = "Node " + (i + 1) + "\n"
 							+ "Drone#: " + nodeScript.droneCount + "\n";
-					progress.pixelInset = new Rect(progress.pixelInset.x,
-						progress.pixelInset.y,(maxProgressBarWidth - minProgressBarWidth) * 
-						((float)nodeScript.minedAmount/(float)nodeScript.resourceCapacity),progress.pixelInset.height);
+					progress.pixelInset = new Rect (progress.pixelInset.x,
+						progress.pixelInset.y, (maxProgressBarWidth - minProgressBarWidth) * 
+						((float)nodeScript.minedAmount / (float)nodeScript.resourceCapacity), progress.pixelInset.height);
 					
-					progText.text = (string)nodeModes [nodeScript.nodeMode] + ": "+ nodeScript.minedAmount+"/"+nodeScript.resourceCapacity;
+					
+					progText.text = (string)nodeModes [nodeScript.nodeMode] + ": " + nodeScript.minedAmount + "/" + nodeScript.resourceCapacity;
 				}
 				if (nodeScript.nodeMode == 1) {
 					text.text = "Node " + (i + 1) + "\n"
 							+ "Drone#: " + nodeScript.droneCount;
 					
-					progress.pixelInset = new Rect(progress.pixelInset.x,
-						progress.pixelInset.y,minProgressBarWidth + (maxProgressBarWidth - minProgressBarWidth) * 
-						((float)nodeScript.progress/(float)nodeScript.calculatedCapacityUpgradeCost()),progress.pixelInset.height);
+					progress.pixelInset = new Rect (progress.pixelInset.x,
+						progress.pixelInset.y, minProgressBarWidth + (maxProgressBarWidth - minProgressBarWidth) * 
+						((float)nodeScript.progress / (float)nodeScript.calculatedCapacityUpgradeCost ()), progress.pixelInset.height);
 					
-					progText.text = (string)nodeModes [nodeScript.nodeMode]+ " " + nodeScript.capacityLevel;
+					progText.text = (string)nodeModes [nodeScript.nodeMode] + " " + nodeScript.capacityLevel;
 					
 					
 				}
@@ -219,32 +206,32 @@ public class NodeGameState : MonoBehaviour
 							+ "Drone#: " + nodeScript.droneCount + "\n";
 							
 					
-					progress.pixelInset = new Rect(progress.pixelInset.x,
-						progress.pixelInset.y,minProgressBarWidth + (maxProgressBarWidth - minProgressBarWidth) * 
-						((float)nodeScript.progress/(float)nodeScript.calculatedDurabilityUpgradeCost()),progress.pixelInset.height);
+					progress.pixelInset = new Rect (progress.pixelInset.x,
+						progress.pixelInset.y, minProgressBarWidth + (maxProgressBarWidth - minProgressBarWidth) * 
+						((float)nodeScript.progress / (float)nodeScript.calculatedDurabilityUpgradeCost ()), progress.pixelInset.height);
 					
-					progText.text = (string)nodeModes [nodeScript.nodeMode]+ " " + nodeScript.durabilityLevel;
+					progText.text = (string)nodeModes [nodeScript.nodeMode] + " " + nodeScript.durabilityLevel;
 					
 				}
 				if (nodeScript.nodeMode == 3) {
 					text.text = "Node " + (i + 1) + "\n"
 							+ "Drone#: " + nodeScript.droneCount + "\n";
 					
-					progress.pixelInset = new Rect(progress.pixelInset.x,
-						progress.pixelInset.y,minProgressBarWidth + (maxProgressBarWidth - minProgressBarWidth) * 
-						((float)nodeScript.progress/(float)nodeScript.calculatedDefenseUpgradeCost()),progress.pixelInset.height);
+					progress.pixelInset = new Rect (progress.pixelInset.x,
+						progress.pixelInset.y, minProgressBarWidth + (maxProgressBarWidth - minProgressBarWidth) * 
+						((float)nodeScript.progress / (float)nodeScript.calculatedDefenseUpgradeCost ()), progress.pixelInset.height);
 					
-					progText.text = (string)nodeModes [nodeScript.nodeMode]+ " " + nodeScript.turretLevel;
+					progText.text = (string)nodeModes [nodeScript.nodeMode] + " " + nodeScript.turretLevel;
 					
 				}
 				if (nodeScript.nodeMode == 4) {
 					text.text = "Node " + (i + 1);
 					
-					progress.pixelInset = new Rect(progress.pixelInset.x,
-						progress.pixelInset.y,minProgressBarWidth + (maxProgressBarWidth - minProgressBarWidth) * 
-						((float)nodeScript.progress/(float)nodeScript.calculatedReproductionUpgradeCost()),progress.pixelInset.height);
+					progress.pixelInset = new Rect (progress.pixelInset.x,
+						progress.pixelInset.y, minProgressBarWidth + (maxProgressBarWidth - minProgressBarWidth) * 
+						((float)nodeScript.progress / (float)nodeScript.calculatedReproductionUpgradeCost ()), progress.pixelInset.height);
 					
-					progText.text = (string)nodeModes [nodeScript.nodeMode]+ " " + (nodeScript.droneCount+1);
+					progText.text = (string)nodeModes [nodeScript.nodeMode] + " " + (nodeScript.droneCount + 1);
 				}
 			}
 			
@@ -265,7 +252,7 @@ public class NodeGameState : MonoBehaviour
 					
 					mineButtonPressed = false;
 					expandButtonPressed = false;
-					fortifyButtonPressed= false;
+					fortifyButtonPressed = false;
 					defendButtonPressed = false;
 					reproduceButtonPressed = false;
 	
@@ -285,7 +272,7 @@ public class NodeGameState : MonoBehaviour
 					
 					mineButtonPressed = false;
 					expandButtonPressed = false;
-					fortifyButtonPressed= false;
+					fortifyButtonPressed = false;
 					defendButtonPressed = false;
 					reproduceButtonPressed = false;
 	
@@ -305,7 +292,7 @@ public class NodeGameState : MonoBehaviour
 					
 					mineButtonPressed = false;
 					expandButtonPressed = false;
-					fortifyButtonPressed= false;
+					fortifyButtonPressed = false;
 					defendButtonPressed = false;
 					reproduceButtonPressed = false;
 	
@@ -325,7 +312,7 @@ public class NodeGameState : MonoBehaviour
 					
 					mineButtonPressed = false;
 					expandButtonPressed = false;
-					fortifyButtonPressed= false;
+					fortifyButtonPressed = false;
 					defendButtonPressed = false;
 					reproduceButtonPressed = false;
 	
@@ -345,7 +332,7 @@ public class NodeGameState : MonoBehaviour
 					
 					mineButtonPressed = false;
 					expandButtonPressed = false;
-					fortifyButtonPressed= false;
+					fortifyButtonPressed = false;
 					defendButtonPressed = false;
 					reproduceButtonPressed = false;
 	
@@ -370,7 +357,7 @@ public class NodeGameState : MonoBehaviour
 					
 					mineButtonPressed = false;
 					expandButtonPressed = false;
-					fortifyButtonPressed= false;
+					fortifyButtonPressed = false;
 					defendButtonPressed = false;
 					reproduceButtonPressed = false;
 					
@@ -390,7 +377,7 @@ public class NodeGameState : MonoBehaviour
 					
 					mineButtonPressed = false;
 					expandButtonPressed = false;
-					fortifyButtonPressed= false;
+					fortifyButtonPressed = false;
 					defendButtonPressed = false;
 					reproduceButtonPressed = false;
 	
@@ -410,7 +397,7 @@ public class NodeGameState : MonoBehaviour
 					
 					mineButtonPressed = false;
 					expandButtonPressed = false;
-					fortifyButtonPressed= false;
+					fortifyButtonPressed = false;
 					defendButtonPressed = false;
 					reproduceButtonPressed = false;
 	
@@ -430,7 +417,7 @@ public class NodeGameState : MonoBehaviour
 					
 					mineButtonPressed = false;
 					expandButtonPressed = false;
-					fortifyButtonPressed= false;
+					fortifyButtonPressed = false;
 					defendButtonPressed = false;
 					reproduceButtonPressed = false;
 	
@@ -450,7 +437,7 @@ public class NodeGameState : MonoBehaviour
 					
 					mineButtonPressed = false;
 					expandButtonPressed = false;
-					fortifyButtonPressed= false;
+					fortifyButtonPressed = false;
 					defendButtonPressed = false;
 					reproduceButtonPressed = false;
 	
@@ -468,8 +455,7 @@ public class NodeGameState : MonoBehaviour
 				buttons.showNodeButtons = true;
 				buttons.showConfirmButton = false;
 				
-				if(nodeSelected)
-				{
+				if (nodeSelected) {
 					buttons.showCommandButtons = false;
 					buttons.showNodeButtons = false;
 					buttons.showConfirmButton = true;
@@ -486,7 +472,7 @@ public class NodeGameState : MonoBehaviour
 			}
 		}
 		
-	/*	for (int j=nodes.Count; j<5; j++) {
+		/*	for (int j=nodes.Count; j<5; j++) {
 			GUIText text = (GUIText)nodeTexts [j];
 			text.text = "";
 			
@@ -513,13 +499,12 @@ public class NodeGameState : MonoBehaviour
 	[RPC]
 	void addNode (int nodeKey)
 	{
-		if(nodes.Contains(sortedNodeList[nodeKey]) == false)
-		{
-			setOwnership();
-			HarvestButtonGUI buttons = (HarvestButtonGUI) main.GetComponent(typeof(HarvestButtonGUI));
-			buttons.setOwnership();
-			if(Network.player == n)
-				nodes.Add (sortedNodeList[nodeKey]);
+		if (nodes.Contains (sortedNodeList [nodeKey]) == false) {
+			setOwnership ();
+			HarvestButtonGUI buttons = (HarvestButtonGUI)main.GetComponent (typeof(HarvestButtonGUI));
+			buttons.setOwnership ();
+			if (Network.player == n)
+				nodes.Add (sortedNodeList [nodeKey]);
 		}
 		//nodes.Add(serverController.sortedNodeList[nodeKey]);
 		//print ("Node Added to NodeGameState "+ nodes.Count);
@@ -529,28 +514,29 @@ public class NodeGameState : MonoBehaviour
 	[RPC]
 	void removeNode (int nodeKey)
 	{
-		if(nodes.Contains(sortedNodeList[nodeKey]) == true)
-			{
-			setOwnership();
-			HarvestButtonGUI buttons = (HarvestButtonGUI) main.GetComponent(typeof(HarvestButtonGUI));
-			buttons.setOwnership();
-			if(Network.player == n)
-				nodes.Remove (sortedNodeList[nodeKey]);
+		if (nodes.Contains (sortedNodeList [nodeKey]) == true) {
+			setOwnership ();
+			HarvestButtonGUI buttons = (HarvestButtonGUI)main.GetComponent (typeof(HarvestButtonGUI));
+			buttons.setOwnership ();
+			if (Network.player == n)
+				nodes.Remove (sortedNodeList [nodeKey]);
 		}
 		//nodes.Remove(serverController.sortedNodeList[nodeKey]);
 		//print ("Node Removed to NodeGameState "+ nodes.Count);
 		//print ("Ownership NodeGameState "+ n.ToString() + " "+ Network.player.ToString());
 	}
 	
-	void setOwnership()
+	void setOwnership ()
 	{
-		GameObject tank = transform.parent.parent.parent.FindChild("NewTank").gameObject;
-		cpc = (ClientPlayerController) tank.GetComponent(typeof(ClientPlayerController));
-		n =  cpc.getOwner();
+		GameObject tank = transform.parent.parent.parent.FindChild ("NewTank").gameObject;
+		cpc = (ClientPlayerController)tank.GetComponent (typeof(ClientPlayerController));
+		n = cpc.getOwner ();
 	}
 	
 	private void nodeCommandResponse (ResourceNodeScript nodeScript)
 	{
+		
+		//blocks commands if chosen node is busy.
 		
 		
 		if (nodeMode == 0) {
@@ -558,66 +544,72 @@ public class NodeGameState : MonoBehaviour
 			commandTimer = 0f;
 			fButtonPressed = false;
 			nodeSelected = false;
-			commandText.text = "";
-		}
-		if (nodeMode == 1) {
-			if (nodeScript.minedAmount >= nodeScript.calculatedCapacityUpgradeCost ()) {
-				commandTimer = 0f;
-				commandText.text = "Cost: " + (nodeScript.calculatedCapacityUpgradeCost ()) + "\n" + 
-								"Hit ` Key again To Commit Command\n" +
-								"Benefit: 25 capacity";
-				nodeSelected = true;
-			} else {
-				commandText.text = "Insuffient Materials";
-				commandTimer = 3f;
-				
-			}
-			//confirmCommand(nodeScript);
-			
-		}
-		if (nodeMode == 2) {
-			if (nodeScript.minedAmount >= nodeScript.calculatedDurabilityUpgradeCost ()) {
-				commandTimer = 0f;
-				commandText.text = "Cost: " + (nodeScript.calculatedDurabilityUpgradeCost ()) + "\n" + 
-								"Hit ` Key again To Commit Command\n" +
-								"Benefit: 50 Durability";
-				nodeSelected = true;
-			} else {
-				commandText.text = "Insuffient Materials";
-				commandTimer = 3f;
-				
-			}
-			//confirmCommand(nodeScript);
-		}
-		if (nodeMode == 3) {
-			if (nodeScript.minedAmount >= nodeScript.calculatedDefenseUpgradeCost () && nodeScript.droneCount > 1) {
-				commandTimer = 0f;
-				commandText.text = "Cost: 1 drone and" + (nodeScript.calculatedDefenseUpgradeCost ()) + "\n" + 
-								"Hit ` Key again To Commit Command\n" +
-								"Benefit: 1 Turret Level";	
-				nodeSelected = true;
-				//confirmCommand(nodeScript);
-			} else {
-				commandText.text = "Insuffient Materials";
-				commandTimer = 3f;
-				
-			}
-		}
-		if (nodeMode == 4) {
-			if (nodeScript.minedAmount >= nodeScript.calculatedReproductionUpgradeCost ()) {
-				commandTimer = 0f;
-				commandText.text = "Cost: " + (nodeScript.calculatedReproductionUpgradeCost ()) + "\n" + 
-								"Hit ` Key again To Commit Command\n" +
-								"Benefit: 1 Drone";	
-				nodeSelected = true;
-				//confirmCommand(nodeScript);
-			} else {
-				commandText.text = "Insuffient Materials";
-				commandTimer = 3f;
-				
-			}
+			commandText.text = "Test";
 		}
 		
+		if (nodeScript.isBusy == false) {
+			if (nodeMode == 1) {
+				if (nodeScript.minedAmount >= nodeScript.calculatedCapacityUpgradeCost ()) {
+					commandTimer = 0f;
+					commandText.text = "Cost: " + (nodeScript.calculatedCapacityUpgradeCost ()) + "\n" + 
+								"Hit ` Key again To Commit Command\n" +
+								"Benefit: 25 capacity";
+					nodeSelected = true;
+				} else {
+					commandText.text = "Insuffient Materials";
+					commandTimer = 3f;
+				
+				}
+				//confirmCommand(nodeScript);
+			
+			}
+			if (nodeMode == 2) {
+				if (nodeScript.minedAmount >= nodeScript.calculatedDurabilityUpgradeCost ()) {
+					commandTimer = 0f;
+					commandText.text = "Cost: " + (nodeScript.calculatedDurabilityUpgradeCost ()) + "\n" + 
+								"Hit ` Key again To Commit Command\n" +
+								"Benefit: 50 Durability";
+					nodeSelected = true;
+				} else {
+					commandText.text = "Insuffient Materials";
+					commandTimer = 3f;
+				
+				}
+				//confirmCommand(nodeScript);
+			}
+			if (nodeMode == 3) {
+				if (nodeScript.minedAmount >= nodeScript.calculatedDefenseUpgradeCost () && nodeScript.droneCount > 1) {
+					commandTimer = 0f;
+					commandText.text = "Cost: 1 drone and" + (nodeScript.calculatedDefenseUpgradeCost ()) + "\n" + 
+								"Hit ` Key again To Commit Command\n" +
+								"Benefit: 1 Turret Level";	
+					nodeSelected = true;
+					//confirmCommand(nodeScript);
+				} else {
+					commandText.text = "Insuffient Materials";
+					commandTimer = 3f;
+				
+				}
+			}
+			if (nodeMode == 4) {
+				if (nodeScript.minedAmount >= nodeScript.calculatedReproductionUpgradeCost ()) {
+					commandTimer = 0f;
+					commandText.text = "Cost: " + (nodeScript.calculatedReproductionUpgradeCost ()) + "\n" + 
+								"Hit ` Key again To Commit Command\n" +
+								"Benefit: 1 Drone";	
+					nodeSelected = true;
+					//confirmCommand(nodeScript);
+				} else {
+					commandText.text = "Insuffient Materials";
+					commandTimer = 3f;
+				
+				}
+			}
+		} 
+		else {
+			commandText.text = "Node Busy";
+			commandTimer = 3f;
+		}
 		
 	}
 	
@@ -637,7 +629,7 @@ public class NodeGameState : MonoBehaviour
 			
 			mineButtonPressed = false;
 			expandButtonPressed = false;
-			fortifyButtonPressed= false;
+			fortifyButtonPressed = false;
 			defendButtonPressed = false;
 			reproduceButtonPressed = false;
 	

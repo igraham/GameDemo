@@ -169,7 +169,7 @@ public class ClientPlayerController : MonoBehaviour
 				networkView.RPC("setClientShootingState", RPCMode.Server, shoot);
 			}
 			
-			if(colliding && node.nodeMode ==0)
+			if(colliding && node.nodeMode ==0 && node.isBusy == false)
 			{
 				player = (PlayerGameState) gameObject.GetComponent(typeof(PlayerGameState));
 			
@@ -205,7 +205,7 @@ public class ClientPlayerController : MonoBehaviour
 	
 	void OnTriggerStay(Collider other) {
 		
-		//if(node.nodeMode ==0)
+		if(node.isBusy ==false)
 			resourceCommandsText.text = "Hit C to add a drone \n"+
 										"Hit Z to remove a drone \n"+
 										"Hit X to collect mined resources";	

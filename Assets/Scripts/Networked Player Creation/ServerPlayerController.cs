@@ -125,19 +125,21 @@ public class ServerPlayerController : MonoBehaviour
 	{
 		if (sortedNodeList.ContainsKey (nodeNumber)) {	
 			ResourceNodeScript nodeScript = (ResourceNodeScript)sortedNodeList [nodeNumber].gameObject.GetComponent (typeof(ResourceNodeScript));
+			if(nodeScript.droneCount < 5)
+				{
 			
-			
-			sortedNodeList [nodeNumber].networkView.RPC ("addDrone", RPCMode.AllBuffered);
-			if(nodeScript.isNode == false)
-			{
+				sortedNodeList [nodeNumber].networkView.RPC ("addDrone", RPCMode.AllBuffered);
+				if(nodeScript.isNode == false)
+				{
 				
-				GUIText nodeText1 = transform.parent.transform.FindChild("HUDElements").transform.FindChild("NodeTexts").transform.FindChild("NodeText1").guiText;
-				NodeGameState nGState = (NodeGameState)nodeText1.GetComponent(typeof(NodeGameState));
+					GUIText nodeText1 = transform.parent.transform.FindChild("HUDElements").transform.FindChild("NodeTexts").transform.FindChild("NodeText1").guiText;
+					NodeGameState nGState = (NodeGameState)nodeText1.GetComponent(typeof(NodeGameState));
 				
-				nGState.networkView.RPC ("addNode",RPCMode.AllBuffered,nodeNumber);
+					nGState.networkView.RPC ("addNode",RPCMode.AllBuffered,nodeNumber);
+				}
+				//PlayerGameState player = (PlayerGameState) gameObject.GetComponent(typeof(PlayerGameState));
+				networkView.RPC ("playerRemoveDrone", RPCMode.AllBuffered);
 			}
-			//PlayerGameState player = (PlayerGameState) gameObject.GetComponent(typeof(PlayerGameState));
-			networkView.RPC ("playerRemoveDrone", RPCMode.AllBuffered);
 			
 		}
 	}
@@ -147,17 +149,21 @@ public class ServerPlayerController : MonoBehaviour
 	{
 		if (sortedNodeList.ContainsKey (nodeNumber)) {
 			
-			sortedNodeList [nodeNumber].networkView.RPC ("removeDrone", RPCMode.AllBuffered);
 			ResourceNodeScript nodeScript = (ResourceNodeScript)sortedNodeList [nodeNumber].gameObject.GetComponent (typeof(ResourceNodeScript));
+			if(nodeScript.droneCount > 0)
+				{
+				sortedNodeList [nodeNumber].networkView.RPC ("removeDrone", RPCMode.AllBuffered);
 			
-			if(nodeScript.droneCount <= 0)
-			{
-				GUIText nodeText1 = transform.parent.transform.FindChild("HUDElements").transform.FindChild("NodeTexts").transform.FindChild("NodeText1").guiText;
-				NodeGameState nGState = (NodeGameState)nodeText1.GetComponent(typeof(NodeGameState));
-				nGState.networkView.RPC ("removeNode",RPCMode.AllBuffered,nodeNumber);
+			
+				if(nodeScript.droneCount <= 0)
+				{
+					GUIText nodeText1 = transform.parent.transform.FindChild("HUDElements").transform.FindChild("NodeTexts").transform.FindChild("NodeText1").guiText;
+					NodeGameState nGState = (NodeGameState)nodeText1.GetComponent(typeof(NodeGameState));
+					nGState.networkView.RPC ("removeNode",RPCMode.AllBuffered,nodeNumber);
+				}
+			
+				networkView.RPC ("playerAddDrone", RPCMode.AllBuffered);
 			}
-			
-			networkView.RPC ("playerAddDrone", RPCMode.AllBuffered);
 		}
 	}
 	

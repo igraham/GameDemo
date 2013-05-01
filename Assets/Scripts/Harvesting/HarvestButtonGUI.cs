@@ -5,6 +5,7 @@ using System.Collections;
 
 public class HarvestButtonGUI : MonoBehaviour {
 	
+	
 	public bool showCommandButtons = false;
 	public bool showNodeButtons = false;
 	public bool showConfirmButton = false;

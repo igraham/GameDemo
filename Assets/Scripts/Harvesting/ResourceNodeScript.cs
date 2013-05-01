@@ -25,6 +25,7 @@ public class ResourceNodeScript : MonoBehaviour
 	public bool acceptCommands = true;
 	public int resourceNodeNumber =0;
 	public int extractable =0;
+	public bool isBusy =false;
 //	public GameObject turretModel;
 	
 	
@@ -108,6 +109,7 @@ public class ResourceNodeScript : MonoBehaviour
 			
 			if(nodeMode ==0)
 			{
+				isBusy =false;
 				if (minedAmount < resourceCapacity && isNode) {
 					timer += Time.deltaTime * droneCount;
 					minedAmount = Mathf.RoundToInt (timer);
@@ -121,7 +123,7 @@ public class ResourceNodeScript : MonoBehaviour
 			{
 				timer += Time.deltaTime * droneCount;
 				progress = Mathf.RoundToInt (timer);
-				
+				isBusy = true;
 				
 				if(progress >= calculatedCapacityUpgradeCost())
 				{
@@ -141,7 +143,7 @@ public class ResourceNodeScript : MonoBehaviour
 			{
 				timer += Time.deltaTime * droneCount;
 				progress = Mathf.RoundToInt (timer);
-				
+				isBusy = true;
 				
 				if(progress >= calculatedDurabilityUpgradeCost())
 				{
@@ -161,7 +163,7 @@ public class ResourceNodeScript : MonoBehaviour
 			{
 				timer += Time.deltaTime * droneCount;
 				progress = Mathf.RoundToInt (timer);
-				
+				isBusy = true;
 				
 				if(progress >= calculatedDefenseUpgradeCost())
 				{
@@ -180,7 +182,7 @@ public class ResourceNodeScript : MonoBehaviour
 			{
 				timer += Time.deltaTime * droneCount;
 				progress = Mathf.RoundToInt (timer);
-				
+				isBusy = true;
 				
 				if(progress >= calculatedReproductionUpgradeCost())
 				{
@@ -228,12 +230,15 @@ public class ResourceNodeScript : MonoBehaviour
 	[RPC]
 	public void extractResources ()
 	{
+		
 		resourceAmount = getRemainingResource();
 		int extracted = minedAmount;
 		//Debug.Log(""+ minedAmount);
 		timer = 0;
 		minedAmount = 0;
 		extractable = extracted;
+		
+			
 		//networkView.RPC("setExtractionAmount",RPCMode.AllBuffered,extracted,extracted);
 	}
 	
