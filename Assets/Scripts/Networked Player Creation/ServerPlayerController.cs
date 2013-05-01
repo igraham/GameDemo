@@ -70,8 +70,22 @@ public class ServerPlayerController : MonoBehaviour
 					obj.renderer.material.color = c;
 				}
 			}
+		}	
+		
+		
+	}
+	
+	void Start ()
+	{
+		if(Network.isServer)
+		{
+			if(gameObject.GetComponentInChildren<GUILayer>())
+			{
+				gameObject.GetComponentInChildren<GUILayer>().enabled = false;
+			}
 		}
 	}
+	
 	
 	[RPC]
 	void setClientTurretControls (float mouseX, float mouseY)
@@ -116,16 +130,19 @@ public class ServerPlayerController : MonoBehaviour
 		if(sortedNodeList.ContainsKey(nodeNumber))
 		{	
 			ResourceNodeScript nodeScript = (ResourceNodeScript)sortedNodeList [nodeNumber].gameObject.GetComponent (typeof(ResourceNodeScript));
-			/*if(nodeScript.isNode == false)
+			if(nodeScript.droneCount < 5)
 			{
-				gState.addNode(sortedNodeList[nodeNumber]);
-			}*/
-			
-			sortedNodeList [nodeNumber].networkView.RPC("addDrone", RPCMode.AllBuffered);
-			
-			//PlayerGameState player = (PlayerGameState) gameObject.GetComponent(typeof(PlayerGameState));
-			networkView.RPC("playerRemoveDrone", RPCMode.AllBuffered);
-			
+				sortedNodeList [nodeNumber].networkView.RPC ("addDrone", RPCMode.AllBuffered);
+				if(nodeScript.isNode == false)
+				{
+					GUIText nodeText1 = transform.parent.transform.FindChild("HUDElements").transform.FindChild("NodeTexts").transform.FindChild("NodeText1").guiText;
+					NodeGameState nGState = (NodeGameState)nodeText1.GetComponent(typeof(NodeGameState));
+				
+					nGState.networkView.RPC ("addNode",RPCMode.AllBuffered,nodeNumber);
+				}
+				//PlayerGameState player = (PlayerGameState) gameObject.GetComponent(typeof(PlayerGameState));
+				networkView.RPC ("playerRemoveDrone", RPCMode.AllBuffered);
+			}
 		}
 	}
 	
@@ -136,22 +153,26 @@ public class ServerPlayerController : MonoBehaviour
 		{
 			sortedNodeList [nodeNumber].networkView.RPC ("removeDrone", RPCMode.AllBuffered);
 			ResourceNodeScript nodeScript = (ResourceNodeScript)sortedNodeList [nodeNumber].gameObject.GetComponent (typeof(ResourceNodeScript));
+			if(nodeScript.droneCount > 0)
+				{
+				sortedNodeList [nodeNumber].networkView.RPC ("removeDrone", RPCMode.AllBuffered);
+				if(nodeScript.droneCount <= 0)
+				{
+					GUIText nodeText1 = transform.parent.transform.FindChild("HUDElements").transform.FindChild("NodeTexts").transform.FindChild("NodeText1").guiText;
+					NodeGameState nGState = (NodeGameState)nodeText1.GetComponent(typeof(NodeGameState));
+					nGState.networkView.RPC ("removeNode",RPCMode.AllBuffered,nodeNumber);
+				}
 			
-			/*if(nodeScript.droneCount <= 0)
-			{
-				gState.removeNode(sortedNodeList[nodeNumber]);
-			}*/
-			networkView.RPC ("playerAddDrone", RPCMode.AllBuffered);
+				networkView.RPC ("playerAddDrone", RPCMode.AllBuffered);
+			}
 		}
 	}
 	
 	[RPC]
 	void requestToCollectResources(int nodeNumber)
 	{
-		if(sortedNodeList.ContainsKey(nodeNumber))
+		if (sortedNodeList.ContainsKey (nodeNumber))
 		{
-			PlayerGameState player = (PlayerGameState)gameObject.GetComponent (typeof(PlayerGameState));
-			
 			sortedNodeList [nodeNumber].networkView.RPC ("extractResources", RPCMode.AllBuffered);
 			ResourceNodeScript nodeScript = (ResourceNodeScript)sortedNodeList [nodeNumber].gameObject.GetComponent (typeof(ResourceNodeScript));
 			//player.addResourcesHeld(sortedNodeList[nodeNumber].networkView.RPC("extractResources",RPCMode.AllBuffered));
@@ -259,6 +280,7 @@ public class ServerPlayerController : MonoBehaviour
 			playerCamera.transform.rotation = Quaternion.Slerp(playerCamera.transform.rotation, 
 															   		   turret.transform.rotation, 
 															   		   Time.deltaTime * 3f);
+			
 		}
 		//move backwards
 		if(reverse)
@@ -267,6 +289,7 @@ public class ServerPlayerController : MonoBehaviour
 			if(rigidbody.velocity.magnitude > maxSpeed)
 			{
 				rigidbody.velocity = rigidbody.velocity.normalized * maxSpeed;
+				
 			}
 		}
 		//rotate right
@@ -317,7 +340,10 @@ public class ServerPlayerController : MonoBehaviour
 			prefab.rigidbody.AddForce(gunBarrel.transform.forward.normalized*18f, ForceMode.Impulse);
 			Destroy(prefab, 5f);
 			shotTimer = false;
-			Invoke("ShotTimer", .5f);
+			Invoke ("ShotTimer", .5f);
+			//gameObject.transform.FindChild("mortarSound").GetComponent<MortarPlayer>().playMortar();
+			NetworkView netView = gameObject.transform.FindChild("mortarSound").gameObject.networkView;
+			netView.RPC("networkplayMortar",RPCMode.All);
 		}
 	}
 	
