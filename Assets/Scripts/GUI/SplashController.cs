@@ -4,7 +4,7 @@ using System.Collections;
 public class SplashController : MonoBehaviour {
 
 	
-    string gameID = "GGC 4650 Demo 2";
+    string gameID = "GGC 4650 Salvage of Eden";
 	public GUIStyle myStyle = new GUIStyle();
 	
 	void Awake()
