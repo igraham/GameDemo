@@ -21,6 +21,7 @@ public class GameServer : MonoBehaviour {
 	//Later on, use colors for team colors in spawning.
 	void Awake () {
 		enabled = Network.isServer;
+		
 		Application.runInBackground = true;
 		for(int i = 0; i < spawnPoints.Length; i++)
 		{
