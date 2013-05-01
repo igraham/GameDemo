@@ -180,6 +180,13 @@ public class ServerPlayerController : MonoBehaviour
 		}
 	}
 	
+	[RPC]
+	void requestToCollectDropppedResources(int amt)
+	{
+		networkView.RPC ("addResourcesHeld", RPCMode.AllBuffered, amt);
+		
+	}
+	
 	/*[RPC]
 	void setResourceNodeIndex()
 	{

@@ -507,8 +507,6 @@ public class NodeGameState : MonoBehaviour
 				nodes.Add (sortedNodeList [nodeKey]);
 		}
 		//nodes.Add(serverController.sortedNodeList[nodeKey]);
-		print ("Node Added to NodeGameState "+ nodes.Count);
-		print ("Ownership NodeGameState "+ n.ToString() + " "+ Network.player.ToString());
 	}
 	
 	[RPC]

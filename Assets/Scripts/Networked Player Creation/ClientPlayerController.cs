@@ -15,8 +15,13 @@ public class ClientPlayerController : MonoBehaviour
 	bool shooting = false;
 	
 	bool colliding = false;
+	bool collect = false;
+	int amount= 0;
 	ResourceNodeScript node;
 	PlayerGameState player;
+	CollectDroppedResource cdr;
+	GameObject dR;
+	float timer = 0f;
 	
 	public GUIText resourceCommandsText;
 	
@@ -145,6 +150,26 @@ public class ClientPlayerController : MonoBehaviour
 					networkView.RPC("requestToCollectResources", RPCMode.Server, node.resourceNodeNumber);
 				}
 			}
+			if(collect)
+			{
+				
+				if(timer == 0.0f)
+				{
+					if(dR != null)
+					{
+						networkView.RPC("requestToCollectDropppedResources", RPCMode.Server, amount);
+					
+						cdr.networkView.RPC("destroy",RPCMode.AllBuffered);
+					}
+				}
+				timer += Time.deltaTime;
+					if(timer > 3.0f)
+					{
+						collect = false;
+						timer = 0f;
+					}
+				
+			}
 			
 			//store history
 			f = forward;
@@ -161,21 +186,46 @@ public class ClientPlayerController : MonoBehaviour
 	
 	void OnTriggerStay(Collider other)
 	{
-		if(node.isBusy ==false)
-			resourceCommandsText.text = "Hit C to add a drone \n"+
-										"Hit Z to remove a drone \n"+
-										"Hit X to collect mined resources";	
+		
+		if(other.tag.Equals("DroppedResource"))
+		{
+		}	
+		else
+		{
+			if(node.isBusy ==false)
+				resourceCommandsText.text = "Hit C to add a drone \n"+
+											"Hit Z to remove a drone \n"+
+											"Hit X to collect mined resources";	
+		}
 	}
 	
 	void OnTriggerEnter(Collider other)
 	{
-		colliding = true;
-		node = (ResourceNodeScript) other.collider.gameObject.GetComponent(typeof(ResourceNodeScript));
+		if(other.tag.Equals("DroppedResource"))
+		{
+			collect = true;
+			CollectDroppedResource collector = (CollectDroppedResource)other.GetComponent(typeof(CollectDroppedResource));
+			amount = collector.getResourceAmount();
+			cdr = (CollectDroppedResource) other.GetComponent(typeof(CollectDroppedResource));
+			dR = other.gameObject;
+		}	
+		else
+		{
+			colliding = true;
+			node = (ResourceNodeScript) other.collider.gameObject.GetComponent(typeof(ResourceNodeScript));
+			
+		}
 	}
 	
 	void OnTriggerExit(Collider other)
 	{
-		resourceCommandsText.text ="";
-		colliding = false;
+		if(other.tag.Equals("DroppedResource"))
+		{
+		}	
+		else
+		{
+			resourceCommandsText.text ="";
+			colliding = false;
+		}
 	}
 }

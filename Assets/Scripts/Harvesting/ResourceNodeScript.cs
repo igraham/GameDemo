@@ -27,6 +27,7 @@ public class ResourceNodeScript : MonoBehaviour
 	public int extractable =0;
 	public bool isBusy =false;
 	int reprodCost =0;
+	public GameObject droppedResources;
 //	public GameObject turretModel;
 	
 	void Start ()
@@ -99,6 +100,9 @@ public class ResourceNodeScript : MonoBehaviour
 				//gState.removeNode (this.gameObject);
 				isNode = false;
 				gameObject.tag = "Untagged";
+				GameObject dr = Network.Instantiate(droppedResources,transform.position,Quaternion.identity,0) as GameObject;
+				CollectDroppedResource cdr = (CollectDroppedResource) dr.GetComponent(typeof(CollectDroppedResource));
+				cdr.setResourceAmount(minedAmount/2);
 			}
 		//}
 		if (isNode)

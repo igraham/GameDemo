@@ -14,6 +14,14 @@ public class PlayerGameState : MonoBehaviour {
 	private float minPlayerLifeBarWidth = 0;
 	private float maxPlayerLifeBarWidth = 200;
 	public GUIText lifebarText;
+	public GameObject droppedResources;
+	float dropTimer = 0f;
+	bool drop = false;
+	int resourcesDropped =0;
+	Vector3 v;
+	public GUIText gameState;
+	NetworkPlayer n;
+	ClientPlayerController cpc;
 	
 	// Use this for initialization
 	
@@ -52,7 +60,26 @@ public class PlayerGameState : MonoBehaviour {
 		//game over
 		if(playerHealth <= 0)
 		{
-			//Application.LoadLevel("Defeat");
+			v = transform.position;
+			networkView.RPC("respawnPlayer",RPCMode.Server);
+			playerHealth = playerDurability;
+			resourcesDropped = resourcesHeld;
+			resourcesHeld = 0;
+			drop = true;
+		}
+		
+		if(drop)
+		{
+			dropTimer+= Time.deltaTime;
+			setOwnership();
+			if(dropTimer > 3.0f && n == Network.player)
+			{
+				GameObject dr = Network.Instantiate(droppedResources,v,Quaternion.identity,0) as GameObject;
+				CollectDroppedResource cdr = (CollectDroppedResource) dr.GetComponent(typeof(CollectDroppedResource));
+				cdr.setResourceAmount(resourcesDropped/2);
+				drop = false;
+				dropTimer =0;	
+			}
 		}
 	}
 	
@@ -68,7 +95,7 @@ public class PlayerGameState : MonoBehaviour {
 	public void addResourcesHeld(int amount)
 	{
 		resourcesHeld += amount;
-		print("Resources: " + resourcesHeld);
+		//print("Resources: " + resourcesHeld);
 	}
 	
 	[RPC]
@@ -90,4 +117,11 @@ public class PlayerGameState : MonoBehaviour {
 			"New health is: "+playerHealth; 
 		Instantiate (debugText);*/
 	}
+	
+	public void setOwnership()
+		{
+			cpc = (ClientPlayerController)gameObject.GetComponent (typeof(ClientPlayerController));
+			n = cpc.getOwner ();
+			
+		}
 }
