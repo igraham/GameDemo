@@ -6,6 +6,7 @@ public class ServerPlayerController : MonoBehaviour
 {
 	public float speed = 5f;
 	public float maxSpeed = 15f;
+	public float motarTimer = 0f;
 	public Vector3 rotationSpeed = new Vector3 (0, 100f, 0);
 	bool forward = false;
 	bool reverse = false;
@@ -16,6 +17,9 @@ public class ServerPlayerController : MonoBehaviour
 	float mouseH = 0;
 	float mouseV = 0;
 	bool shoot = false;
+	bool lclick = false;
+	int charge = 0;
+	float chargeRate = 0.5f;
 	bool shotTimer = true;
 	public GameObject turret;
 	public GameObject gunBarrel;
@@ -72,11 +76,6 @@ public class ServerPlayerController : MonoBehaviour
 		
 	}
 	
-	void Start ()
-	{
-		
-	}
-	
 	[RPC]
 	void setClientTurretControls (float mouseX, float mouseY)
 	{
@@ -99,6 +98,12 @@ public class ServerPlayerController : MonoBehaviour
 	void setClientShootingState (bool shooting)
 	{
 		shoot = shooting;
+	}
+	
+	[RPC]
+	void setClientShootingState2 (bool shooting)
+	{
+		lclick = shooting;
 	}
 	
 	[RPC]
@@ -288,15 +293,48 @@ public class ServerPlayerController : MonoBehaviour
 	
 	private void shootingControls ()
 	{
+		
 		if (shoot && shotTimer)
 		{
+			float motarSpeed = 18f + (18f * motarTimer);
+			print ("motarSpeed is " + motarSpeed);
 			GameObject prefab = Network.Instantiate(bullet, gunBarrel.transform.position + 
 				gunBarrel.transform.forward.normalized*2.108931f, 
 				Quaternion.identity, 0) as GameObject;
-			prefab.rigidbody.AddForce (gunBarrel.transform.forward.normalized*18f, ForceMode.Impulse);
+			prefab.rigidbody.AddForce (gunBarrel.transform.forward.normalized*motarSpeed, ForceMode.Impulse);
 			Destroy (prefab, 5f);
 			shotTimer = false;
 			Invoke ("ShotTimer", .5f);
+		}
+	}
+	
+	void Update() 
+	{
+		
+		float max = 2f;
+		//check to see if the left click is down
+		if(lclick)
+		{
+			charge = 1;
+		}
+		//start charging
+		if(charge == 1)
+		{
+			motarTimer += chargeRate * Time.deltaTime;
+			print ("motarTimer = " + motarTimer);
+		}
+		
+		if(motarTimer >= max)
+		{
+			motarTimer = max;
+			charge = 0;
+		}
+		
+		//after the left click has been release reset the charge and motartimer
+		if(shoot)
+		{
+			charge = 0;
+			motarTimer = 0f;
 		}
 	}
 	

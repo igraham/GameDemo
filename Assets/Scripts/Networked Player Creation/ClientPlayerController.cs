@@ -13,7 +13,7 @@ public class ClientPlayerController : MonoBehaviour
 	float mouseY = 0;
 	NetworkPlayer owner;
 	bool shooting = false;
-	
+	bool shooting2 = false;
 	bool colliding = false;
 	ResourceNodeScript node;
 	PlayerGameState player;
@@ -120,7 +120,8 @@ public class ClientPlayerController : MonoBehaviour
 			bool strLeft = Input.GetButton("StrLeft");
 			float mouseH = Input.GetAxis("Mouse X");
 			float mouseV = Input.GetAxis("Mouse Y");
-			bool shoot = Input.GetButton("Fire1") && Input.mousePosition.y < Screen.height -50;
+			bool shoot = Input.GetButtonUp("Fire1") && Input.mousePosition.y < Screen.height -50;
+			bool lclick = Input.GetButton("Fire1");
 			
 			if(f!=forward || r!=reverse || rotR!=rotateRight || rotL!=rotateLeft 
 				|| strR!=strRight || strL!=strLeft)
@@ -138,8 +139,14 @@ public class ClientPlayerController : MonoBehaviour
 			
 			if(shoot!=shooting)
 			{
-				//RPC to server to send mouse click for shooting.
+				//RPC to server to send mouse click for when the left click is released.
 				networkView.RPC("setClientShootingState", RPCMode.Server, shoot);
+			}
+			
+			if(lclick!=shooting2)
+			{
+				//RPC to server to send mouse click is being held down.
+				networkView.RPC("setClientShootingState2", RPCMode.Server, lclick);
 			}
 			
 			if(colliding && node.nodeMode ==0)
@@ -160,7 +167,6 @@ public class ClientPlayerController : MonoBehaviour
 				}
 			}
 			
-			
 			//store history
 			f = forward;
 			r = reverse;
@@ -171,9 +177,8 @@ public class ClientPlayerController : MonoBehaviour
 			mouseX = mouseH;
 			mouseY = mouseV;
 			shooting = shoot;
+			shooting2 = lclick;
 		}
-		
-		
 	}
 	
 	void OnTriggerStay(Collider other) {
