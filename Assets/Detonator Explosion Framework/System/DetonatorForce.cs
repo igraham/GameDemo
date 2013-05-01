@@ -65,7 +65,6 @@ public class DetonatorForce : DetonatorComponent {
 				}
 				if(hit.rigidbody)
 				{
-					print(hit.rigidbody.tag);
 					RaycastHit hitInfo;
 					if (Physics.Linecast(transform.position, hit.transform.position, out hitInfo))
 					{
@@ -92,9 +91,8 @@ public class DetonatorForce : DetonatorComponent {
 						float dist = Vector3.Distance (hit.transform.position, transform.position);
 						if(dist <= 10f)
 						{
-							EnemyDeath dura2 = (EnemyDeath) hit.gameObject.GetComponent(typeof(EnemyDeath));
 							int percent = (int)(bombDamage*(transform.position-hit.transform.position).magnitude/10f);
-							dura2.damageDurability(percent);
+							hit.gameObject.networkView.RPC ("damageEnemy", RPCMode.AllBuffered, percent);
 						}
 					}
 					if(hit.rigidbody.tag == "Player")
