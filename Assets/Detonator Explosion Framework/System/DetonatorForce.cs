@@ -68,19 +68,31 @@ public class DetonatorForce : DetonatorComponent {
 					RaycastHit hitInfo;
 					if (Physics.Linecast(transform.position, hit.transform.position, out hitInfo))
 					{
-						if(hitInfo.transform.tag == "Terrain" || hitInfo.transform.tag == "Wall")
+						if(hitInfo.transform.tag == "Terrain")
 						{
 							continue;
 						}
 					}
+					
+					if(hit.rigidbody.tag == "Wall")
+					{
+						float dist = Vector3.Distance (hit.transform.position, transform.position);
+						if(hit.gameObject && dist <= 10f)
+						{
+							//print ("wall hit!");
+							int percent = (int)(25*(transform.position-hit.transform.position).magnitude/10f);
+							hit.gameObject.networkView.RPC ("damageWall", RPCMode.AllBuffered, percent);
+						}
+						continue;
+					}
+					
 					if(hit.rigidbody.tag == "Enemy")
 					{
 						float dist = Vector3.Distance (hit.transform.position, transform.position);
 						if(dist <= 10f)
 						{
-							EnemyDeath dura2 = (EnemyDeath) hit.gameObject.GetComponent(typeof(EnemyDeath));
 							int percent = (int)(bombDamage*(transform.position-hit.transform.position).magnitude/10f);
-							dura2.damageDurability(percent);
+							hit.gameObject.networkView.RPC ("damageEnemy", RPCMode.AllBuffered, percent);
 						}
 					}
 					if(hit.rigidbody.tag == "Player")
