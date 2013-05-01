@@ -37,8 +37,7 @@ public class BulletScript : MonoBehaviour {
 			}
 			else if(collision.gameObject.tag.Equals ("Enemy"))
 			{
-				EnemyDeath dura2 = (EnemyDeath) collision.gameObject.GetComponent(typeof(EnemyDeath));
-				dura2.damageDurability(damage);
+				collision.gameObject.networkView.RPC ("damageEnemy", RPCMode.AllBuffered, damage);
 			}
 			else if(collision.gameObject.tag.Equals ("Player"))
 			{
