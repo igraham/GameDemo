@@ -32,6 +32,7 @@ public class ShootScript : MonoBehaviour {
 				Destroy(prefab,5f);
 			    shotTimer=false;
 				Invoke("ShotTimer",.5f);
+			
 			}
 		}
 	}

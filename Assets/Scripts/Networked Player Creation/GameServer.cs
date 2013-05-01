@@ -19,7 +19,8 @@ public class GameServer : MonoBehaviour {
 	bool processSpawnRequests = false;
 	//	Color[] playerColors = {Color.black, Color.blue, Color.green, Color.red};
 	//Later on, use colors for team colors in spawning.
-	void Awake () {
+	void Awake()
+	{
 		enabled = Network.isServer;
 		
 		Application.runInBackground = true;
@@ -27,7 +28,6 @@ public class GameServer : MonoBehaviour {
 		{
 			spawnLocations[i] = spawnPoints[i].transform.position;
 		}
-		
 		/*resourceNodes = GameObject.FindGameObjectsWithTag("ResourceNode");
 		
 		foreach(GameObject node in resourceNodes)
@@ -41,13 +41,12 @@ public class GameServer : MonoBehaviour {
 		//requestSpawn (Network.player);
 	}
 	
-	void OnPlayerConnected(NetworkPlayer player) {
+	void OnPlayerConnected(NetworkPlayer player)
+	{
 		Debug.Log ("Spawning playerPrefab for new client");
 		scheduledSpawns.Add (player);
 		processSpawnRequests = true;
     }
-	
-	
 	
 	[RPC]
 	void requestSpawn(NetworkPlayer requester)
@@ -85,7 +84,6 @@ public class GameServer : MonoBehaviour {
 		if(scheduledSpawns.Count == 0)
 		{
 			Debug.Log ("spawns is empty! stopping spawn request processing");
-			
 			processSpawnRequests = false;
 		}
 	}
@@ -109,5 +107,4 @@ public class GameServer : MonoBehaviour {
 			playerTracker.Remove (found);
 		}
 	}
-	
 }
