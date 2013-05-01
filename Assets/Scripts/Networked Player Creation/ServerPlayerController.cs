@@ -79,8 +79,6 @@ public class ServerPlayerController : MonoBehaviour
 				}
 			}
 		}	
-		
-		
 	}
 
 	void Start ()
@@ -337,7 +335,7 @@ public class ServerPlayerController : MonoBehaviour
 	
 	private void shootingControls()
 	{
-		if(shoot && shotTimer)
+		if(!shoot && shotTimer)
 		{
 			float motarSpeed = 18f + (18f * motarTimer);
 			print ("motarSpeed is " + motarSpeed);
@@ -356,7 +354,7 @@ public class ServerPlayerController : MonoBehaviour
 	void Update() 
 	{
 		//check to see if the left click is down
-		if(lclick)
+		if(shoot)
 		{
 			charge = 1;
 		}
@@ -375,7 +373,7 @@ public class ServerPlayerController : MonoBehaviour
 		}
 		
 		//after the left click has been release reset the charge and motartimer
-		if(shoot)
+		if(!shoot)
 		{
 			charge = 0;
 			motarTimer = 0f;
@@ -414,9 +412,9 @@ public class ServerPlayerController : MonoBehaviour
 	{
 		if (!isRespawning)
 		{
-			turretControls ();
-			movementControls ();
-			shootingControls ();
+			turretControls();
+			movementControls();
+			shootingControls();
 			MshootingControls();
 		}
 	}
