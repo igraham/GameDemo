@@ -38,7 +38,7 @@ public class ParticleTester : MonoBehaviour {
 			thisFlareSystem.name = obj.name;
 			thisFlareSystem.particleObject = Instantiate (obj, Vector3.zero, Quaternion.identity) as GameObject;
 			thisFlareSystem.particleSystems = thisFlareSystem.particleObject.GetComponentsInChildren<ParticleSystem>();
-			thisFlareSystem.particleObject.SetActiveRecursively (false);
+			thisFlareSystem.particleObject.SetActive (false);
 			thisFlareSystem.toggleFlag = false;
 			thisFlareSystem.particleObject.transform.parent = this.transform;
 			flareSystems.Add (thisFlareSystem);
@@ -48,7 +48,7 @@ public class ParticleTester : MonoBehaviour {
 			thisFlareSystem.name = obj.name;
 			thisFlareSystem.particleObject = Instantiate (obj, Vector3.zero, Quaternion.identity) as GameObject;
 			thisFlareSystem.particleSystems = thisFlareSystem.particleObject.GetComponentsInChildren<ParticleSystem>();
-			thisFlareSystem.particleObject.SetActiveRecursively (false);
+			thisFlareSystem.particleObject.SetActive (false);
 			thisFlareSystem.toggleFlag = false;
 			thisFlareSystem.particleObject.transform.parent = this.transform;
 			directionalSystems.Add (thisFlareSystem);
@@ -85,7 +85,7 @@ public class ParticleTester : MonoBehaviour {
 				foreach (FlareSystem fs in flareSystems) {
 					fs.toggleFlag = GUILayout.Toggle (fs.toggleFlag, fs.name);
 					if (fs.toggleFlag != fs.savedToggleFlag) {
-						fs.particleObject.SetActiveRecursively (fs.toggleFlag);
+						fs.particleObject.SetActive (fs.toggleFlag);
 						if (fs.toggleFlag) {
 							foreach (ParticleSystem pSys in fs.particleSystems) {
 								pSys.Clear ();
@@ -101,7 +101,7 @@ public class ParticleTester : MonoBehaviour {
 				foreach (FlareSystem fs in directionalSystems) {
 					fs.toggleFlag = GUILayout.Toggle (fs.toggleFlag, fs.name);
 					if (fs.toggleFlag != fs.savedToggleFlag) {
-						fs.particleObject.SetActiveRecursively (fs.toggleFlag);
+						fs.particleObject.SetActive (fs.toggleFlag);
 						if (fs.toggleFlag) {
 							foreach (ParticleSystem pSys in fs.particleSystems) {
 								pSys.Clear ();
@@ -147,12 +147,12 @@ public class ParticleTester : MonoBehaviour {
 		foreach (FlareSystem fs in flareSystems) {
 			fs.toggleFlag = false;
 			fs.savedToggleFlag = false;
-			fs.particleObject.SetActiveRecursively (false);
+			fs.particleObject.SetActive (false);
 		}
 		foreach (FlareSystem fs in directionalSystems) {
 			fs.toggleFlag = false;
 			fs.savedToggleFlag = false;
-			fs.particleObject.SetActiveRecursively (false);
+			fs.particleObject.SetActive (false);
 		}
 	}
 		
