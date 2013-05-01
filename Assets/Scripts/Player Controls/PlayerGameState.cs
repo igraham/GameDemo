@@ -158,7 +158,8 @@ public class PlayerGameState : MonoBehaviour {
 	public void collectResources()
 	{
 		totalResources += resourcesHeld;
-		networkView.RPC ("addResources", RPCMode.Server, resourcesHeld, networkView);
+		GameObject obj = GameObject.Find("NetManager");
+		obj.networkView.RPC ("addResources", RPCMode.Server, resourcesHeld, networkView);
 		resourcesHeld = 0;
 	}
 }

@@ -188,6 +188,8 @@ public class ClientPlayerController : MonoBehaviour
 		if(other.tag.Equals("DroppedResource"))
 		{
 		}	
+		else if(other.tag.Equals("PlayerSpawn"))
+		{}
 		else
 		{
 			if(node.isBusy ==false)
@@ -219,20 +221,25 @@ public class ClientPlayerController : MonoBehaviour
 			amount = collector.getResourceAmount();
 			cdr = (CollectDroppedResource) other.GetComponent(typeof(CollectDroppedResource));
 			dR = other.gameObject;
-		}	
+		}
+		else if(other.tag.Equals("PlayerSpawn"))
+		{}
 		else
 		{
 			colliding = true;
-			node = (ResourceNodeScript) other.collider.gameObject.GetComponent(typeof(ResourceNodeScript));
+			
 			
 		}
+		node = (ResourceNodeScript) other.collider.gameObject.GetComponent(typeof(ResourceNodeScript));
 	}
 	
 	void OnTriggerExit(Collider other)
 	{
 		if(other.tag.Equals("DroppedResource"))
 		{
-		}	
+		}
+		else if(other.tag.Equals("PlayerSpawn"))
+		{}
 		else
 		{
 			resourceCommandsText.text ="";
