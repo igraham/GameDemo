@@ -91,6 +91,8 @@ public class ResourceNodeScript : MonoBehaviour
 				foreach (Renderer r in nodeRenderers) {
 					r.enabled = false;
 				}	
+			
+				isBusy =false;
 				/*Component[] turretRenderers = turretModel.GetComponentsInChildren<Renderer> ();
 				foreach (Renderer r in turretRenderers) {
 				r.enabled = false;
