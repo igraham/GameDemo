@@ -22,6 +22,7 @@ public class GameServer : MonoBehaviour {
 	void Awake()
 	{
 		enabled = Network.isServer;
+		
 		Application.runInBackground = true;
 		for(int i = 0; i < spawnPoints.Length; i++)
 		{
