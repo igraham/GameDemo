@@ -65,7 +65,6 @@ public class DetonatorForce : DetonatorComponent {
 				}
 				if(hit.rigidbody)
 				{
-					print(hit.rigidbody.tag);
 					RaycastHit hitInfo;
 					if (Physics.Linecast(transform.position, hit.transform.position, out hitInfo))
 					{
