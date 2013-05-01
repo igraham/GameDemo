@@ -16,13 +16,17 @@ public class ServerPlayerController : MonoBehaviour
 	float mouseH = 0;
 	float mouseV = 0;
 	bool shoot = false;
+	bool mShoot = false;
+	bool mShotTimer = true;
 	bool shotTimer = true;
 	public GameObject turret;
 	public GameObject gunBarrel;
 	public Camera playerCamera;
 	public GameObject bullet;
+	public GameObject mBullet;
 	GameObject spawnLocation;
 	bool isRespawning = false;
+	public int mDamage = 1;
 	public GameObject[] resourceNodes;
 	//public static ArrayList nodeScripts = new ArrayList();
 	public Dictionary<int,GameObject> sortedNodeList = new Dictionary<int,GameObject> ();
@@ -100,6 +104,12 @@ public class ServerPlayerController : MonoBehaviour
 	void setClientShootingState (bool shooting)
 	{
 		shoot = shooting;
+	}
+	
+	[RPC]
+	void MsetClientShootingState (bool mShooting)
+	{
+		mShoot = mShooting;
 	}
 	
 	[RPC]
@@ -289,6 +299,10 @@ public class ServerPlayerController : MonoBehaviour
 		shotTimer = true;	
 	}
 	
+	void MShotTimer()
+	{
+		mShotTimer = true;
+	}
 	private void shootingControls ()
 	{
 		if (shoot && shotTimer)
@@ -300,9 +314,38 @@ public class ServerPlayerController : MonoBehaviour
 			Destroy (prefab, 5f);
 			shotTimer = false;
 			Invoke ("ShotTimer", .5f);
-			//gameObject.transform.FindChild("mortarSound").GetComponent<MortarPlayer>().playMortar();
 			NetworkView netView = gameObject.transform.FindChild("mortarSound").gameObject.networkView;
 			netView.RPC("networkplayMortar",RPCMode.All);
+		}
+	}
+	private void MshootingControls ()
+	{
+		if (mShoot && mShotTimer)
+		{
+		    GameObject prefab = Network.Instantiate(mBullet, gunBarrel.transform.position + 
+			gunBarrel.transform.forward.normalized*2.108931f+new Vector3(-.1f,-.1f,0), 
+			gunBarrel.transform.rotation, 0) as GameObject;
+			prefab.rigidbody.AddForce (gunBarrel.transform.forward.normalized*18f, ForceMode.Impulse);
+			Destroy (prefab, 5f);
+			mShotTimer = false;
+			Invoke ("MShotTimer", .08f);
+			NetworkView netView = gameObject.transform.FindChild("Machinegun").gameObject.networkView;
+			netView.RPC("networkplayMGun",RPCMode.All);
+			RaycastHit hitInfo;
+			if(Physics.Raycast(transform.position,transform.forward,out hitInfo))
+			{
+				 if(hitInfo.transform.tag== "Enemy")
+				{
+					hitInfo.transform.gameObject.networkView.RPC ("damageEnemy", RPCMode.AllBuffered, mDamage);
+				}
+				else if(hitInfo.transform.tag== "Player")
+				{
+					hitInfo.transform.gameObject.networkView.RPC ("damagePlayer", RPCMode.AllBuffered, mDamage);
+				}
+			}
+			
+			
+			
 		}
 	}
 	
@@ -312,6 +355,7 @@ public class ServerPlayerController : MonoBehaviour
 			turretControls ();
 			movementControls ();
 			shootingControls ();
+			MshootingControls();
 		}
 	}
 }

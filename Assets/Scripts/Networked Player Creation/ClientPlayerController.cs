@@ -13,7 +13,7 @@ public class ClientPlayerController : MonoBehaviour
 	float mouseY = 0;
 	NetworkPlayer owner;
 	bool shooting = false;
-	
+	bool mShooting = false;
 	bool colliding = false;
 	ResourceNodeScript node;
 	PlayerGameState player;
@@ -121,6 +121,7 @@ public class ClientPlayerController : MonoBehaviour
 			float mouseH = Input.GetAxis("Mouse X");
 			float mouseV = Input.GetAxis("Mouse Y");
 			bool shoot = Input.GetButton("Fire1") && Input.mousePosition.y < Screen.height -50;
+			bool mShoot =Input.GetButton("Fire2") && Input.mousePosition.y < Screen.height -50;
 			
 			if(f!=forward || r!=reverse || rotR!=rotateRight || rotL!=rotateLeft 
 				|| strR!=strRight || strL!=strLeft)
@@ -140,6 +141,11 @@ public class ClientPlayerController : MonoBehaviour
 			{
 				//RPC to server to send mouse click for shooting.
 				networkView.RPC("setClientShootingState", RPCMode.Server, shoot);
+			}
+			if(mShoot!=mShooting)
+			{
+				//RPC to server to send mouse click for shooting.
+				networkView.RPC("MsetClientShootingState", RPCMode.Server, mShoot);
 			}
 			
 			if(colliding && node.nodeMode ==0)
@@ -171,6 +177,7 @@ public class ClientPlayerController : MonoBehaviour
 			mouseX = mouseH;
 			mouseY = mouseV;
 			shooting = shoot;
+			mShooting = mShoot;
 		}
 		
 		
