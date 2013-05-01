@@ -82,7 +82,7 @@ public class AIMovement : MonoBehaviour
 			gameObject.networkView.RPC("noTargetsDetonation", RPCMode.AllBuffered);
 		}
 		//check to see whether the final destination is no longer a valid target
-		if(!finalDestination)
+		if(!finalDestination && targetList.Count > 0)
 		{
 			//if it is not, then generate a new target.
 			//for enemies, remove the old target from the targetList and generate a new random target

@@ -20,11 +20,6 @@ public class ClientPlayerController : MonoBehaviour
 	
 	public GUIText resourceCommandsText;
 	
-	void OnNetworkInstantiate(NetworkMessageInfo info)
-	{
-		//may need in the future?
-	}
-	
 	[RPC]
 	void setOwner(NetworkPlayer player)
 	{
@@ -44,14 +39,6 @@ public class ClientPlayerController : MonoBehaviour
 			if(gameObject.GetComponentInChildren<Camera>())
 			{
 				gameObject.GetComponentInChildren<Camera>().enabled = false;
-			}
-			if(gameObject.GetComponentInChildren<AudioListener>())
-			{
-				gameObject.GetComponentInChildren<AudioListener>().enabled = false;
-			}
-			if(gameObject.GetComponentInChildren<GUILayer>())
-			{
-				gameObject.GetComponentInChildren<GUILayer>().enabled = false;
 			}
 			if(transform.parent.transform.FindChild("HUDElements") != null)
 			{
@@ -176,6 +163,19 @@ public class ClientPlayerController : MonoBehaviour
 			resourceCommandsText.text = "Hit C to add a drone \n"+
 										"Hit Z to remove a drone \n"+
 										"Hit X to collect mined resources";	
+	}
+	
+	[RPC]
+	void loadVictoryOrDefeat(string viewid)
+	{
+		if((""+networkView.viewID)==viewid)
+		{
+			Application.LoadLevel("victorytwo");
+		}
+		else
+		{
+			Application.LoadLevel("Defeat");
+		}
 	}
 	
 	void OnTriggerEnter(Collider other)

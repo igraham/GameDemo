@@ -9,9 +9,14 @@ public class GameServer : MonoBehaviour {
 	public static string levelName;
 	Vector3[] spawnLocations = new Vector3[4];
 	int playerCount = 0;
-	
+	public int totalResources1=0;
+ 	public int totalResources2=0;
+	public int totalResources3=0;
+	public int totalResources4=0;
+	public string [] playerIDs = new string[4];
 	public List<ClientPlayerController> playerTracker = new List<ClientPlayerController>();
 	public List<NetworkPlayer> scheduledSpawns = new List<NetworkPlayer>();
+	public int win = 100;
 	
 	public GameObject[] resourceNodes;
 	public static ArrayList nodeScripts = new ArrayList();
@@ -39,6 +44,26 @@ public class GameServer : MonoBehaviour {
 		//scheduledSpawns.Add (Network.player);
 		//processSpawnRequests = true;
 		//requestSpawn (Network.player);
+	}
+	
+	void Update()
+	{
+		if(totalResources1 >= 100)
+		{
+			networkView.RPC ("loadVictoryOrDefeat", RPCMode.AllBuffered, playerIDs[0]);
+		}
+		else if(totalResources2 >= 100)
+		{
+			networkView.RPC ("loadVictoryOrDefeat", RPCMode.AllBuffered, playerIDs[1]);
+		}
+		else if(totalResources3 >= 100)
+		{
+			networkView.RPC ("loadVictoryOrDefeat", RPCMode.AllBuffered, playerIDs[2]);
+		}
+		else if(totalResources4 >= 100)
+		{
+			networkView.RPC ("loadVictoryOrDefeat", RPCMode.AllBuffered, playerIDs[3]);
+		}
 	}
 	
 	void OnPlayerConnected(NetworkPlayer player)
@@ -69,6 +94,7 @@ public class GameServer : MonoBehaviour {
 				GameObject handle = Network.Instantiate(playerPrefab, 
 														spawnLocations[playerCount], 
 														Quaternion.identity, 0) as GameObject;
+				playerIDs[playerCount] = ""+networkView.viewID;
 				playerCount++;
 				var sc = handle.transform.FindChild("NewTank").gameObject.GetComponent<ClientPlayerController>();
 				if(!sc)
@@ -85,6 +111,28 @@ public class GameServer : MonoBehaviour {
 		{
 			Debug.Log ("spawns is empty! stopping spawn request processing");
 			processSpawnRequests = false;
+		}
+	}
+	
+	[RPC]
+	public void addResources(int amount, NetworkView netView)
+	{
+		string viewid = ""+netView.viewID;
+		if(viewid == playerIDs[0])
+		{
+			totalResources1 += amount;
+		}
+		if(viewid == playerIDs[1])
+		{
+			totalResources2 += amount;
+		}
+		if(viewid == playerIDs[2])
+		{
+			totalResources3 += amount;
+		}
+		if(viewid == playerIDs[3])
+		{
+			totalResources4 += amount;
 		}
 	}
 	

@@ -68,10 +68,8 @@ public class ServerPlayerController : MonoBehaviour
 		Color c;
 		for (int i = 0; i< spawns.Length; i++)
 		{
-			Debug.Log ("here");
 			if (spawns [i] == spawnLocation)
 			{
-				Debug.Log ("here2");
 				c = tankColor [i];
 				foreach (GameObject obj in pieceChange)
 				{
@@ -335,7 +333,7 @@ public class ServerPlayerController : MonoBehaviour
 	
 	private void shootingControls()
 	{
-		if(!shoot && shotTimer)
+		if(shoot && shotTimer)
 		{
 			float motarSpeed = 18f + (18f * motarTimer);
 			print ("motarSpeed is " + motarSpeed);
@@ -348,35 +346,6 @@ public class ServerPlayerController : MonoBehaviour
 			Invoke ("ShotTimer", .5f);
 			NetworkView netView = gameObject.transform.FindChild("mortarSound").gameObject.networkView;
 			netView.RPC("networkplayMortar",RPCMode.All);
-		}
-	}
-	
-	void Update() 
-	{
-		//check to see if the left click is down
-		if(shoot)
-		{
-			charge = 1;
-		}
-		//start charging
-		if(charge == 1)
-		{
-			motarTimer += chargeRate * Time.deltaTime;
-			print ("motarTimer = " + motarTimer);
-		}
-		
-		//checks to see if the charge is at full capacity
-		if(motarTimer >= maxCharge)
-		{
-			motarTimer = maxCharge;
-			charge = 0;
-		}
-		
-		//after the left click has been release reset the charge and motartimer
-		if(!shoot)
-		{
-			charge = 0;
-			motarTimer = 0f;
 		}
 	}
 	
