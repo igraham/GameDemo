@@ -8,6 +8,7 @@ public class PlayerGameState : MonoBehaviour {
 	public int playerHealth = 100;
 	public int playerDroneCount = 10;
 	public int resourcesHeld =0;
+	public int totalResources = 0;
 	private float timer = 0;
 	public GUIText playerStatus;
 	public GUITexture playerLifeBar;
@@ -22,6 +23,8 @@ public class PlayerGameState : MonoBehaviour {
 	public GUIText gameState;
 	NetworkPlayer n;
 	ClientPlayerController cpc;
+	GameObject spawnLocation;
+	bool bankResources = false;
 	
 	// Use this for initialization
 	
@@ -32,14 +35,42 @@ public class PlayerGameState : MonoBehaviour {
 		//lifebarText = GameObject.Find("ProgressType").guiText;
 	}
 	
-	void Start () {
+	void OnNetworkInstantiate(NetworkMessageInfo info)
+	{
+		float dist = float.MaxValue;
+		foreach (GameObject obj in GameObject.FindGameObjectsWithTag ("PlayerSpawn"))
+		{
+			if (Vector3.Distance (obj.transform.position, transform.position) < dist)
+			{
+				dist = Vector3.Distance (obj.transform.position, transform.position);
+				spawnLocation = obj;
+			}
+		}
+	}
+	
+	void OnTriggerEnter(Collider col)
+	{
+		if(col.tag.Equals ("PlayerSpawn") && col.gameObject.Equals(spawnLocation))
+		{
+			bankResources = true;
+		}
+	}
+	
+	void Start ()
+	{
 		playerDurability = playerDurability + 10*playerDroneCount;
 		playerHealth = playerDurability;
 		lifebarText.material.color = Color.black;
 	}
 	
 	// Update is called once per frame
-	void Update () {
+	void Update ()
+	{
+		if(bankResources)
+		{
+			collectResources();
+			bankResources = false;
+		}
 		playerStatus.text = "Resources: "+ resourcesHeld + " Drones: "+ playerDroneCount;
 		
 		playerLifeBar.pixelInset = new Rect(playerLifeBar.pixelInset.x,
@@ -119,9 +150,15 @@ public class PlayerGameState : MonoBehaviour {
 	}
 	
 	public void setOwnership()
-		{
-			cpc = (ClientPlayerController)gameObject.GetComponent (typeof(ClientPlayerController));
-			n = cpc.getOwner ();
-			
-		}
+	{
+		cpc = (ClientPlayerController)gameObject.GetComponent (typeof(ClientPlayerController));
+		n = cpc.getOwner ();
+	}
+	
+	public void collectResources()
+	{
+		totalResources += resourcesHeld;
+		networkView.RPC ("addResources", RPCMode.Server, resourcesHeld, networkView);
+		resourcesHeld = 0;
+	}
 }

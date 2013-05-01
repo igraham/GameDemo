@@ -15,7 +15,7 @@ public class AIMovement : MonoBehaviour
 	public List<Vector3> path = null;
 	int targetIndex = -1;
 	
-	void Start()
+	void Awake()
 	{
 		pathFinder = GetComponent<PathFinder>();
 		if(gameObject.name.Equals("Enemy(Clone)"))
@@ -33,6 +33,20 @@ public class AIMovement : MonoBehaviour
 			{
 				gameObject.networkView.RPC("noTargetsDetonation", RPCMode.AllBuffered);
 			}
+			else
+			{
+				setRandomTargetFromList();
+				path = pathFinder.getPath(transform.position, finalDestination.position);
+				//set initial current and next destination
+				if(path.Count > 0)
+				{ //path has to have at least one element to get here.
+					currentDestination = path[0];
+					if(path.Count > 1)
+					{ //path has to have at least two elements to get here.
+						nextDestination = path[1];
+					}
+				}
+			}
 		}
 		else if(gameObject.name.Equals("Drone(Clone)"))
 		{
@@ -42,17 +56,6 @@ public class AIMovement : MonoBehaviour
 			//however, finding said target is difficult, and this code is executed in Start.
 			//additionally, resources need a "spawn point" next to it to avoid spawning
 			//drones inside the terrain.
-		}
-		setRandomTargetFromList();
-		path = pathFinder.getPath(transform.position, finalDestination.position);
-		//set initial current and next destination
-		if(path.Count > 0)
-		{ //path has to have at least one element to get here.
-			currentDestination = path[0];
-			if(path.Count > 1)
-			{ //path has to have at least two elements to get here.
-				nextDestination = path[1];
-			}
 		}
 	}
 	
@@ -79,7 +82,7 @@ public class AIMovement : MonoBehaviour
 			gameObject.networkView.RPC("noTargetsDetonation", RPCMode.AllBuffered);
 		}
 		//check to see whether the final destination is no longer a valid target
-		if(!finalDestination)
+		if(!finalDestination && targetList.Count > 0)
 		{
 			//if it is not, then generate a new target.
 			//for enemies, remove the old target from the targetList and generate a new random target

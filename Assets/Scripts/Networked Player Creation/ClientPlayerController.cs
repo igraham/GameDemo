@@ -13,7 +13,7 @@ public class ClientPlayerController : MonoBehaviour
 	float mouseY = 0;
 	NetworkPlayer owner;
 	bool shooting = false;
-	
+	bool mShooting = false;
 	bool colliding = false;
 	bool collect = false;
 	int amount= 0;
@@ -24,11 +24,6 @@ public class ClientPlayerController : MonoBehaviour
 	float timer = 0f;
 	
 	public GUIText resourceCommandsText;
-	
-	void OnNetworkInstantiate(NetworkMessageInfo info)
-	{
-		//may need in the future?
-	}
 	
 	[RPC]
 	void setOwner(NetworkPlayer player)
@@ -50,14 +45,6 @@ public class ClientPlayerController : MonoBehaviour
 			{
 				gameObject.GetComponentInChildren<Camera>().enabled = false;
 			}
-			if(gameObject.GetComponentInChildren<AudioListener>())
-			{
-				gameObject.GetComponentInChildren<AudioListener>().enabled = false;
-			}
-			if(gameObject.GetComponentInChildren<GUILayer>())
-			{
-				gameObject.GetComponentInChildren<GUILayer>().enabled = false;
-			}
 			if(transform.parent.transform.FindChild("HUDElements") != null)
 			{
 				GameObject hud = transform.parent.transform.FindChild("HUDElements").gameObject;
@@ -76,12 +63,14 @@ public class ClientPlayerController : MonoBehaviour
 				}
 				
 				Component[] hudTexts = hud.GetComponentsInChildren<GUIText> ();
-				foreach (GUIText text in hudTexts) {
+				foreach (GUIText text in hudTexts)
+				{
 					text.enabled = false;
 				}
 				
 				Component[] hudTextures = hud.GetComponentsInChildren<GUITexture> ();
-				foreach (GUITexture texture in hudTextures) {
+				foreach (GUITexture texture in hudTextures)
+				{
 					texture.enabled = false;
 				}
 			}
@@ -114,7 +103,9 @@ public class ClientPlayerController : MonoBehaviour
 			bool strLeft = Input.GetButton("StrLeft");
 			float mouseH = Input.GetAxis("Mouse X");
 			float mouseV = Input.GetAxis("Mouse Y");
+
 			bool shoot = Input.GetButton("Fire1") && Input.mousePosition.y < Screen.height -50;
+			bool mShoot =Input.GetButton("Fire2") && Input.mousePosition.y < Screen.height -50;
 			
 			if(f!=forward || r!=reverse || rotR!=rotateRight || rotL!=rotateLeft 
 				|| strR!=strRight || strL!=strLeft)
@@ -130,8 +121,14 @@ public class ClientPlayerController : MonoBehaviour
 			}
 			if(shoot!=shooting)
 			{
-				//RPC to server to send mouse click for shooting.
+				//RPC to server to send mouse click for when the left click is released.
 				networkView.RPC("setClientShootingState", RPCMode.Server, shoot);
+			}
+
+			if(mShoot!=mShooting)
+			{
+				//RPC to server to send mouse click for shooting.
+				networkView.RPC("MsetClientShootingState", RPCMode.Server, mShoot);
 			}
 			if(colliding && node.nodeMode ==0 && node.isBusy == false)
 			{
@@ -181,6 +178,7 @@ public class ClientPlayerController : MonoBehaviour
 			mouseX = mouseH;
 			mouseY = mouseV;
 			shooting = shoot;
+			mShooting = mShoot;
 		}
 	}
 	
@@ -196,6 +194,19 @@ public class ClientPlayerController : MonoBehaviour
 				resourceCommandsText.text = "Hit C to add a drone \n"+
 											"Hit Z to remove a drone \n"+
 											"Hit X to collect mined resources";	
+		}
+	}
+	
+	[RPC]
+	void loadVictoryOrDefeat(string viewid)
+	{
+		if((""+networkView.viewID)==viewid)
+		{
+			Application.LoadLevel("victorytwo");
+		}
+		else
+		{
+			Application.LoadLevel("Defeat");
 		}
 	}
 	
