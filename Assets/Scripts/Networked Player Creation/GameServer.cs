@@ -115,9 +115,9 @@ public class GameServer : MonoBehaviour {
 	}
 	
 	[RPC]
-	public void addResources(int amount, NetworkView netView)
+	public void addResources(int amount, NetworkViewID viewID)
 	{
-		string viewid = ""+netView.viewID;
+		string viewid = ""+viewID;
 		if(viewid == playerIDs[0])
 		{
 			totalResources1 += amount;

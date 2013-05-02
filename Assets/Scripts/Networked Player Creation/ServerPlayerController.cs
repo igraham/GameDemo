@@ -15,7 +15,7 @@ public class ServerPlayerController : MonoBehaviour
 	bool strRight = false;
 	bool strLeft = false;
 	float mouseH = 0;
-	float mouseV = 0;
+	float mouseV = 0; 
 	bool shoot = false;
 	int charge = 0;
 	float maxCharge = 2f;

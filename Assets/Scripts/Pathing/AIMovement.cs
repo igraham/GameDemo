@@ -65,6 +65,7 @@ public class AIMovement : MonoBehaviour
 	{
 		targetIndex = Random.Range(0,targetList.Count);
 		finalDestination = targetList[targetIndex].transform;
+		print(finalDestination.position);
 	}
 	
 	//use this to change the transform being used as the final destination
@@ -82,7 +83,8 @@ public class AIMovement : MonoBehaviour
 			gameObject.networkView.RPC("noTargetsDetonation", RPCMode.AllBuffered);
 		}
 		//check to see whether the final destination is no longer a valid target
-		if(!finalDestination && targetList.Count > 0)
+		if(!finalDestination && targetList.Count > 0
+			|| (finalDestination.name == "Resource" && finalDestination.tag != "HasDrones"))
 		{
 			//if it is not, then generate a new target.
 			//for enemies, remove the old target from the targetList and generate a new random target

@@ -229,7 +229,7 @@ public class ClientPlayerController : MonoBehaviour
 			colliding = true;
 			
 			
-		}
+		} 
 		node = (ResourceNodeScript) other.collider.gameObject.GetComponent(typeof(ResourceNodeScript));
 	}
 	

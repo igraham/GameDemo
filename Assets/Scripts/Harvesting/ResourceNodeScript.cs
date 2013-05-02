@@ -99,7 +99,7 @@ public class ResourceNodeScript : MonoBehaviour
 				tcontrol.turretActive = false;*/
 				//gState.removeNode (this.gameObject);
 				isNode = false;
-				gameObject.tag = "Untagged";
+				gameObject.tag = "ResourceNode";
 				GameObject dr = Network.Instantiate(droppedResources,transform.position,Quaternion.identity,0) as GameObject;
 				CollectDroppedResource cdr = (CollectDroppedResource) dr.GetComponent(typeof(CollectDroppedResource));
 				cdr.setResourceAmount(minedAmount/2);

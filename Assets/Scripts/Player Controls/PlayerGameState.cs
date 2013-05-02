@@ -14,7 +14,7 @@ public class PlayerGameState : MonoBehaviour {
 	public GUITexture playerLifeBar;
 	private float minPlayerLifeBarWidth = 0;
 	private float maxPlayerLifeBarWidth = 200;
-	public GUIText lifebarText;
+	public GUIText lifebarText; 
 	public GameObject droppedResources;
 	float dropTimer = 0f;
 	bool drop = false;
@@ -159,7 +159,7 @@ public class PlayerGameState : MonoBehaviour {
 	{
 		totalResources += resourcesHeld;
 		GameObject obj = GameObject.Find("NetManager");
-		obj.networkView.RPC ("addResources", RPCMode.Server, resourcesHeld, networkView);
+		obj.networkView.RPC ("addResources", RPCMode.Server, resourcesHeld, networkView.viewID);
 		resourcesHeld = 0;
 	}
 }
