@@ -12,10 +12,10 @@ public class AIMovement : MonoBehaviour
 	public Vector3 nextDestination = Vector3.zero;
 	public Transform finalDestination; //sounds like a movie name
 	List<GameObject> targetList = new List<GameObject>();
-	public List<Vector3> path = null;
+	public List<Vector3> path = new List<Vector3>();
 	int targetIndex = -1;
 	
-	void Awake()
+	void Start()
 	{
 		pathFinder = GetComponent<PathFinder>();
 		if(gameObject.name.Equals("Enemy(Clone)"))
@@ -45,6 +45,10 @@ public class AIMovement : MonoBehaviour
 					{ //path has to have at least two elements to get here.
 						nextDestination = path[1];
 					}
+				}
+				else
+				{
+					gameObject.networkView.RPC("noTargetsDetonation", RPCMode.AllBuffered);
 				}
 			}
 		}
@@ -78,13 +82,13 @@ public class AIMovement : MonoBehaviour
 	void FixedUpdate ()
 	{
 		//before anything else, determine whether there are any targets to follow.
-		if(targetList.Count == 0)
+		if(targetList.Count == 0 || !(pathFinder.EnemiesSeeWayPoints()) || !(pathFinder.WayPointsSeeTarget()))
 		{
 			gameObject.networkView.RPC("noTargetsDetonation", RPCMode.AllBuffered);
 		}
 		//check to see whether the final destination is no longer a valid target
-		if(!finalDestination && targetList.Count > 0
-			|| (finalDestination.name == "Resource" && finalDestination.tag != "HasDrones"))
+		if(targetIndex > -1 && (!finalDestination && targetList.Count > 0
+			|| (finalDestination.name == "Resource" && finalDestination.tag != "HasDrones")))
 		{
 			//if it is not, then generate a new target.
 			//for enemies, remove the old target from the targetList and generate a new random target
@@ -94,8 +98,7 @@ public class AIMovement : MonoBehaviour
 		}
 		//check if path is null, if path is empty (and can't see the destination currently), 
 		//or if the last waypoint in path can't see the destination
-		if(path == null
-			|| (path.Count <= 0 
+		if((path.Count <= 0 
 				&& !(PathFinder.lineOfSight(transform.position, finalDestination.position)))
 			|| (path.Count > 0 
 				&& !(PathFinder.lineOfSight(path.FindLast(_unused => true), finalDestination.position))))

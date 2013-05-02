@@ -149,6 +149,8 @@ public class PathFinder : MonoBehaviour {
 	
 	void buildStartAndGoal(Vector3 origin, Vector3 destination)
 	{
+		print ("Start Location: "+origin);
+		print ("Destination: "+destination);
 		if(goal!=null)
 			resetPath();
 		//create start and end waypoints
@@ -187,6 +189,15 @@ public class PathFinder : MonoBehaviour {
 			throw new System.Exception("No WayPoint can see Destination: " + goal.position);
 	}
 	
+	public bool EnemiesSeeWayPoints()
+	{
+		return !(start.neighbors.Count==0);
+	}
+	
+	public bool WayPointsSeeTarget()
+	{
+		return !(goal.neighbors.Count==0);
+	}
 	
 	public List<Vector3> getPath(Vector3 origin, Vector3 destination)
 	{
@@ -197,7 +208,6 @@ public class PathFinder : MonoBehaviour {
 			return pathPoints;
 		}
 		buildStartAndGoal(origin, destination);
-		checkWayPointVision();
 		path.Remove(start);
 		path.Remove(goal);
 		foreach(WayPoint p in path)
