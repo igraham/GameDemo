@@ -38,13 +38,10 @@ public class AIMovement : MonoBehaviour
 				setRandomTargetFromList();
 				path = pathFinder.getPath(transform.position, finalDestination.position);
 				//set initial current and next destination
-				if(path.Count > 0)
-				{ //path has to have at least one element to get here.
+				if(path.Count > 1)
+				{
 					currentDestination = path[0];
-					if(path.Count > 1)
-					{ //path has to have at least two elements to get here.
-						nextDestination = path[1];
-					}
+					nextDestination = path[1];
 				}
 				else
 				{
@@ -67,9 +64,20 @@ public class AIMovement : MonoBehaviour
 	//player disconnected, connection lost, etc.)
 	public void setRandomTargetFromList()
 	{
-		targetIndex = Random.Range(0,targetList.Count);
-		finalDestination = targetList[targetIndex].transform;
-		print(finalDestination.position);
+		if(targetList.Count > 1)
+		{
+			targetIndex = Random.Range(0,targetList.Count);
+			finalDestination = targetList[targetIndex].transform;
+		}
+		else if(targetList.Count == 1)
+		{
+			targetIndex = 0;
+			finalDestination = targetList[targetIndex].transform;
+		}
+		else
+		{
+			gameObject.networkView.RPC("noTargetsDetonation", RPCMode.AllBuffered);
+		}
 	}
 	
 	//use this to change the transform being used as the final destination
@@ -87,7 +95,7 @@ public class AIMovement : MonoBehaviour
 			gameObject.networkView.RPC("noTargetsDetonation", RPCMode.AllBuffered);
 		}
 		//check to see whether the final destination is no longer a valid target
-		if(targetIndex > -1 && (!finalDestination && targetList.Count > 0
+		if(targetIndex > -1 && ((!finalDestination && targetList.Count > 0)
 			|| (finalDestination.name == "Resource" && finalDestination.tag != "HasDrones")))
 		{
 			//if it is not, then generate a new target.
