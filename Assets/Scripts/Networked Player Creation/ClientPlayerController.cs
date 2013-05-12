@@ -34,7 +34,7 @@ public class ClientPlayerController : MonoBehaviour
 		{
 			enabled = true;
 		}
-		else
+		else if(Network.isServer || player != Network.player)
 		{
 			GameObject radar = gameObject.transform.FindChild("Radar").gameObject;
 			if(radar.GetComponent<Camera>())
@@ -45,10 +45,23 @@ public class ClientPlayerController : MonoBehaviour
 			{
 				gameObject.GetComponentInChildren<Camera>().enabled = false;
 			}
-			if(transform.parent.transform.FindChild("HUDElements") != null)
+			if(transform.parent.transform.FindChild("HUDElements") != null
+				&& transform.parent.transform.FindChild("NewTank") != null)
 			{
 				GameObject hud = transform.parent.transform.FindChild("HUDElements").gameObject;
-				
+				GameObject tank = transform.parent.transform.FindChild("NewTank").gameObject;
+				GameObject serverCam = GameObject.Find("ServerCamera");
+				if(Network.isClient)
+				{
+					if(serverCam.GetComponent<Camera>())
+					{
+						serverCam.GetComponent<Camera>().enabled = false;
+					}
+					if(serverCam.GetComponent<AudioListener>())
+					{
+						serverCam.GetComponent<AudioListener>().enabled = false;
+					}
+				}
 				if(hud.GetComponentInChildren<Camera>())
 				{
 					hud.GetComponentInChildren<Camera>().enabled = false;
@@ -60,6 +73,18 @@ public class ClientPlayerController : MonoBehaviour
 				if(hud.GetComponentInChildren<GUILayer>())
 				{
 					hud.GetComponentInChildren<GUILayer>().enabled = false;
+				}
+				if(tank.GetComponentInChildren<Camera>())
+				{
+					tank.GetComponentInChildren<Camera>().enabled = false;
+				}
+				if(tank.GetComponentInChildren<AudioListener>())
+				{
+					tank.GetComponentInChildren<AudioListener>().enabled = false;
+				}
+				if(tank.GetComponentInChildren<GUILayer>())
+				{
+					tank.GetComponentInChildren<GUILayer>().enabled = false;
 				}
 				
 				Component[] hudTexts = hud.GetComponentsInChildren<GUIText> ();
