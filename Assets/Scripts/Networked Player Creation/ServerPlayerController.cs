@@ -6,7 +6,6 @@ public class ServerPlayerController : MonoBehaviour
 {
 	public float speed = 5f;
 	public float maxSpeed = 15f;
-	public float motarTimer = 0f;
 	public Vector3 rotationSpeed = new Vector3 (0, 100f, 0);
 	bool forward = false;
 	bool reverse = false;
@@ -17,9 +16,6 @@ public class ServerPlayerController : MonoBehaviour
 	float mouseH = 0;
 	float mouseV = 0; 
 	bool shoot = false;
-	int charge = 0;
-	float maxCharge = 2f;
-	float chargeRate = 0.5f;
 	bool mShoot = false;
 	bool mShotTimer = true;
 	bool shotTimer = true;
@@ -32,7 +28,8 @@ public class ServerPlayerController : MonoBehaviour
 	bool isRespawning = false;
 	public int mDamage = 1;
 	public GameObject[] resourceNodes;
-	public float shotsPerSecond  = 12.5f;
+	public float machineGunShotsPerSecond  = 12.5f;
+	public float mortarPowerTimer = 0f;
 	//public static ArrayList nodeScripts = new ArrayList();
 	public Dictionary<int,GameObject> sortedNodeList = new Dictionary<int,GameObject> ();
 	Color[] tankColor = new Color[]{Color.red,Color.blue,Color.green,Color.yellow};
@@ -341,19 +338,25 @@ public class ServerPlayerController : MonoBehaviour
 	
 	private void shootingControls()
 	{
-		if(shoot && shotTimer)
+		if(shoot && shotTimer && mortarPowerTimer <= 1.5f)
 		{
-			float motarSpeed = 18f + (18f * motarTimer);
-			print ("motarSpeed is " + motarSpeed);
+			mortarPowerTimer += Time.deltaTime;
+		}
+		else if(!shoot && shotTimer && mortarPowerTimer > 0f)
+		{
+			if(mortarPowerTimer > 1.5f){mortarPowerTimer = 1.5f;}
+			float mortarSpeed = 18f + (18f * mortarPowerTimer);
+			print ("motarSpeed is " + mortarSpeed);
 			GameObject prefab = Network.Instantiate(bullet, gunBarrel.transform.position + 
 				gunBarrel.transform.forward.normalized*2.108931f, 
 				Quaternion.identity, 0) as GameObject;
-			prefab.rigidbody.AddForce (gunBarrel.transform.forward.normalized*motarSpeed, ForceMode.Impulse);
+			prefab.rigidbody.AddForce (gunBarrel.transform.forward.normalized*mortarSpeed, ForceMode.Impulse);
 			Destroy (prefab, 5f);
 			shotTimer = false;
-			Invoke ("ShotTimer", .5f);
+			Invoke ("ShotTimer", 2.0f);
 			NetworkView netView = gameObject.transform.FindChild("mortarSound").gameObject.networkView;
 			netView.RPC("networkplayMortar",RPCMode.All);
+			mortarPowerTimer = 0f;
 		}
 	}
 	
@@ -367,7 +370,7 @@ public class ServerPlayerController : MonoBehaviour
 			prefab.rigidbody.AddForce (gunBarrel.transform.forward.normalized*18f, ForceMode.Impulse);
 			Destroy (prefab, 5f);
 			mShotTimer = false;
-			Invoke ("MShotTimer", 1/shotsPerSecond);
+			Invoke ("MShotTimer", 1.0f/machineGunShotsPerSecond);
 			NetworkView netView = gameObject.transform.FindChild("Machinegun").gameObject.networkView;
 			netView.RPC("networkplayMGun",RPCMode.All);
 			RaycastHit hitInfo;

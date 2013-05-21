@@ -101,6 +101,7 @@ public class AIMovement : MonoBehaviour
 			{
 				stopCode = true;
 				gameObject.networkView.RPC("noTargetsDetonation", RPCMode.AllBuffered);
+				return;
 			}
 			//check to see whether the final destination is no longer a valid target
 			if(targetIndex > -1 && ((!finalDestination && targetList.Count > 0)
@@ -111,6 +112,7 @@ public class AIMovement : MonoBehaviour
 				//removing a destroyed object works because the list only has a reference
 				targetList.RemoveAt(targetIndex);
 				setRandomTargetFromList();
+				if(stopCode){return;}
 			}
 			//check if path is null, if path is empty (and can't see the destination currently), 
 			//or if the last waypoint in path can't see the destination
