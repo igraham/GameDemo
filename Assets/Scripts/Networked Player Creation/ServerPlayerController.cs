@@ -45,7 +45,6 @@ public class ServerPlayerController : MonoBehaviour
 		{
 			ResourceNodeScript nodeScript = (ResourceNodeScript)node.GetComponent (typeof(ResourceNodeScript));
 			sortedNodeList.Add (nodeScript.resourceNodeNumber, node);
-			
 		}
 		
 		//Sorts them by number as key from when the server initialized

@@ -22,7 +22,6 @@ public class ClientPlayerController : MonoBehaviour
 	CollectDroppedResource cdr;
 	GameObject dR;
 	float timer = 0f;
-	
 	public GUIText resourceCommandsText;
 	
 	[RPC]
@@ -37,9 +36,14 @@ public class ClientPlayerController : MonoBehaviour
 		else if(Network.isServer || player != Network.player)
 		{
 			GameObject radar = gameObject.transform.FindChild("Radar").gameObject;
+			GameObject radarBlackout = radar.transform.FindChild("RadarBlackout").gameObject;
 			if(radar.GetComponent<Camera>())
 			{
 				radar.GetComponent<Camera>().enabled = false;
+			}
+			if(radarBlackout.GetComponent<MeshRenderer>())
+			{
+				radarBlackout.GetComponent<MeshRenderer>().enabled = false;
 			}
 			if(gameObject.GetComponentInChildren<Camera>())
 			{
