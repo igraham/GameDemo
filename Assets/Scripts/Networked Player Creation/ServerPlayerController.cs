@@ -32,6 +32,7 @@ public class ServerPlayerController : MonoBehaviour
 	bool isRespawning = false;
 	public int mDamage = 1;
 	public GameObject[] resourceNodes;
+	public float shotsPerSecond  = 12.5f;
 	//public static ArrayList nodeScripts = new ArrayList();
 	public Dictionary<int,GameObject> sortedNodeList = new Dictionary<int,GameObject> ();
 	Color[] tankColor = new Color[]{Color.red,Color.blue,Color.green,Color.yellow};
@@ -366,7 +367,7 @@ public class ServerPlayerController : MonoBehaviour
 			prefab.rigidbody.AddForce (gunBarrel.transform.forward.normalized*18f, ForceMode.Impulse);
 			Destroy (prefab, 5f);
 			mShotTimer = false;
-			Invoke ("MShotTimer", .08f);
+			Invoke ("MShotTimer", 1/shotsPerSecond);
 			NetworkView netView = gameObject.transform.FindChild("Machinegun").gameObject.networkView;
 			netView.RPC("networkplayMGun",RPCMode.All);
 			RaycastHit hitInfo;
