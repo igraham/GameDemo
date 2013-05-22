@@ -8,6 +8,7 @@ public class EnemyGenerator : MonoBehaviour {
 	ArrayList spawnPoints = new ArrayList ();
 	public float spawnTime = 20f;
 	private float timer = 0;
+	public bool canSpawn = false;
 
 	void Start ()
 	{
@@ -22,12 +23,15 @@ public class EnemyGenerator : MonoBehaviour {
 		
 		if(timer >= spawnTime)
 		{
-			for(int i = 0; i < spawnPoints.Count;i++)
+			if(canSpawn)
 			{
-				Network.Instantiate (enemy,((GameObject)spawnPoints[i]).transform.position, 
-					Quaternion.identity,0);
+				for(int i = 0; i < spawnPoints.Count;i++)
+				{
+					Network.Instantiate (enemy,((GameObject)spawnPoints[i]).transform.position, 
+						Quaternion.identity,0);
+				}
 			}
-			timer =0;
+			timer = 0;
 		}
 	
 	}

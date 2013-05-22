@@ -26,6 +26,7 @@ public class Fading : MonoBehaviour
 			FadeRadar();
 			radarCooldown = true;
 			Invoke("RadarCooldown",radarCooldownTime);
+			networkView.RPC("showRadarDotToEnemies", RPCMode.Server);
 		}
 	}
 	

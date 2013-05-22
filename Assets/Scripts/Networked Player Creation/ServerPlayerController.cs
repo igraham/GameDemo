@@ -24,6 +24,7 @@ public class ServerPlayerController : MonoBehaviour
 	public Camera playerCamera;
 	public GameObject bullet;
 	public GameObject mBullet;
+	private GameObject radarDot;
 	GameObject spawnLocation;
 	bool isRespawning = false;
 	public int mDamage = 1;
@@ -37,6 +38,7 @@ public class ServerPlayerController : MonoBehaviour
 	
 	void OnNetworkInstantiate (NetworkMessageInfo info)
 	{
+		radarDot = transform.FindChild("RadarDot").gameObject;
 		GameObject[] spawns = GameObject.FindGameObjectsWithTag ("PlayerSpawn");
 		//Finds all the nodes
 		//print ("Test Run1");
@@ -85,6 +87,18 @@ public class ServerPlayerController : MonoBehaviour
 				gameObject.GetComponentInChildren<GUILayer>().enabled = false;
 			}
 		}
+	}
+	
+	[RPC]
+	void showRadarDotToEnemies()
+	{
+		radarDot.transform.localPosition = new Vector3(0, 67f, 0);
+		Invoke("resetRadarDotPosition", 2.5f);
+	}
+	
+	void resetRadarDotPosition()
+	{
+		radarDot.transform.localPosition = new Vector3(0, 57f, 0);
 	}
 	
 	[RPC]

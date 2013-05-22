@@ -16,13 +16,21 @@ public class ClientPlayerController : MonoBehaviour
 	bool mShooting = false;
 	bool colliding = false;
 	bool collect = false;
-	int amount= 0;
+	int amount = 0;
 	ResourceNodeScript node;
 	PlayerGameState player;
 	CollectDroppedResource cdr;
 	GameObject dR;
 	float timer = 0f;
 	public GUIText resourceCommandsText;
+	Fading radarControl;
+	public float radarCooldownTime = 5f;
+	bool radarCooldown = false;
+	
+	private void RadarCooldown()
+	{
+		radarCooldown = false;
+	}
 	
 	[RPC]
 	void setOwner(NetworkPlayer player)
@@ -32,6 +40,11 @@ public class ClientPlayerController : MonoBehaviour
 		if(player == Network.player)
 		{
 			enabled = true;
+			GameObject radar = gameObject.transform.FindChild("Radar").gameObject;
+			if(radar.transform.FindChild("RadarBlackout"))
+			{
+				radarControl = radar.transform.FindChild("RadarBlackout").GetComponent<Fading>();
+			}
 		}
 		else if(Network.isServer || player != Network.player)
 		{
@@ -136,6 +149,13 @@ public class ClientPlayerController : MonoBehaviour
 			bool shoot = Input.GetButton("Fire1") && Input.mousePosition.y < Screen.height -50;
 			bool mShoot =Input.GetButton("Fire2") && Input.mousePosition.y < Screen.height -50;
 			
+			if(!radarCooldown && Input.GetKey(KeyCode.Space))
+			{
+				radarControl.FadeRadar();
+				radarCooldown = true;
+				Invoke("RadarCooldown",radarCooldownTime);
+				networkView.RPC("showRadarDotToEnemies", RPCMode.Server);
+			}
 			if(f!=forward || r!=reverse || rotR!=rotateRight || rotL!=rotateLeft 
 				|| strR!=strRight || strL!=strLeft)
 			{
