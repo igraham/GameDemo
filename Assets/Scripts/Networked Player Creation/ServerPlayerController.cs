@@ -125,6 +125,7 @@ public class ServerPlayerController : MonoBehaviour
 		shoot = shooting;
 	}
 	
+	[RPC]
 	void MsetClientShootingState (bool mShooting)
 	{
 		mShoot = mShooting;
@@ -384,16 +385,16 @@ public class ServerPlayerController : MonoBehaviour
 			Destroy (prefab, 5f);
 			mShotTimer = false;
 			Invoke ("MShotTimer", 1.0f/machineGunShotsPerSecond);
-			NetworkView netView = gameObject.transform.FindChild("Machinegun").gameObject.networkView;
+			//NetworkView netView = gameObject.transform.FindChild("Machinegun").gameObject.networkView;
 			netView.RPC("networkplayMGun",RPCMode.All);
 			RaycastHit hitInfo;
 			if(Physics.Raycast(transform.position,transform.forward,out hitInfo))
 			{
-				 if(hitInfo.transform.tag== "Enemy")
+				if(hitInfo.transform.tag == "Enemy")
 				{
 					hitInfo.transform.gameObject.networkView.RPC ("damageEnemy", RPCMode.AllBuffered, mDamage);
 				}
-				else if(hitInfo.transform.tag== "Player")
+				else if(hitInfo.transform.tag == "Player")
 				{
 					hitInfo.transform.gameObject.networkView.RPC ("damagePlayer", RPCMode.AllBuffered, mDamage);
 				}

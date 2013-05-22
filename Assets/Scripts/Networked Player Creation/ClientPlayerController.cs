@@ -146,8 +146,8 @@ public class ClientPlayerController : MonoBehaviour
 			float mouseH = Input.GetAxis("Mouse X");
 			float mouseV = Input.GetAxis("Mouse Y");
 
-			bool shoot = Input.GetButton("Fire1") && Input.mousePosition.y < Screen.height -50;
-			bool mShoot =Input.GetButton("Fire2") && Input.mousePosition.y < Screen.height -50;
+			bool shoot = Input.GetMouseButton(0) && Input.mousePosition.y < Screen.height -50;
+			bool mShoot = Input.GetMouseButton(1) && Input.mousePosition.y < Screen.height -50;
 			
 			if(!radarCooldown && Input.GetKey(KeyCode.Space))
 			{
@@ -179,7 +179,7 @@ public class ClientPlayerController : MonoBehaviour
 				//RPC to server to send mouse click for shooting.
 				networkView.RPC("MsetClientShootingState", RPCMode.Server, mShoot);
 			}
-			if(colliding && node.nodeMode ==0 && node.isBusy == false)
+			if(colliding && node.nodeMode == 0 && node.isBusy == false)
 			{
 				player = (PlayerGameState) gameObject.GetComponent(typeof(PlayerGameState));
 			
@@ -238,10 +238,12 @@ public class ClientPlayerController : MonoBehaviour
 		{
 		}	
 		else if(other.tag.Equals("PlayerSpawn"))
-		{}
+		{
+			
+		}
 		else
 		{
-			if(node.isBusy ==false)
+			if(node.isBusy == false)
 				resourceCommandsText.text = "Hit C to add a drone \n"+
 											"Hit Z to remove a drone \n"+
 											"Hit X to collect mined resources";	
@@ -288,7 +290,9 @@ public class ClientPlayerController : MonoBehaviour
 		{
 		}
 		else if(other.tag.Equals("PlayerSpawn"))
-		{}
+		{
+			
+		}
 		else
 		{
 			resourceCommandsText.text ="";
