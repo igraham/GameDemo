@@ -274,12 +274,12 @@ public class ClientPlayerController : MonoBehaviour
 			dR = other.gameObject;
 		}
 		else if(other.tag.Equals("PlayerSpawn"))
-		{}
+		{
+			
+		}
 		else
 		{
 			colliding = true;
-			
-			
 		} 
 		node = (ResourceNodeScript) other.collider.gameObject.GetComponent(typeof(ResourceNodeScript));
 	}
@@ -288,6 +288,7 @@ public class ClientPlayerController : MonoBehaviour
 	{
 		if(other.tag.Equals("DroppedResource"))
 		{
+			
 		}
 		else if(other.tag.Equals("PlayerSpawn"))
 		{

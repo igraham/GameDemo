@@ -15,6 +15,7 @@ public class AIMovement : MonoBehaviour
 	public List<Vector3> path = new List<Vector3>();
 	int targetIndex = -1;
 	bool stopCode = false;
+	public Vector3 finalDestPosition;
 	
 	void Start()
 	{
@@ -39,7 +40,8 @@ public class AIMovement : MonoBehaviour
 			else
 			{
 				setRandomTargetFromList();
-				path = pathFinder.getPath(transform.position, finalDestination.position);
+				path = pathFinder.getPath(transform.position+new Vector3(0, 2.5f, -1f), 
+					finalDestination.position);
 				//set initial current and next destination
 				if(path.Count > 1)
 				{
@@ -97,7 +99,9 @@ public class AIMovement : MonoBehaviour
 		if(!stopCode)
 		{
 			//before anything else, determine whether there are any targets to follow.
-			if(targetList.Count == 0 || !(pathFinder.EnemiesSeeWayPoints()) || !(pathFinder.WayPointsSeeTarget()))
+			if(targetList.Count == 0 
+				|| !(pathFinder.EnemiesSeeWayPoints()) 
+				|| !(pathFinder.WayPointsSeeTarget()))
 			{
 				stopCode = true;
 				gameObject.networkView.RPC("noTargetsDetonation", RPCMode.AllBuffered);
@@ -117,15 +121,15 @@ public class AIMovement : MonoBehaviour
 			//check if path is null, if path is empty (and can't see the destination currently), 
 			//or if the last waypoint in path can't see the destination
 			if((path.Count <= 0 
-					&& !(PathFinder.lineOfSight(transform.position, finalDestination.position)))
-				|| (path.Count > 0 
-					&& !(PathFinder.lineOfSight(path.FindLast(_unused => true), finalDestination.position))))
+					&& !(PathFinder.lineOfSight(transform.position+new Vector3(0, 2.5f, -1f), 
+				finalDestination.position))))
 			{
 				path = pathFinder.getPath (transform.position, finalDestination.position);
 			}
 			//check whether the final destination is visible.
 			//determine whether we need a new current and next destination
-			if(nextDestination != Vector3.zero && PathFinder.lineOfSight(transform.position, nextDestination))
+			if(nextDestination != Vector3.zero && 
+				PathFinder.lineOfSight(transform.position+new Vector3(0, 2.5f, -1f), nextDestination))
 			{
 				if(path.Count > 0)
 				{
@@ -149,7 +153,8 @@ public class AIMovement : MonoBehaviour
 			if(!stopCode)
 			{
 				//If the final destination is in line of sight...
-				if(PathFinder.lineOfSight(transform.position, finalDestination.position))
+				if(PathFinder.lineOfSight(transform.position+new Vector3(0, 2.5f, -1f), 
+					finalDestination.position))
 				{
 					//set current destination equal to the final destination's position
 					if(currentDestination != finalDestination.position)

@@ -9,6 +9,7 @@ public class EnemyGenerator : MonoBehaviour {
 	public float spawnTime = 20f;
 	private float timer = 0;
 	public bool canSpawn = false;
+	public int numEnemiesSpawning = 1;
 
 	void Start ()
 	{
@@ -18,6 +19,24 @@ public class EnemyGenerator : MonoBehaviour {
 		}
 	}
 	
+	private ArrayList genUniqueSpawns(int numSpawns)
+	{
+		ArrayList indexList = new ArrayList();
+		for(int i = 0; i < spawnPoints.Count; i++)
+		{
+			indexList.Add(i);
+		}
+		ArrayList spawnList = new ArrayList();
+		for(int i = 0; i < numEnemiesSpawning; i++)
+		{
+			int uniqueIndex = Random.Range (0, indexList.Count);
+			spawnList.Add (indexList[uniqueIndex]);
+			indexList.RemoveAt (uniqueIndex);
+		}
+		indexList = null;
+		return spawnList;
+	}
+	
 	void Update () {
 		timer += Time.deltaTime;
 		
@@ -25,9 +44,11 @@ public class EnemyGenerator : MonoBehaviour {
 		{
 			if(canSpawn)
 			{
-				for(int i = 0; i < spawnPoints.Count;i++)
+				ArrayList spawnList = genUniqueSpawns(numEnemiesSpawning);
+				for(int i = 0; i < numEnemiesSpawning;i++)
 				{
-					Network.Instantiate (enemy,((GameObject)spawnPoints[i]).transform.position, 
+					Network.Instantiate (enemy,
+						((GameObject)spawnPoints[(int)spawnList[i]]).transform.position, 
 						Quaternion.identity,0);
 				}
 			}

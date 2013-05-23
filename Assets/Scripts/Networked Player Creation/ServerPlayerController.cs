@@ -281,10 +281,13 @@ public class ServerPlayerController : MonoBehaviour
 		//move forwards
 		if(forward)
 		{
-			rigidbody.AddForce(transform.forward.normalized * speed);
-			if(rigidbody.velocity.magnitude > maxSpeed)
+			if(Quaternion.Angle (rigidbody.rotation, turret.transform.rotation) < 5f)
 			{
-				rigidbody.velocity = rigidbody.velocity.normalized * maxSpeed;
+				rigidbody.AddForce(transform.forward.normalized * speed);
+				if(rigidbody.velocity.magnitude > maxSpeed)
+				{
+					rigidbody.velocity = rigidbody.velocity.normalized * maxSpeed;
+				}
 			}
 			rigidbody.rotation = Quaternion.Slerp(rigidbody.rotation, 
 												  		  turret.transform.rotation, 
@@ -360,7 +363,6 @@ public class ServerPlayerController : MonoBehaviour
 		{
 			if(mortarPowerTimer > 1.5f){mortarPowerTimer = 1.5f;}
 			float mortarSpeed = 18f + (18f * mortarPowerTimer);
-			print ("motarSpeed is " + mortarSpeed);
 			GameObject prefab = Network.Instantiate(bullet, gunBarrel.transform.position + 
 				gunBarrel.transform.forward.normalized*2.108931f, 
 				Quaternion.identity, 0) as GameObject;
@@ -378,17 +380,21 @@ public class ServerPlayerController : MonoBehaviour
 	{
 		if (mShoot && mShotTimer)
 		{
-		    GameObject prefab = Network.Instantiate(mBullet, gunBarrel.transform.position + 
-			gunBarrel.transform.forward.normalized*2.108931f+new Vector3(-.1f,-.1f,0), 
+			Vector3 spawnPos = gunBarrel.transform.position + 
+			gunBarrel.transform.forward.normalized*2.108931f+new Vector3(-.1f,-.1f,0);
+		    GameObject prefab = Network.Instantiate(mBullet, spawnPos, 
 			gunBarrel.transform.rotation, 0) as GameObject;
 			prefab.rigidbody.AddForce (gunBarrel.transform.forward.normalized*18f, ForceMode.Impulse);
 			Destroy (prefab, 5f);
 			mShotTimer = false;
 			Invoke ("MShotTimer", 1.0f/machineGunShotsPerSecond);
 			//NetworkView netView = gameObject.transform.FindChild("Machinegun").gameObject.networkView;
-			netView.RPC("networkplayMGun",RPCMode.All);
+			//netView.RPC("networkplayMGun",RPCMode.All);
 			RaycastHit hitInfo;
-			if(Physics.Raycast(transform.position,transform.forward,out hitInfo))
+			var hit = Physics.Raycast (spawnPos, gunBarrel.transform.forward);
+			Color color = hit ? Color.green : Color.red;
+			Debug.DrawRay(spawnPos, gunBarrel.transform.forward*50f, color, 3f);
+			if(Physics.Raycast(spawnPos,gunBarrel.transform.forward,out hitInfo))
 			{
 				if(hitInfo.transform.tag == "Enemy")
 				{
