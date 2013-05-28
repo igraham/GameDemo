@@ -16,11 +16,13 @@ public class GameClient : MonoBehaviour {
 		
 	}
 	
-	void OnLevelWasLoaded(int level) {
+	void OnLevelWasLoaded(int level)
+	{
 		//enable the message processing for clients now that level has been loaded
 		if(level != 0 && Network.isClient)
 		{
 			Network.isMessageQueueRunning = true;
+			Network.SetSendingEnabled(0, true);
 			Debug.Log ("Level was loaded, requesting spawn");
 			Debug.Log ("Re-enabling message queue!");
 		

@@ -18,8 +18,6 @@ public class LobbyController : MonoBehaviour {
 			if(GUI.Button (new Rect(x, y+=h+10, w, h),"Load Game"))
 			{
 				networkView.RPC ("loadGame",RPCMode.AllBuffered);
-				Network.isMessageQueueRunning = true;
-        		Network.SetSendingEnabled(0, true);
 			}
 		}
 	}
