@@ -74,9 +74,10 @@ public class DetonatorForce : DetonatorComponent {
 						}
 					}
 					
+					float dist = Vector3.Distance (hit.transform.position, transform.position);
+					
 					if(hit.rigidbody.tag == "Wall")
 					{
-						float dist = Vector3.Distance (hit.transform.position, transform.position);
 						if(hit.gameObject && dist <= 10f)
 						{
 							//print ("wall hit!");
@@ -85,23 +86,28 @@ public class DetonatorForce : DetonatorComponent {
 						}
 						continue;
 					}
-					
-					if(hit.rigidbody.tag == "Enemy")
+					else if(hit.rigidbody.tag == "Enemy")
 					{
-						float dist = Vector3.Distance (hit.transform.position, transform.position);
 						if(dist <= 10f)
 						{
 							int percent = (int)(bombDamage*(transform.position-hit.transform.position).magnitude/10f);
 							hit.gameObject.networkView.RPC ("damageEnemy", RPCMode.AllBuffered, percent);
 						}
 					}
-					if(hit.rigidbody.tag == "Player")
+					else if(hit.rigidbody.tag == "Player")
 					{
-						float dist = Vector3.Distance (hit.transform.position, transform.position);
 						if(dist <= 10f)
 						{
 							int percent = (int)(bombDamage*(transform.position-hit.transform.position).magnitude/10f);
 							hit.gameObject.networkView.RPC ("damagePlayer", RPCMode.AllBuffered, percent);
+						}
+					}
+					else if(hit.rigidbody.tag == "HasDrones")
+					{
+						if(dist <= 10f)
+						{
+							int percent = (int)(bombDamage*(transform.position-hit.transform.position).magnitude/10f);
+							hit.gameObject.networkView.RPC ("damageNode", RPCMode.AllBuffered, percent);
 						}
 					}
 					//align the force along the object's rotation

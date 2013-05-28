@@ -404,6 +404,10 @@ public class ServerPlayerController : MonoBehaviour
 				{
 					hitInfo.transform.gameObject.networkView.RPC ("damagePlayer", RPCMode.AllBuffered, mDamage);
 				}
+				else if(hitInfo.transform.tag == "HasDrones")
+				{
+					hitInfo.transform.gameObject.networkView.RPC ("damageNode", RPCMode.AllBuffered, mDamage);
+				}
 			}
 		}
 	}

@@ -43,6 +43,10 @@ public class BulletScript : MonoBehaviour {
 			{
 				collision.gameObject.networkView.RPC ("damagePlayer", RPCMode.AllBuffered, damage);
 			}
+			else if(collision.gameObject.tag.Equals ("HasDrones"))
+			{
+				collision.gameObject.networkView.RPC ("damageNode", RPCMode.AllBuffered, damage);
+			}
 			Network.Instantiate(explosion, transform.position, Quaternion.identity, 0);
 			Network.Destroy(gameObject);
 		}
