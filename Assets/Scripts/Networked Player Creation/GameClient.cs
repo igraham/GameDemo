@@ -11,14 +11,15 @@ public class GameClient : MonoBehaviour {
 	{
 		Debug.Log ("Disabling message queue!");
 		Network.isMessageQueueRunning = false;
-		Network.SetSendingEnabled(0, false);
 		Application.LoadLevel (GameServer.levelName);
+		
+		
 	}
 	
 	void OnLevelWasLoaded(int level)
 	{
 		//enable the message processing for clients now that level has been loaded
-		if(level > 1 && Network.isClient)
+		if(level != 0 && Network.isClient)
 		{
 			Network.isMessageQueueRunning = true;
 			Network.SetSendingEnabled(0, true);

@@ -15,7 +15,7 @@ public class SplashController : MonoBehaviour {
 	void OnServerInitialized()
 	{
 		//tell all clients to load level 1
-		string levelName = "Lobby";
+		string levelName = "RockyCrag";
 		networkView.RPC("clientLoadLevel", RPCMode.OthersBuffered, levelName);
 		//load level 1
 		Application.LoadLevel(levelName);
@@ -34,7 +34,7 @@ public class SplashController : MonoBehaviour {
 	{
 		if(Input.GetKeyDown(KeyCode.Return))
 		{
-	 		Application.LoadLevel("Lobby");
+	 		Application.LoadLevel("RockyCrag");
 		}
 	}
 	
