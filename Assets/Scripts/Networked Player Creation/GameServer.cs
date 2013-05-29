@@ -66,6 +66,18 @@ public class GameServer : MonoBehaviour {
 		}
 	}
 	
+	void OnLevelWasLoaded(int level)
+	{
+		if(level == 3)
+		{
+			foreach(NetworkPlayer player in Network.connections)
+			{
+				scheduledSpawns.Add (player);
+			}
+			processSpawnRequests = true;
+		}
+	}
+	
 	void OnPlayerConnected(NetworkPlayer player)
 	{
 		Debug.Log ("Spawning playerPrefab for new client");
