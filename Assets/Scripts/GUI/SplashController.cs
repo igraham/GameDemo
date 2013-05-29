@@ -3,19 +3,19 @@ using System.Collections;
 
 public class SplashController : MonoBehaviour {
 
-	
+
     string gameID = "GGC 4650 Salvage of Eden";
 	public GUIStyle myStyle = new GUIStyle();
-	
+
 	void Awake()
 	{
 		Application.runInBackground = true;
 	}
-	
+
 	void OnServerInitialized()
 	{
 		//tell all clients to load level 1
-		string levelName = "RockyCrag";
+		string levelName = "Lobby";
 		networkView.RPC("clientLoadLevel", RPCMode.OthersBuffered, levelName);
 		//load level 1
 		Application.LoadLevel(levelName);
@@ -28,17 +28,17 @@ public class SplashController : MonoBehaviour {
 		Network.isMessageQueueRunning = false;
 		Application.LoadLevel(name);
 	}
-	
+
 	// Update is called once per frame
 	void Update () 
 	{
 		if(Input.GetKeyDown(KeyCode.Return))
 		{
-	 		Application.LoadLevel("RockyCrag");
+	 		Application.LoadLevel("Lobby");
 		}
 	}
-	
-	
+
+
 	void OnGUI()
 	{
 		float w = 600;
@@ -52,12 +52,12 @@ public class SplashController : MonoBehaviour {
 			var today = System.DateTime.Now;
 			MasterServer.RegisterHost(gameID, "Salvage of Eden - "+today.ToString("yyyy-MM-dd_HH:mm:ss"));
 		}
-		
+
 		if(GUI.Button(new Rect(x, y+=h+10, w, h), "Search for Servers",myStyle))
 		{
 			MasterServer.RequestHostList(gameID);
 		}
-		
+
 		foreach(HostData host in MasterServer.PollHostList())
 		{
 			if(GUI.Button(new Rect(x, y+=h+10, w-50, h), "Join " + host.gameName,myStyle))

@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class GameServer : MonoBehaviour {
-	
+
 	public GameObject[] spawnPoints;
 	public GameObject playerPrefab;
 	public static string levelName;
@@ -17,17 +17,17 @@ public class GameServer : MonoBehaviour {
 	public List<ClientPlayerController> playerTracker = new List<ClientPlayerController>();
 	public List<NetworkPlayer> scheduledSpawns = new List<NetworkPlayer>();
 	public int win = 100;
-	
+
 	public GameObject[] resourceNodes;
 	public static ArrayList nodeScripts = new ArrayList();
-	
+
 	bool processSpawnRequests = false;
 	//	Color[] playerColors = {Color.black, Color.blue, Color.green, Color.red};
 	//Later on, use colors for team colors in spawning.
 	void Awake()
 	{
 		enabled = Network.isServer;
-		
+
 		Application.runInBackground = true;
 		for(int i = 0; i < spawnPoints.Length; i++)
 		{
@@ -45,7 +45,7 @@ public class GameServer : MonoBehaviour {
 		//processSpawnRequests = true;
 		//requestSpawn (Network.player);
 	}
-	
+
 	void Update()
 	{
 		if(totalResources1 >= 100)
@@ -65,7 +65,19 @@ public class GameServer : MonoBehaviour {
 			networkView.RPC ("loadVictoryOrDefeat", RPCMode.AllBuffered, playerIDs[3]);
 		}
 	}
-	
+
+	void OnLevelWasLoaded(int level)
+	{
+		if(level == 3)
+		{
+			foreach(NetworkPlayer player in Network.connections)
+			{
+				scheduledSpawns.Add (player);
+			}
+			processSpawnRequests = true;
+		}
+	}
+
 	void OnPlayerConnected(NetworkPlayer player)
 	{
 		Debug.Log ("Spawning playerPrefab for new client");
@@ -135,7 +147,7 @@ public class GameServer : MonoBehaviour {
 			totalResources4 += amount;
 		}
 	}
-	
+
 	void OnPlayerDisconnected(NetworkPlayer player)
 	{
 		Debug.Log ("Player " +player.guid + " disconnected.");
