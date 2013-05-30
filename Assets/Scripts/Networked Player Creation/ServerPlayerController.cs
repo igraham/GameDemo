@@ -4,37 +4,21 @@ using System.Collections.Generic;
 
 public class ServerPlayerController : MonoBehaviour
 {
-	public float speed = 5f;
-	public float maxSpeed = 15f;
-	public Vector3 rotationSpeed = new Vector3 (0, 100f, 0);
-	bool forward = false;
-	bool reverse = false;
-	bool rotateRight = false;
-	bool rotateLeft = false;
-	bool strRight = false;
-	bool strLeft = false;
-	float mouseH = 0;
-	float mouseV = 0; 
-	bool shoot = false;
-	bool mShoot = false;
-	bool mShotTimer = true;
-	bool shotTimer = true;
 	public GameObject turret;
 	public GameObject gunBarrel;
 	public Camera playerCamera;
-	public GameObject bullet;
-	public GameObject mBullet;
 	private GameObject radarDot;
 	GameObject spawnLocation;
 	bool isRespawning = false;
-	public int mDamage = 1;
 	public GameObject[] resourceNodes;
-	public float machineGunShotsPerSecond  = 12.5f;
-	public float mortarPowerTimer = 0f;
 	//public static ArrayList nodeScripts = new ArrayList();
 	public Dictionary<int,GameObject> sortedNodeList = new Dictionary<int,GameObject> ();
 	Color[] tankColor = new Color[]{Color.red,Color.blue,Color.green,Color.yellow};
 	public GameObject[] pieceChange;
+	public MovementController movement;
+	public TankTurretController turretRotation;
+	public MortarController mortar;
+	public MachineGunController machineGun;
 	
 	void OnNetworkInstantiate (NetworkMessageInfo info)
 	{
@@ -99,36 +83,6 @@ public class ServerPlayerController : MonoBehaviour
 	void resetRadarDotPosition()
 	{
 		radarDot.transform.localPosition = new Vector3(0, 57f, 0);
-	}
-	
-	[RPC]
-	void setClientTurretControls (float mouseX, float mouseY)
-	{
-		mouseH = mouseX;
-		mouseV = mouseY;
-	}
-	
-	[RPC]
-	void setClientMovementControls (bool f, bool r, bool rotR, bool rotL, bool strR, bool strL)
-	{
-		forward = f;
-		reverse = r;
-		rotateRight = rotR;
-		rotateLeft = rotL;
-		strRight = strR;
-		strLeft = strL;
-	}
-	
-	[RPC]
-	void setClientShootingState (bool shooting)
-	{
-		shoot = shooting;
-	}
-	
-	[RPC]
-	void MsetClientShootingState (bool mShooting)
-	{
-		mShoot = mShooting;
 	}
 	
 	[RPC]
@@ -212,214 +166,14 @@ public class ServerPlayerController : MonoBehaviour
 		isRespawning = false;
 	}
 	
-	private void turretControls()
-	{
-		//------------------turret----------------------//
-		float upDown = -mouseV * Time.deltaTime * 60f;
-		float leftRight = mouseH * Time.deltaTime * 60f;
-		
-		//making it turn up or down
-		if(gunBarrel.transform.localEulerAngles.x < 2)
-		{
-			gunBarrel.transform.Rotate (upDown, 0, 0);
-		}
-		else if(gunBarrel.transform.localEulerAngles.x > 335)
-		{
-			gunBarrel.transform.Rotate (upDown, 0, 0);         
-		}
-		
-		//making it turn left or right
-		if(turret.transform.localEulerAngles.y < 33)
-		{
-			turret.transform.Rotate(0, leftRight, 0);
-		}
-		else if(turret.transform.localEulerAngles.y > 327)
-		{
-			turret.transform.Rotate(0, leftRight, 0);        
-		}
- 
-		//making it not exeed rotation limit (left and right) and preventing it lock up
-		if(turret.transform.localEulerAngles.y >= 33 && turret.transform.localEulerAngles.y < 327)
-		{
-			if(turret.transform.localEulerAngles.y < 180)
-			{
-				turret.transform.localEulerAngles = new Vector3(transform.localEulerAngles.x, 32.9F, 0);
-				playerCamera.transform.Rotate (0, leftRight, 0);
-			}
-			else
-			{
-				turret.transform.localEulerAngles = new Vector3(transform.localEulerAngles.x, 327.1F, 0);
-				playerCamera.transform.Rotate (0, leftRight, 0);
-			}
-		}
- 
-		//making it not exeed rotation limit (up and down) and preventing it lock up
-		if(gunBarrel.transform.localEulerAngles.x >= 2 && gunBarrel.transform.localEulerAngles.x < 335)
-		{
-			if(gunBarrel.transform.localEulerAngles.x < 180)
-			{
-				gunBarrel.transform.localEulerAngles = new Vector3(1.9F, gunBarrel.transform.localEulerAngles.y, 0);
-			}
-			else
-			{
-				gunBarrel.transform.localEulerAngles = new Vector3(335.1F, gunBarrel.transform.localEulerAngles.y, 0);
-			}
-		}
- 
-		//making sure it doesn't turn on it's z axis
-		if(turret.transform.localEulerAngles.z != 0)
-		{
-			turret.transform.localEulerAngles = new Vector3(turret.transform.localEulerAngles.x, 
-				turret.transform.localEulerAngles.y, 0);
-		}
-		//------------------turret----------------------//
-	}
-	
-	private void movementControls()
-	{
-		//------------------movement--------------------//
-		//move forwards
-		if(forward)
-		{
-			if(Quaternion.Angle (rigidbody.rotation, turret.transform.rotation) < 5f)
-			{
-				rigidbody.AddForce(transform.forward.normalized * speed);
-				if(rigidbody.velocity.magnitude > maxSpeed)
-				{
-					rigidbody.velocity = rigidbody.velocity.normalized * maxSpeed;
-				}
-			}
-			rigidbody.rotation = Quaternion.Slerp(rigidbody.rotation, 
-												  		  turret.transform.rotation, 
-												  		  Time.deltaTime * 4f);
-			turret.transform.rotation = Quaternion.Slerp(turret.transform.rotation, 
-														 		 rigidbody.rotation, 
-														 		 Time.deltaTime * 2f);
-			playerCamera.transform.rotation = Quaternion.Slerp(playerCamera.transform.rotation, 
-															   		   turret.transform.rotation, 
-															   		   Time.deltaTime * 3f);
-			
-		}
-		//move backwards
-		if(reverse)
-		{
-			rigidbody.AddForce(-1f * transform.forward.normalized * speed);
-			if(rigidbody.velocity.magnitude > maxSpeed)
-			{
-				rigidbody.velocity = rigidbody.velocity.normalized * maxSpeed;
-				
-			}
-		}
-		//rotate right
-		if(rotateRight)
-		{
-			Quaternion deltaRotation = Quaternion.Euler(rotationSpeed * Time.deltaTime);
-			rigidbody.MoveRotation(rigidbody.rotation * deltaRotation);
-		}
-		//rotate left
-		if(rotateLeft)
-		{
-			Quaternion deltaRotation = Quaternion.Euler(rotationSpeed * Time.deltaTime * -1f);
-			rigidbody.MoveRotation(rigidbody.rotation * deltaRotation);
-		}
-		//strafe right
-		if(strRight)
-		{
-			rigidbody.AddForce(transform.right.normalized * speed);
-			if(rigidbody.velocity.magnitude > maxSpeed)
-			{
-				rigidbody.velocity = rigidbody.velocity.normalized * maxSpeed;
-			}
-		}
-		//strafe left
-		if(strLeft)
-		{
-			rigidbody.AddForce(-1f * transform.right.normalized * speed);
-			if(rigidbody.velocity.magnitude > maxSpeed)
-			{
-				rigidbody.velocity = rigidbody.velocity.normalized * maxSpeed;
-			}
-		}
-		//------------------movement--------------------//
-	}
-	
-	void ShotTimer()
-	{
-		shotTimer = true;	
-	}
-	
-	void MShotTimer()
-	{
-		mShotTimer = true;
-	}
-	
-	private void shootingControls()
-	{
-		if(shoot && shotTimer && mortarPowerTimer <= 1.5f)
-		{
-			mortarPowerTimer += Time.deltaTime;
-		}
-		else if(!shoot && shotTimer && mortarPowerTimer > 0f)
-		{
-			if(mortarPowerTimer > 1.5f){mortarPowerTimer = 1.5f;}
-			float mortarSpeed = 18f + (18f * mortarPowerTimer);
-			GameObject prefab = Network.Instantiate(bullet, gunBarrel.transform.position + 
-				gunBarrel.transform.forward.normalized*2.108931f, 
-				Quaternion.identity, 0) as GameObject;
-			prefab.rigidbody.AddForce (gunBarrel.transform.forward.normalized*mortarSpeed, ForceMode.Impulse);
-			Destroy (prefab, 5f);
-			shotTimer = false;
-			Invoke ("ShotTimer", 2.0f);
-			NetworkView netView = gameObject.transform.FindChild("mortarSound").gameObject.networkView;
-			netView.RPC("networkplayMortar",RPCMode.All);
-			mortarPowerTimer = 0f;
-		}
-	}
-	
-	private void MshootingControls ()
-	{
-		if (mShoot && mShotTimer)
-		{
-			Vector3 spawnPos = gunBarrel.transform.position + 
-			gunBarrel.transform.forward.normalized*2.108931f+new Vector3(-.1f,-.1f,0);
-		    GameObject prefab = Network.Instantiate(mBullet, spawnPos, 
-			gunBarrel.transform.rotation, 0) as GameObject;
-			prefab.rigidbody.AddForce (gunBarrel.transform.forward.normalized*18f, ForceMode.Impulse);
-			Destroy (prefab, 5f);
-			mShotTimer = false;
-			Invoke ("MShotTimer", 1.0f/machineGunShotsPerSecond);
-			//NetworkView netView = gameObject.transform.FindChild("Machinegun").gameObject.networkView;
-			//netView.RPC("networkplayMGun",RPCMode.All);
-			RaycastHit hitInfo;
-			var hit = Physics.Raycast (spawnPos, gunBarrel.transform.forward);
-			Color color = hit ? Color.green : Color.red;
-			Debug.DrawRay(spawnPos, gunBarrel.transform.forward*50f, color, 3f);
-			if(Physics.Raycast(spawnPos,gunBarrel.transform.forward,out hitInfo))
-			{
-				if(hitInfo.transform.tag == "Enemy")
-				{
-					hitInfo.transform.gameObject.networkView.RPC ("damageEnemy", RPCMode.AllBuffered, mDamage);
-				}
-				else if(hitInfo.transform.tag == "Player")
-				{
-					hitInfo.transform.gameObject.networkView.RPC ("damagePlayer", RPCMode.AllBuffered, mDamage);
-				}
-				else if(hitInfo.transform.tag == "HasDrones")
-				{
-					hitInfo.transform.gameObject.networkView.RPC ("damageNode", RPCMode.AllBuffered, mDamage);
-				}
-			}
-		}
-	}
-	
 	void FixedUpdate()
 	{
 		if (!isRespawning)
 		{
-			turretControls();
-			movementControls();
-			shootingControls();
-			MshootingControls();
+			turretRotation.Controls();
+			movement.Controls();
+			mortar.Controls();
+			machineGun.Controls();
 		}
 	}
 }
