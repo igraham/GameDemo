@@ -18,13 +18,13 @@ public class Predictor : MonoBehaviour
 		
 		if(stream.isWriting)
 		{
-			stream.Serialize(pos);
-			stream.Serialize(rot);
+			stream.Serialize(ref pos);
+			stream.Serialize(ref rot);
 		}
 		else
 		{
-			stream.Serialize(pos);
-			stream.Serialize(rot);
+			stream.Serialize(ref pos);
+			stream.Serialize(ref rot);
 			receiver.serverPosition = pos;
 			receiver.serverRotation = rot;
 			
@@ -46,8 +46,8 @@ public class Predictor : MonoBehaviour
 			return;
 		}
 		
-		clientPing = (Network.GetAveragePing(Network.connections[0])/100f) + pingMargin;
-		float interpolationTime = Network.time - clientPing;
+		clientPing = (float)(Network.GetAveragePing(Network.connections[0])/100) + pingMargin;
+		double interpolationTime = Network.time - clientPing;
 		
 		if(serverStateBuffer[0] == null)
 		{
@@ -69,12 +69,12 @@ public class Predictor : MonoBehaviour
 					NetState bestTarget = serverStateBuffer[Mathf.Max (i-1, 0)];
 					NetState bestStart = serverStateBuffer[i];
 					
-					float timeDiff = bestTarget.timeStamp - bestStart.timeStamp;
+					float timeDiff = (float)(bestTarget.timeStamp - bestStart.timeStamp);
 					float lerpTime = 0f;
 					
-					if(timeDiff > 0.0001f)
+					if(timeDiff > 0.0001d)
 					{
-						lerpTime = ((interpolationTime - bestStart.timeStamp) / timeDiff);
+						lerpTime = (float)((interpolationTime - bestStart.timeStamp) / timeDiff);
 					}
 					
 					transform.position = Vector3.Lerp(bestStart.pos, bestTarget.pos, lerpTime);
