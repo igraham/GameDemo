@@ -70,7 +70,13 @@ public class GameServer : MonoBehaviour {
 	{
 		if(level == 3)
 		{
+			List<NetworkPlayer> playerList = new List<NetworkPlayer>();
 			foreach(NetworkPlayer player in Network.connections)
+			{
+				playerList.Add (player);
+			}
+			playerList.Sort ((x,y) => string.Compare(x.guid, y.guid));
+			foreach(NetworkPlayer player in playerList)
 			{
 				scheduledSpawns.Add (player);
 			}

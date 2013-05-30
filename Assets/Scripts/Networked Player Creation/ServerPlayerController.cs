@@ -4,8 +4,6 @@ using System.Collections.Generic;
 
 public class ServerPlayerController : MonoBehaviour
 {
-	float mouseH = 0;
-	float mouseV = 0; 
 	bool shoot = false;
 	bool mShoot = false;
 	bool mShotTimer = true;
@@ -27,6 +25,7 @@ public class ServerPlayerController : MonoBehaviour
 	Color[] tankColor = new Color[]{Color.red,Color.blue,Color.green,Color.yellow};
 	public GameObject[] pieceChange;
 	public MovementController movement;
+	public TankTurretController turretRotation;
 	
 	void OnNetworkInstantiate (NetworkMessageInfo info)
 	{
@@ -91,13 +90,6 @@ public class ServerPlayerController : MonoBehaviour
 	void resetRadarDotPosition()
 	{
 		radarDot.transform.localPosition = new Vector3(0, 57f, 0);
-	}
-	
-	[RPC]
-	void setClientTurretControls (float mouseX, float mouseY)
-	{
-		mouseH = mouseX;
-		mouseV = mouseY;
 	}
 	
 	[RPC]
@@ -193,69 +185,6 @@ public class ServerPlayerController : MonoBehaviour
 		isRespawning = false;
 	}
 	
-	private void turretControls()
-	{
-		//------------------turret----------------------//
-		float upDown = -mouseV * Time.deltaTime * 60f;
-		float leftRight = mouseH * Time.deltaTime * 60f;
-		
-		//making it turn up or down
-		if(gunBarrel.transform.localEulerAngles.x < 2)
-		{
-			gunBarrel.transform.Rotate (upDown, 0, 0);
-		}
-		else if(gunBarrel.transform.localEulerAngles.x > 335)
-		{
-			gunBarrel.transform.Rotate (upDown, 0, 0);         
-		}
-		
-		//making it turn left or right
-		if(turret.transform.localEulerAngles.y < 33)
-		{
-			turret.transform.Rotate(0, leftRight, 0);
-		}
-		else if(turret.transform.localEulerAngles.y > 327)
-		{
-			turret.transform.Rotate(0, leftRight, 0);        
-		}
- 
-		//making it not exeed rotation limit (left and right) and preventing it lock up
-		if(turret.transform.localEulerAngles.y >= 33 && turret.transform.localEulerAngles.y < 327)
-		{
-			if(turret.transform.localEulerAngles.y < 180)
-			{
-				turret.transform.localEulerAngles = new Vector3(transform.localEulerAngles.x, 32.9F, 0);
-				playerCamera.transform.Rotate (0, leftRight, 0);
-			}
-			else
-			{
-				turret.transform.localEulerAngles = new Vector3(transform.localEulerAngles.x, 327.1F, 0);
-				playerCamera.transform.Rotate (0, leftRight, 0);
-			}
-		}
- 
-		//making it not exeed rotation limit (up and down) and preventing it lock up
-		if(gunBarrel.transform.localEulerAngles.x >= 2 && gunBarrel.transform.localEulerAngles.x < 335)
-		{
-			if(gunBarrel.transform.localEulerAngles.x < 180)
-			{
-				gunBarrel.transform.localEulerAngles = new Vector3(1.9F, gunBarrel.transform.localEulerAngles.y, 0);
-			}
-			else
-			{
-				gunBarrel.transform.localEulerAngles = new Vector3(335.1F, gunBarrel.transform.localEulerAngles.y, 0);
-			}
-		}
- 
-		//making sure it doesn't turn on it's z axis
-		if(turret.transform.localEulerAngles.z != 0)
-		{
-			turret.transform.localEulerAngles = new Vector3(turret.transform.localEulerAngles.x, 
-				turret.transform.localEulerAngles.y, 0);
-		}
-		//------------------turret----------------------//
-	}
-	
 	void ShotTimer()
 	{
 		shotTimer = true;	
@@ -329,7 +258,7 @@ public class ServerPlayerController : MonoBehaviour
 	{
 		if (!isRespawning)
 		{
-			turretControls();
+			turretRotation.Controls();
 			movement.Controls();
 			shootingControls();
 			MshootingControls();

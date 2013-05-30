@@ -16,7 +16,7 @@ public class MovementController : MonoBehaviour {
 	public Camera playerCamera;
 	
 	[RPC]
-	void setClientMovementControls (bool f, bool r, bool rotR, bool rotL, bool strR, bool strL)
+	public void setClientMovementControls (bool f, bool r, bool rotR, bool rotL, bool strR, bool strL)
 	{
 		forward = f;
 		reverse = r;
