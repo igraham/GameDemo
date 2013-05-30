@@ -4,28 +4,21 @@ using System.Collections.Generic;
 
 public class ServerPlayerController : MonoBehaviour
 {
-	bool shoot = false;
-	bool mShoot = false;
-	bool mShotTimer = true;
-	bool shotTimer = true;
 	public GameObject turret;
 	public GameObject gunBarrel;
 	public Camera playerCamera;
-	public GameObject bullet;
-	public GameObject mBullet;
 	private GameObject radarDot;
 	GameObject spawnLocation;
 	bool isRespawning = false;
-	public int mDamage = 1;
 	public GameObject[] resourceNodes;
-	public float machineGunShotsPerSecond  = 12.5f;
-	public float mortarPowerTimer = 0f;
 	//public static ArrayList nodeScripts = new ArrayList();
 	public Dictionary<int,GameObject> sortedNodeList = new Dictionary<int,GameObject> ();
 	Color[] tankColor = new Color[]{Color.red,Color.blue,Color.green,Color.yellow};
 	public GameObject[] pieceChange;
 	public MovementController movement;
 	public TankTurretController turretRotation;
+	public MortarController mortar;
+	public MachineGunController machineGun;
 	
 	void OnNetworkInstantiate (NetworkMessageInfo info)
 	{
@@ -90,18 +83,6 @@ public class ServerPlayerController : MonoBehaviour
 	void resetRadarDotPosition()
 	{
 		radarDot.transform.localPosition = new Vector3(0, 57f, 0);
-	}
-	
-	[RPC]
-	void setClientShootingState (bool shooting)
-	{
-		shoot = shooting;
-	}
-	
-	[RPC]
-	void MsetClientShootingState (bool mShooting)
-	{
-		mShoot = mShooting;
 	}
 	
 	[RPC]
@@ -185,83 +166,14 @@ public class ServerPlayerController : MonoBehaviour
 		isRespawning = false;
 	}
 	
-	void ShotTimer()
-	{
-		shotTimer = true;	
-	}
-	
-	void MShotTimer()
-	{
-		mShotTimer = true;
-	}
-	
-	private void shootingControls()
-	{
-		if(shoot && shotTimer && mortarPowerTimer <= 1.5f)
-		{
-			mortarPowerTimer += Time.deltaTime;
-		}
-		else if(!shoot && shotTimer && mortarPowerTimer > 0f)
-		{
-			if(mortarPowerTimer > 1.5f){mortarPowerTimer = 1.5f;}
-			float mortarSpeed = 18f + (18f * mortarPowerTimer);
-			GameObject prefab = Network.Instantiate(bullet, gunBarrel.transform.position + 
-				gunBarrel.transform.forward.normalized*2.108931f, 
-				Quaternion.identity, 0) as GameObject;
-			prefab.rigidbody.AddForce (gunBarrel.transform.forward.normalized*mortarSpeed, ForceMode.Impulse);
-			Destroy (prefab, 5f);
-			shotTimer = false;
-			Invoke ("ShotTimer", 2.0f);
-			NetworkView netView = gameObject.transform.FindChild("mortarSound").gameObject.networkView;
-			netView.RPC("networkplayMortar",RPCMode.All);
-			mortarPowerTimer = 0f;
-		}
-	}
-	
-	private void MshootingControls ()
-	{
-		if (mShoot && mShotTimer)
-		{
-			Vector3 spawnPos = gunBarrel.transform.position + 
-			gunBarrel.transform.forward.normalized*2.108931f+new Vector3(-.1f,-.1f,0);
-		    GameObject prefab = Network.Instantiate(mBullet, spawnPos, 
-			gunBarrel.transform.rotation, 0) as GameObject;
-			prefab.rigidbody.AddForce (gunBarrel.transform.forward.normalized*18f, ForceMode.Impulse);
-			Destroy (prefab, 5f);
-			mShotTimer = false;
-			Invoke ("MShotTimer", 1.0f/machineGunShotsPerSecond);
-			//NetworkView netView = gameObject.transform.FindChild("Machinegun").gameObject.networkView;
-			//netView.RPC("networkplayMGun",RPCMode.All);
-			RaycastHit hitInfo;
-			var hit = Physics.Raycast (spawnPos, gunBarrel.transform.forward);
-			Color color = hit ? Color.green : Color.red;
-			Debug.DrawRay(spawnPos, gunBarrel.transform.forward*50f, color, 3f);
-			if(Physics.Raycast(spawnPos,gunBarrel.transform.forward,out hitInfo))
-			{
-				if(hitInfo.transform.tag == "Enemy")
-				{
-					hitInfo.transform.gameObject.networkView.RPC ("damageEnemy", RPCMode.AllBuffered, mDamage);
-				}
-				else if(hitInfo.transform.tag == "Player")
-				{
-					hitInfo.transform.gameObject.networkView.RPC ("damagePlayer", RPCMode.AllBuffered, mDamage);
-				}
-				else if(hitInfo.transform.tag == "HasDrones")
-				{
-					hitInfo.transform.gameObject.networkView.RPC ("damageNode", RPCMode.AllBuffered, mDamage);
-				}
-			}
-		}
-	}
-	
 	void FixedUpdate()
 	{
 		if (!isRespawning)
 		{
 			turretRotation.Controls();
 			movement.Controls();
-			shootingControls();
-			MshootingControls();
+			mortar.Controls();
+			machineGun.Controls();
 		}
 	}
 }
