@@ -26,6 +26,15 @@ public class MovementController : MonoBehaviour {
 		strLeft = strL;
 	}
 	
+	private void fixUnintentionalRotation()
+	{
+		if(transform.localEulerAngles.z != 0)
+		{
+			transform.localEulerAngles = new Vector3(transform.localEulerAngles.x, 
+													 transform.localEulerAngles.y, 0);
+		}
+	}
+	
 	private void moveForward()
 	{
 		if(Quaternion.Angle (rigidbody.rotation, turret.transform.rotation) < 5f)
@@ -53,7 +62,6 @@ public class MovementController : MonoBehaviour {
 		if(rigidbody.velocity.magnitude > maxSpeed)
 		{
 			rigidbody.velocity = rigidbody.velocity.normalized * maxSpeed;
-			
 		}
 	}
 	
@@ -125,6 +133,7 @@ public class MovementController : MonoBehaviour {
 		{
 			strafeLeft();
 		}
+		fixUnintentionalRotation();
 	}
 	
 }
