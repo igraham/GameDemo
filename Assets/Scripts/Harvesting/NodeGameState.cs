@@ -4,7 +4,6 @@ using System.Collections.Generic;
 
 public class NodeGameState : MonoBehaviour
 {
-
 	public ArrayList nodes = new ArrayList ();
 	public ArrayList nodeTexts = new ArrayList ();
 	public ArrayList nodeModes = new ArrayList ();
@@ -60,7 +59,8 @@ public class NodeGameState : MonoBehaviour
 	public Dictionary<int,GameObject> sortedNodeList = new Dictionary<int,GameObject> ();
 	public GameObject[] resourceNodes;
 	ClientPlayerController cpc;
-	public NetworkPlayer n;
+	public NetworkPlayer netPlayer;
+	
 	
 	void OnNetworkInstantiate (NetworkMessageInfo info)
 	{
@@ -147,7 +147,7 @@ public class NodeGameState : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
 	{
-		if (nodes.Count > 0 && Network.player == n) {
+		if (nodes.Count > 0 && Network.player == netPlayer) {
 			HarvestButtonGUI buttons = (HarvestButtonGUI)main.GetComponent (typeof(HarvestButtonGUI));
 			buttons.showCommandButtons = true;
 			buttons.showNodeButtons = false;
@@ -501,9 +501,10 @@ public class NodeGameState : MonoBehaviour
 	{
 		if (nodes.Contains (sortedNodeList [nodeKey]) == false) {
 			setOwnership ();
+			//ortedNodeList [nodeKey].owner = netPlayer;
 			HarvestButtonGUI buttons = (HarvestButtonGUI)main.GetComponent (typeof(HarvestButtonGUI));
 			buttons.setOwnership ();
-			if (Network.player == n)
+			if (Network.player == netPlayer)
 				nodes.Add (sortedNodeList [nodeKey]);
 		}
 		//nodes.Add(serverController.sortedNodeList[nodeKey]);
@@ -516,7 +517,7 @@ public class NodeGameState : MonoBehaviour
 			setOwnership ();
 			HarvestButtonGUI buttons = (HarvestButtonGUI)main.GetComponent (typeof(HarvestButtonGUI));
 			buttons.setOwnership ();
-			if (Network.player == n)
+			if (Network.player == netPlayer)
 				nodes.Remove (sortedNodeList [nodeKey]);
 		}
 		//nodes.Remove(serverController.sortedNodeList[nodeKey]);
@@ -528,7 +529,7 @@ public class NodeGameState : MonoBehaviour
 	{
 		GameObject tank = transform.parent.parent.parent.FindChild ("NewTank").gameObject;
 		cpc = (ClientPlayerController)tank.GetComponent (typeof(ClientPlayerController));
-		n = cpc.getOwner ();
+		netPlayer = cpc.getOwner ();
 	}
 	
 	private void nodeCommandResponse (ResourceNodeScript nodeScript)
