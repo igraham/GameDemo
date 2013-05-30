@@ -26,6 +26,22 @@ public class ClientPlayerController : MonoBehaviour
 	Fading radarControl;
 	public float radarCooldownTime = 5f;
 	bool radarCooldown = false;
+	public Vector3 serverPosition = Vector3.zero;
+	public Quaternion serverRotation = Quaternion.identity;
+	public float positionDiffThreshold = 0.2f;
+	public float speed = 5f;
+	
+	public void lerpToTarget()
+	{
+		float distance = Vector3.Distance(transform.position, serverPosition);
+		
+		if(distance >= positionDiffThreshold)
+		{
+			float lerp = ((1/distance) * speed)/100f;
+			transform.position = Vector3.Lerp (transform.position, serverPosition, lerp);
+			transform.rotation = Quaternion.Slerp (transform.rotation, serverRotation, lerp);
+		}
+	}
 	
 	private void RadarCooldown()
 	{
@@ -135,6 +151,8 @@ public class ClientPlayerController : MonoBehaviour
 		
 	void FixedUpdate ()
 	{
+		if(Network.isServer){return;}
+		
 		if(Network.player == owner)
 		{
 			bool forward = Input.GetButton("Forward");

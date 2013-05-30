@@ -4,15 +4,6 @@ using System.Collections.Generic;
 
 public class ServerPlayerController : MonoBehaviour
 {
-	public float speed = 5f;
-	public float maxSpeed = 15f;
-	public Vector3 rotationSpeed = new Vector3 (0, 100f, 0);
-	bool forward = false;
-	bool reverse = false;
-	bool rotateRight = false;
-	bool rotateLeft = false;
-	bool strRight = false;
-	bool strLeft = false;
 	float mouseH = 0;
 	float mouseV = 0; 
 	bool shoot = false;
@@ -35,6 +26,7 @@ public class ServerPlayerController : MonoBehaviour
 	public Dictionary<int,GameObject> sortedNodeList = new Dictionary<int,GameObject> ();
 	Color[] tankColor = new Color[]{Color.red,Color.blue,Color.green,Color.yellow};
 	public GameObject[] pieceChange;
+	public MovementController movement;
 	
 	void OnNetworkInstantiate (NetworkMessageInfo info)
 	{
@@ -106,17 +98,6 @@ public class ServerPlayerController : MonoBehaviour
 	{
 		mouseH = mouseX;
 		mouseV = mouseY;
-	}
-	
-	[RPC]
-	void setClientMovementControls (bool f, bool r, bool rotR, bool rotL, bool strR, bool strL)
-	{
-		forward = f;
-		reverse = r;
-		rotateRight = rotR;
-		rotateLeft = rotL;
-		strRight = strR;
-		strLeft = strL;
 	}
 	
 	[RPC]
@@ -275,74 +256,6 @@ public class ServerPlayerController : MonoBehaviour
 		//------------------turret----------------------//
 	}
 	
-	private void movementControls()
-	{
-		//------------------movement--------------------//
-		//move forwards
-		if(forward)
-		{
-			if(Quaternion.Angle (rigidbody.rotation, turret.transform.rotation) < 5f)
-			{
-				rigidbody.AddForce(transform.forward.normalized * speed);
-				if(rigidbody.velocity.magnitude > maxSpeed)
-				{
-					rigidbody.velocity = rigidbody.velocity.normalized * maxSpeed;
-				}
-			}
-			rigidbody.rotation = Quaternion.Slerp(rigidbody.rotation, 
-												  		  turret.transform.rotation, 
-												  		  Time.deltaTime * 4f);
-			turret.transform.rotation = Quaternion.Slerp(turret.transform.rotation, 
-														 		 rigidbody.rotation, 
-														 		 Time.deltaTime * 2f);
-			playerCamera.transform.rotation = Quaternion.Slerp(playerCamera.transform.rotation, 
-															   		   turret.transform.rotation, 
-															   		   Time.deltaTime * 3f);
-			
-		}
-		//move backwards
-		if(reverse)
-		{
-			rigidbody.AddForce(-1f * transform.forward.normalized * speed);
-			if(rigidbody.velocity.magnitude > maxSpeed)
-			{
-				rigidbody.velocity = rigidbody.velocity.normalized * maxSpeed;
-				
-			}
-		}
-		//rotate right
-		if(rotateRight)
-		{
-			Quaternion deltaRotation = Quaternion.Euler(rotationSpeed * Time.deltaTime);
-			rigidbody.MoveRotation(rigidbody.rotation * deltaRotation);
-		}
-		//rotate left
-		if(rotateLeft)
-		{
-			Quaternion deltaRotation = Quaternion.Euler(rotationSpeed * Time.deltaTime * -1f);
-			rigidbody.MoveRotation(rigidbody.rotation * deltaRotation);
-		}
-		//strafe right
-		if(strRight)
-		{
-			rigidbody.AddForce(transform.right.normalized * speed);
-			if(rigidbody.velocity.magnitude > maxSpeed)
-			{
-				rigidbody.velocity = rigidbody.velocity.normalized * maxSpeed;
-			}
-		}
-		//strafe left
-		if(strLeft)
-		{
-			rigidbody.AddForce(-1f * transform.right.normalized * speed);
-			if(rigidbody.velocity.magnitude > maxSpeed)
-			{
-				rigidbody.velocity = rigidbody.velocity.normalized * maxSpeed;
-			}
-		}
-		//------------------movement--------------------//
-	}
-	
 	void ShotTimer()
 	{
 		shotTimer = true;	
@@ -417,7 +330,7 @@ public class ServerPlayerController : MonoBehaviour
 		if (!isRespawning)
 		{
 			turretControls();
-			movementControls();
+			movement.Controls();
 			shootingControls();
 			MshootingControls();
 		}
