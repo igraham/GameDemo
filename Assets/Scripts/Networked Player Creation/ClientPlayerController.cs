@@ -27,6 +27,13 @@ public class ClientPlayerController : MonoBehaviour
 	public float radarCooldownTime = 5f;
 	bool radarCooldown = false;
 	bool isNodeBusy = false;
+	public Vector3 serverPosition;
+	public Quaternion serverRotation;
+
+	public void lerpToTarget()
+	{
+		
+	}
 	
 	private void RadarCooldown()
 	{
