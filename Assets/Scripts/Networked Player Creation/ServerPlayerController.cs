@@ -36,7 +36,9 @@ public class ServerPlayerController : MonoBehaviour
 		//Sorts them by number as key from when the server initialized
 		
 		if (resourceNodes.Length == 0)
-			print ("Empty");
+		{
+			//print ("Empty");
+		}
 		float dist = float.MaxValue;
 		foreach (GameObject obj in spawns)
 		{

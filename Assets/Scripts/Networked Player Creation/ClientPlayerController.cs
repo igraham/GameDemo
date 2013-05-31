@@ -29,10 +29,19 @@ public class ClientPlayerController : MonoBehaviour
 	bool isNodeBusy = false;
 	public Vector3 serverPosition;
 	public Quaternion serverRotation;
+	public float positionErrorThreshold = 0.2f;
+	public float speed = 10f;
 
 	public void lerpToTarget()
 	{
-		
+		float distance = Vector3.Distance(transform.position, serverPosition);
+
+		if(distance >= positionErrorThreshold)
+		{
+			float lerp = ((1 / distance) * speed) / 100f;
+			transform.position = Vector3.Lerp (transform.position, serverPosition, lerp);
+			transform.rotation = Quaternion.Slerp(transform.rotation, serverRotation, lerp);
+		}
 	}
 	
 	private void RadarCooldown()
@@ -46,9 +55,20 @@ public class ClientPlayerController : MonoBehaviour
 		Debug.Log ("Setting the owner.");
 		owner = player;
 		
-		if(Network.isClient)
+		if(player == Network.player)
+		{
+			enabled = true;
+			GameObject radar = gameObject.transform.FindChild("Radar").gameObject;
+			if(radar.transform.FindChild("RadarBlackout"))
+			{
+				radarControl = radar.transform.FindChild("RadarBlackout").GetComponent<Fading>();
+			}
+			if(Network.isClient)
+			{
+				print ("found this code here");
+				GameObject serverCam = GameObject.Find("ServerCamera");
+				if(serverCam)
 				{
-					GameObject serverCam = GameObject.Find("ServerCamera");
 					if(serverCam.GetComponent<Camera>())
 					{
 						serverCam.GetComponent<Camera>().enabled = false;
@@ -58,20 +78,13 @@ public class ClientPlayerController : MonoBehaviour
 						serverCam.GetComponent<AudioListener>().enabled = false;
 					}
 				}
-		
-		if(player == Network.player)
-		{
-			enabled = true;
-			GameObject radar = gameObject.transform.FindChild("Radar").gameObject;
-			if(radar.transform.FindChild("RadarBlackout"))
-			{
-				radarControl = radar.transform.FindChild("RadarBlackout").GetComponent<Fading>();
 			}
 		}
 		else if(Network.isServer || player != Network.player)
 		{
 			GameObject radar = gameObject.transform.FindChild("Radar").gameObject;
 			GameObject radarBlackout = radar.transform.FindChild("RadarBlackout").gameObject;
+
 			if(radar.GetComponent<Camera>())
 			{
 				radar.GetComponent<Camera>().enabled = false;
@@ -146,6 +159,8 @@ public class ClientPlayerController : MonoBehaviour
 		
 	void FixedUpdate ()
 	{
+		if(Network.isServer){return;}
+		
 		if(Network.player == owner)
 		{
 			bool forward = Input.GetButton("Forward");

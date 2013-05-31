@@ -58,7 +58,7 @@ public class DetonatorBurstEmitter : DetonatorComponent
 	//unused
 	override public void Init() 
 	{
-		print ("UNUSED");
+		
 	} 
 	
     public void Awake()

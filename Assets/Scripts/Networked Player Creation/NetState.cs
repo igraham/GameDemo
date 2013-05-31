@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class NetState : MonoBehaviour
+public class NetState
 {
 
 	public double timeStamp;

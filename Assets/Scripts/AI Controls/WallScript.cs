@@ -23,8 +23,6 @@ public class WallScript : MonoBehaviour {
 	[RPC]
 	public void damageWall(int damage)
 	{
-		print("wall health before " + wallHealth);
 		wallHealth = wallHealth - damage;
-		print("wall health after " + wallHealth);
 	}
 }

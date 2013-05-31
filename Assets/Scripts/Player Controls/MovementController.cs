@@ -11,7 +11,7 @@ public class MovementController : MonoBehaviour {
 	bool strLeft = false;
 	public float speed = 5f;
 	public float maxSpeed = 15f;
-	public Vector3 rotationSpeed = new Vector3 (0, 100f, 0);
+	public Vector3 rotationSpeed = new Vector3 (0, 50f, 0);
 	public GameObject turret;
 	public Camera playerCamera;
 	

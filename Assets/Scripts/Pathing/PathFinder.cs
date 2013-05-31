@@ -149,8 +149,8 @@ public class PathFinder : MonoBehaviour {
 	
 	void buildStartAndGoal(Vector3 origin, Vector3 destination)
 	{
-		print ("Start Location: "+origin);
-		print ("Destination: "+destination);
+		//print ("Start Location: "+origin);
+		//print ("Destination: "+destination);
 		if(goal!=null)
 			resetPath();
 		//create start and end waypoints
