@@ -28,7 +28,7 @@ public class MovementController : MonoBehaviour {
 	
 	private void fixUnintentionalRotation()
 	{
-		if(transform.localEulerAngles.z != 0)
+		if(transform.localEulerAngles.z > 10f)
 		{
 			transform.localEulerAngles = new Vector3(transform.localEulerAngles.x, 
 													 transform.localEulerAngles.y, 0);
@@ -68,7 +68,7 @@ public class MovementController : MonoBehaviour {
 	private void rotateLeft()
 	{
 		Quaternion deltaRotation = Quaternion.Euler(rotationSpeed * Time.deltaTime * -1f);
-			rigidbody.MoveRotation(rigidbody.rotation * deltaRotation);
+		rigidbody.MoveRotation(rigidbody.rotation * deltaRotation);
 	}
 	
 	private void rotateRight()
