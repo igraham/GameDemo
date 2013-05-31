@@ -26,22 +26,7 @@ public class ClientPlayerController : MonoBehaviour
 	Fading radarControl;
 	public float radarCooldownTime = 5f;
 	bool radarCooldown = false;
-	public Vector3 serverPosition = Vector3.zero;
-	public Quaternion serverRotation = Quaternion.identity;
-	public float positionDiffThreshold = 0.2f;
-	public float speed = 5f;
-	
-	public void lerpToTarget()
-	{
-		float distance = Vector3.Distance(transform.position, serverPosition);
-		
-		if(distance >= positionDiffThreshold)
-		{
-			float lerp = ((1/distance) * speed)/100f;
-			transform.position = Vector3.Lerp (transform.position, serverPosition, lerp);
-			transform.rotation = Quaternion.Slerp (transform.rotation, serverRotation, lerp);
-		}
-	}
+	bool isNodeBusy = false;
 	
 	private void RadarCooldown()
 	{
@@ -53,6 +38,20 @@ public class ClientPlayerController : MonoBehaviour
 	{
 		Debug.Log ("Setting the owner.");
 		owner = player;
+		
+		if(Network.isClient)
+				{
+					GameObject serverCam = GameObject.Find("ServerCamera");
+					if(serverCam.GetComponent<Camera>())
+					{
+						serverCam.GetComponent<Camera>().enabled = false;
+					}
+					if(serverCam.GetComponent<AudioListener>())
+					{
+						serverCam.GetComponent<AudioListener>().enabled = false;
+					}
+				}
+		
 		if(player == Network.player)
 		{
 			enabled = true;
@@ -83,18 +82,7 @@ public class ClientPlayerController : MonoBehaviour
 			{
 				GameObject hud = transform.parent.transform.FindChild("HUDElements").gameObject;
 				GameObject tank = transform.parent.transform.FindChild("NewTank").gameObject;
-				GameObject serverCam = GameObject.Find("ServerCamera");
-				if(Network.isClient)
-				{
-					if(serverCam.GetComponent<Camera>())
-					{
-						serverCam.GetComponent<Camera>().enabled = false;
-					}
-					if(serverCam.GetComponent<AudioListener>())
-					{
-						serverCam.GetComponent<AudioListener>().enabled = false;
-					}
-				}
+				
 				if(hud.GetComponentInChildren<Camera>())
 				{
 					hud.GetComponentInChildren<Camera>().enabled = false;
@@ -151,8 +139,6 @@ public class ClientPlayerController : MonoBehaviour
 		
 	void FixedUpdate ()
 	{
-		if(Network.isServer){return;}
-		
 		if(Network.player == owner)
 		{
 			bool forward = Input.GetButton("Forward");
@@ -197,7 +183,7 @@ public class ClientPlayerController : MonoBehaviour
 				//RPC to server to send mouse click for shooting.
 				networkView.RPC("MsetClientShootingState", RPCMode.Server, mShoot);
 			}
-			if(colliding && node.nodeMode == 0 && node.isBusy == false)
+			if(colliding && isNodeBusy == false)
 			{
 				player = (PlayerGameState) gameObject.GetComponent(typeof(PlayerGameState));
 			
@@ -261,6 +247,12 @@ public class ClientPlayerController : MonoBehaviour
 		}
 		else
 		{
+			node = (ResourceNodeScript) other.collider.gameObject.GetComponent(typeof(ResourceNodeScript));
+			if( node.nodeMode == 0 && node.isBusy == false)
+				isNodeBusy = false;
+			else
+				isNodeBusy = true;
+			
 			if(node.isBusy == false)
 				resourceCommandsText.text = "Hit C to add a drone \n"+
 											"Hit Z to remove a drone \n"+
@@ -298,8 +290,14 @@ public class ClientPlayerController : MonoBehaviour
 		else
 		{
 			colliding = true;
+			node = (ResourceNodeScript) other.collider.gameObject.GetComponent(typeof(ResourceNodeScript));
+			if(node.nodeMode == 0 && node.isBusy == false)
+				isNodeBusy = false;
+			else
+			isNodeBusy = true;
 		} 
-		node = (ResourceNodeScript) other.collider.gameObject.GetComponent(typeof(ResourceNodeScript));
+		
+		
 	}
 	
 	void OnTriggerExit(Collider other)

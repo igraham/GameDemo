@@ -26,11 +26,9 @@ public class ResourceNodeScript : MonoBehaviour
 	public int resourceNodeNumber = 0;
 	public int extractable =0;
 	public bool isBusy =false;
-	//public NetworkPlayer owner;
 	int reprodCost =0;
 	public GameObject droppedResources;
 //	public GameObject turretModel;
-	public GameObject[] players;
 	
 	void Start ()
 	{
@@ -53,8 +51,7 @@ public class ResourceNodeScript : MonoBehaviour
 		//if (gState.nodes.Count < 6) {
 			if (droneCount > 0 && isNode == false)
 			{
-				players = GameObject.FindGameObjectsWithTag("Player");
-			
+				timer = 0f;
 				Component[] resourcRenderers = rawResourceModel.GetComponentsInChildren<Renderer> ();
 				foreach (Renderer r in resourcRenderers)
 				{
@@ -92,7 +89,17 @@ public class ResourceNodeScript : MonoBehaviour
 				{
 					r.enabled = false;
 				}	
-			
+				//reset node stats to base
+				minedAmount = 0;
+				nodeHealth = 100;
+				nodeDurability = 100;
+				resourceCapacity = 100;
+				durabilityLevel = 1;
+				turretLevel = 1;
+				capacityLevel = 1;
+				progress = 0;
+				previousNodeMode = 0;
+				acceptCommands = true;
 				isBusy =false;
 				/*Component[] turretRenderers = turretModel.GetComponentsInChildren<Renderer> ();
 				foreach (Renderer r in turretRenderers)
@@ -107,12 +114,6 @@ public class ResourceNodeScript : MonoBehaviour
 				GameObject dr = Network.Instantiate(droppedResources,transform.position,Quaternion.identity,0) as GameObject;
 				CollectDroppedResource cdr = (CollectDroppedResource) dr.GetComponent(typeof(CollectDroppedResource));
 				cdr.setResourceAmount(minedAmount/2);
-				
-				foreach(GameObject g in players)
-				{
-					NodeGameState nGS =  (NodeGameState)g.GetComponent(typeof(NodeGameState));
-					nGS.networkView.RPC("removeNode",RPCMode.AllBuffered,resourceNodeNumber);
-				}
 			}
 		//}
 		if (isNode)
