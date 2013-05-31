@@ -51,7 +51,6 @@ public class ResourceNodeScript : MonoBehaviour
 		//if (gState.nodes.Count < 6) {
 			if (droneCount > 0 && isNode == false)
 			{
-				timer = 0f;
 				Component[] resourcRenderers = rawResourceModel.GetComponentsInChildren<Renderer> ();
 				foreach (Renderer r in resourcRenderers)
 				{
@@ -89,17 +88,7 @@ public class ResourceNodeScript : MonoBehaviour
 				{
 					r.enabled = false;
 				}	
-				//reset node stats to base
-				minedAmount = 0;
-				nodeHealth = 100;
-				nodeDurability = 100;
-				resourceCapacity = 100;
-				durabilityLevel = 1;
-				turretLevel = 1;
-				capacityLevel = 1;
-				progress = 0;
-				previousNodeMode = 0;
-				acceptCommands = true;
+			
 				isBusy =false;
 				/*Component[] turretRenderers = turretModel.GetComponentsInChildren<Renderer> ();
 				foreach (Renderer r in turretRenderers)
