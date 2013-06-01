@@ -4,7 +4,7 @@ using System.Collections;
 public class Predictor : MonoBehaviour
 {
 	
-	public Transform observedTransform;
+	public Rigidbody observedRigidbody;
 	public ClientPlayerController receiver;
 	public float pingMargin = 0.5f;
 	
@@ -13,20 +13,24 @@ public class Predictor : MonoBehaviour
 	
 	void OnSerializeNetworkView(BitStream stream, NetworkMessageInfo info)
 	{
-		Vector3 pos = observedTransform.position;
-		Quaternion rot = observedTransform.rotation;
+		Vector3 pos = observedRigidbody.position;
+		Quaternion rot = observedRigidbody.rotation;
+		float vel = observedRigidbody.velocity.magnitude;
 		
 		if(stream.isWriting)
 		{
 			stream.Serialize(ref pos);
 			stream.Serialize(ref rot);
+			stream.Serialize(ref vel);
 		}
 		else
 		{
 			stream.Serialize(ref pos);
 			stream.Serialize(ref rot);
+			stream.Serialize(ref vel);
 			receiver.serverPosition = pos;
 			receiver.serverRotation = rot;
+			receiver.serverVelocity = vel;
 			
 			receiver.lerpToTarget();
 			
@@ -62,7 +66,7 @@ public class Predictor : MonoBehaviour
 				{
 					continue;
 				}
-				
+
 				if(serverStateBuffer[i].timeStamp <= interpolationTime
 					|| i == serverStateBuffer.Length - 1)
 				{

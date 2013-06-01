@@ -14,7 +14,7 @@ public class VolumeControl : MonoBehaviour
 		{
 			sliderVolumeLevel = GUI.HorizontalSlider(new Rect(25f, 25f, 100f, 30f), 
 				sliderVolumeLevel, 0.0f, 1.0f);
-			GUI.Label (new Rect(100f, 100f, 200f, 20f), "Volume: "+100f*sliderVolumeLevel);
+			GUI.Label (new Rect(25f, 75f, 200f, 20f), "Volume: "+100f*sliderVolumeLevel);
 			audio.volume = sliderVolumeLevel;
 		}
 	}

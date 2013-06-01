@@ -29,18 +29,28 @@ public class ClientPlayerController : MonoBehaviour
 	bool isNodeBusy = false;
 	public Vector3 serverPosition;
 	public Quaternion serverRotation;
+	public float serverVelocity;
 	public float positionErrorThreshold = 0.2f;
-	public float speed = 10f;
+	public float angleErrorThreshold = 0.5f;
+	public float moveSpeed = 15f;
+	public float rotationSpeed = 100f;
+	public MovementController movement;
 
 	public void lerpToTarget()
 	{
 		float distance = Vector3.Distance(transform.position, serverPosition);
+		float angle = Quaternion.Angle (transform.rotation, serverRotation);
+
+		float lerp = ((1f / distance) * moveSpeed) / ((1 / serverVelocity+0.01f) * 150f);
+		float alerp = ((1 / distance) * rotationSpeed) / 20;
 
 		if(distance >= positionErrorThreshold)
 		{
-			float lerp = ((1 / distance) * speed) / 100f;
 			transform.position = Vector3.Lerp (transform.position, serverPosition, lerp);
-			transform.rotation = Quaternion.Slerp(transform.rotation, serverRotation, lerp);
+		}
+		if(angle >= angleErrorThreshold)
+		{
+			transform.rotation = Quaternion.Slerp(transform.rotation, serverRotation, alerp);
 		}
 	}
 	
@@ -65,7 +75,6 @@ public class ClientPlayerController : MonoBehaviour
 			}
 			if(Network.isClient)
 			{
-				print ("found this code here");
 				GameObject serverCam = GameObject.Find("ServerCamera");
 				if(serverCam)
 				{
@@ -271,14 +280,19 @@ public class ClientPlayerController : MonoBehaviour
 		{
 			node = (ResourceNodeScript) other.collider.gameObject.GetComponent(typeof(ResourceNodeScript));
 			if( node.nodeMode == 0 && node.isBusy == false)
+			{
 				isNodeBusy = false;
+			}
 			else
+			{
 				isNodeBusy = true;
-			
+			}
 			if(node.isBusy == false)
+			{
 				resourceCommandsText.text = "Hit C to add a drone \n"+
 											"Hit Z to remove a drone \n"+
-											"Hit X to collect mined resources";	
+											"Hit X to collect mined resources";
+			}
 		}
 	}
 	
@@ -314,12 +328,14 @@ public class ClientPlayerController : MonoBehaviour
 			colliding = true;
 			node = (ResourceNodeScript) other.collider.gameObject.GetComponent(typeof(ResourceNodeScript));
 			if(node.nodeMode == 0 && node.isBusy == false)
+			{
 				isNodeBusy = false;
+			}
 			else
-			isNodeBusy = true;
-		} 
-		
-		
+			{
+				isNodeBusy = true;
+			}
+		}
 	}
 	
 	void OnTriggerExit(Collider other)
