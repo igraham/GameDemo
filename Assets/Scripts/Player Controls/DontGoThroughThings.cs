@@ -26,7 +26,7 @@ public class DontGoThroughThings : MonoBehaviour
 		sqrMinimumExtent = minimumExtent * minimumExtent;
 	}
 
-	void OnCollisionEnter(Collider col)
+	void OnCollisionEnter(Collision col)
 	{
 		Network.Destroy(gameObject);
 	}
