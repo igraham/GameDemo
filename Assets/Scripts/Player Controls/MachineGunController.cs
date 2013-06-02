@@ -31,7 +31,6 @@ public class MachineGunController : MonoBehaviour
 		    GameObject prefab = Network.Instantiate(mBullet, spawnPos, 
 			gunBarrel.transform.rotation, 2) as GameObject;
 			prefab.rigidbody.AddForce (gunBarrel.transform.forward.normalized*18f, ForceMode.Impulse);
-			Destroy (prefab, 5f);
 			mShotTimer = false;
 			Invoke ("MShotTimer", 1.0f/machineGunShotsPerSecond);
 			//NetworkView netView = gameObject.transform.FindChild("Machinegun").gameObject.networkView;
