@@ -29,7 +29,7 @@ public class MachineGunController : MonoBehaviour
 			Vector3 spawnPos = gunBarrel.transform.position + 
 			gunBarrel.transform.forward.normalized*2.108931f+new Vector3(-.1f,-.1f,0);
 		    GameObject prefab = Network.Instantiate(mBullet, spawnPos, 
-			gunBarrel.transform.rotation, 0) as GameObject;
+			gunBarrel.transform.rotation, 2) as GameObject;
 			prefab.rigidbody.AddForce (gunBarrel.transform.forward.normalized*18f, ForceMode.Impulse);
 			Destroy (prefab, 5f);
 			mShotTimer = false;

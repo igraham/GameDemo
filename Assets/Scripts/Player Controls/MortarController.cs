@@ -33,7 +33,7 @@ public class MortarController : MonoBehaviour
 			float mortarSpeed = 18f + (18f * mortarPowerTimer);
 			GameObject prefab = Network.Instantiate(bullet, gunBarrel.transform.position + 
 				gunBarrel.transform.forward.normalized*2.108931f, 
-				Quaternion.identity, 0) as GameObject;
+				Quaternion.identity, 2) as GameObject;
 			prefab.rigidbody.AddForce (gunBarrel.transform.forward.normalized*mortarSpeed, ForceMode.Impulse);
 			Destroy (prefab, 5f);
 			shotTimer = false;

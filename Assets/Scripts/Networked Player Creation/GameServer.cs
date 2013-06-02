@@ -22,8 +22,7 @@ public class GameServer : MonoBehaviour {
 	public static ArrayList nodeScripts = new ArrayList();
 
 	bool processSpawnRequests = false;
-	//	Color[] playerColors = {Color.black, Color.blue, Color.green, Color.red};
-	//Later on, use colors for team colors in spawning.
+
 	void Awake()
 	{
 		enabled = Network.isServer;
@@ -33,17 +32,6 @@ public class GameServer : MonoBehaviour {
 		{
 			spawnLocations[i] = spawnPoints[i].transform.position;
 		}
-		/*resourceNodes = GameObject.FindGameObjectsWithTag("ResourceNode");
-		
-		foreach(GameObject node in resourceNodes)
-		{
-			ResourceNodeScript nodeScript = (ResourceNodeScript) node.GetComponent(typeof(ResourceNodeScript));
-			nodeScripts.Add(nodeScript);
-		}*/
-		//print(""+nodeScripts.Count);
-		//scheduledSpawns.Add (Network.player);
-		//processSpawnRequests = true;
-		//requestSpawn (Network.player);
 	}
 
 	void Update()
@@ -108,10 +96,9 @@ public class GameServer : MonoBehaviour {
 			Debug.Log ("Checking player "+spawn.guid);
 			if(spawn == requester)
 			{
-				//int num = int.Parse (spawn + "");
 				GameObject handle = Network.Instantiate(playerPrefab, 
 														spawnLocations[playerCount], 
-														Quaternion.identity, 0) as GameObject;
+														Quaternion.identity, 1) as GameObject;
 				playerIDs[playerCount] = ""+networkView.viewID;
 				playerCount++;
 				var sc = handle.transform.FindChild("NewTank").gameObject.GetComponent<ClientPlayerController>();

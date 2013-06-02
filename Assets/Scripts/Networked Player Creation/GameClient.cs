@@ -12,16 +12,15 @@ public class GameClient : MonoBehaviour {
 		Debug.Log ("Disabling message queue!");
 		Network.isMessageQueueRunning = false;
 		Network.SetSendingEnabled(0, false);
-		Application.LoadLevel (GameServer.levelName);
 	}
 
 	void OnLevelWasLoaded(int level)
 	{
 		//enable the message processing for clients now that level has been loaded
-		if(level > 1 && Network.isClient)
+		Network.isMessageQueueRunning = true;
+		Network.SetSendingEnabled(0, true);
+		if(level > 1 && level < 4 && Network.isClient)
 		{
-			Network.isMessageQueueRunning = true;
-			Network.SetSendingEnabled(0, true);
 			Debug.Log ("Level was loaded, requesting spawn");
 			Debug.Log ("Re-enabling message queue!");
 
@@ -34,7 +33,6 @@ public class GameClient : MonoBehaviour {
 				ResourceNodeScript nodeScript = (ResourceNodeScript) node.GetComponent(typeof(ResourceNodeScript));
 				nodeScripts.Add(nodeScript);
 			}
-
 		}
     }
 }

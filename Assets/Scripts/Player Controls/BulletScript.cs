@@ -31,7 +31,7 @@ public class BulletScript : MonoBehaviour {
 			if(collision.gameObject.tag.Equals ("Terrain"))
 			{
 				backtrack = Vector3.MoveTowards(transform.position,gunLocation,3f);
-				Network.Instantiate(explosion, backtrack, Quaternion.identity, 0);
+				Network.Instantiate(explosion, backtrack, Quaternion.identity, 2);
 				Network.Destroy(gameObject);
 				return;
 			}

@@ -6,7 +6,6 @@ public class LobbyController : MonoBehaviour {
 	public int maxNumberOfPlayers = 4;
 	public bool autoStart = false;
 	private int playersInLobby = 0;
-	private int lastLevelPrefix = 0;
 
 	void OnGUI()
 	{
@@ -18,7 +17,7 @@ public class LobbyController : MonoBehaviour {
 			float y = (Screen.height - h)/2;
 			if(GUI.Button (new Rect(x, y+=h+10, w, h),"Load Game"))
 			{
-				networkView.RPC ("loadGame",RPCMode.AllBuffered, "RockyCrag", lastLevelPrefix+1);
+				networkView.RPC ("loadGame", RPCMode.All, "RockyCrag");
 			}
 		}
 	}
@@ -41,16 +40,14 @@ public class LobbyController : MonoBehaviour {
 
 	IEnumerator waitOneSecond()
 	{
-		yield return new WaitForSeconds(1f);
+		yield return new WaitForSeconds(1.5f);
 	}
 	
 	[RPC]
-	public void loadGame(string levelName, int levelPrefix)
+	public void loadGame(string levelName)
 	{
-		lastLevelPrefix = levelPrefix;
-		Network.SetSendingEnabled(0, false);    
+		Network.SetSendingEnabled(0, false);
 		Network.isMessageQueueRunning = false;
-		Network.SetLevelPrefix(levelPrefix);
 		if(Network.isClient)
 		{
 			waitOneSecond();
