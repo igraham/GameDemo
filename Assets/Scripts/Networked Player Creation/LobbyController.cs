@@ -17,7 +17,7 @@ public class LobbyController : MonoBehaviour {
 			float y = (Screen.height - h)/2;
 			if(GUI.Button (new Rect(x, y+=h+10, w, h),"Load Game"))
 			{
-				networkView.RPC ("loadGame", RPCMode.All, "RockyCrag");
+				networkView.RPC ("startCountdown", RPCMode.All);
 			}
 		}
 	}
@@ -42,6 +42,11 @@ public class LobbyController : MonoBehaviour {
 	{
 		yield return new WaitForSeconds(1.5f);
 	}
+
+	IEnumerator waitForStart()
+	{
+		yield return new WaitForSeconds(3.5f);
+	}
 	
 	[RPC]
 	public void loadGame(string levelName)
@@ -60,11 +65,9 @@ public class LobbyController : MonoBehaviour {
 
 	void Update ()
 	{
-		/*if(Network.isServer && playersInLobby == maxNumberOfPlayers && autoStart)
+		if(Network.isServer && playersInLobby == maxNumberOfPlayers && autoStart)
 		{//don't let clients start the game anywhere, in fact.
-			//start a count-down or load immediately?
-			//either way, load the rocky crag scene, with players in the same order.
-			networkView.RPC ("loadGame",RPCMode.AllBuffered);
-		}*/
+			networkView.RPC ("startCountdown", RPCMode.All);
+		}
 	}
 }

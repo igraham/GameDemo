@@ -28,7 +28,7 @@ public class MovementController : MonoBehaviour {
 	
 	private void fixUnintentionalRotation()
 	{
-		if(transform.localEulerAngles.z > 10f)
+		if(Mathf.Abs(transform.localEulerAngles.z) > 10f)
 		{
 			transform.localEulerAngles = new Vector3(transform.localEulerAngles.x, 
 													 transform.localEulerAngles.y, 0);

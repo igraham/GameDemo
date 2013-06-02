@@ -83,7 +83,7 @@ public class TankTurretController : MonoBehaviour
 	
 	private void fixUnintentionalRotation()
 	{
-		if(turret.transform.localEulerAngles.z != 0)
+		if(Mathf.Abs(turret.transform.localEulerAngles.z) > 10f)
 		{
 			turret.transform.localEulerAngles = new Vector3(turret.transform.localEulerAngles.x, 
 				turret.transform.localEulerAngles.y, 0);
