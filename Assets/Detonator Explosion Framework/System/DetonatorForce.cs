@@ -17,7 +17,7 @@ public class DetonatorForce : DetonatorComponent {
 	public GameObject fireObject;
 	public float fireObjectLife;
 	
-	private Collider[] _colliders;
+	public Collider[] _colliders;
 	private GameObject _tempFireObject;
 	
 	public int bombDamage = 25;
@@ -86,7 +86,7 @@ public class DetonatorForce : DetonatorComponent {
 						}
 						continue;
 					}
-					else if(hit.rigidbody.tag == "Enemy")
+					if(hit.rigidbody.tag == "Enemy")
 					{
 						if(dist <= 10f)
 						{
@@ -94,7 +94,7 @@ public class DetonatorForce : DetonatorComponent {
 							hit.gameObject.networkView.RPC ("damageEnemy", RPCMode.AllBuffered, percent);
 						}
 					}
-					else if(hit.rigidbody.tag == "Player")
+					if(hit.rigidbody.tag == "Player")
 					{
 						if(dist <= 10f)
 						{
@@ -102,7 +102,7 @@ public class DetonatorForce : DetonatorComponent {
 							hit.gameObject.networkView.RPC ("damagePlayer", RPCMode.AllBuffered, percent);
 						}
 					}
-					else if(hit.rigidbody.tag == "HasDrones")
+					if(hit.rigidbody.tag == "HasDrones")
 					{
 						if(dist <= 10f)
 						{

@@ -25,11 +25,6 @@ public class DontGoThroughThings : MonoBehaviour
 		partialExtent = minimumExtent * (1.0f - skinWidth);
 		sqrMinimumExtent = minimumExtent * minimumExtent;
 	}
-
-	void OnCollisionEnter(Collision col)
-	{
-		Network.Destroy(gameObject);
-	}
  
 	void FixedUpdate ()
 	{ 
