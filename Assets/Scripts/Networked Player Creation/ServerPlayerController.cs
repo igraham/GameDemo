@@ -32,10 +32,10 @@ public class ServerPlayerController : MonoBehaviour
 			sortedNodeList.Add (nodeScript.resourceNodeNumber, node);
 		}
 		List<GameObject> spawnOrder = new List<GameObject>();
-		spawnOrder.Add (GameObject.Find ("PlayerSpawnPoint1"));
-		spawnOrder.Add (GameObject.Find ("PlayerSpawnPoint2"));
-		spawnOrder.Add (GameObject.Find ("PlayerSpawnPoint3"));
-		spawnOrder.Add (GameObject.Find ("PlayerSpawnPoint4"));
+		spawnOrder.Add (GameObject.Find ("PlayerSpawn1"));
+		spawnOrder.Add (GameObject.Find ("PlayerSpawn2"));
+		spawnOrder.Add (GameObject.Find ("PlayerSpawn3"));
+		spawnOrder.Add (GameObject.Find ("PlayerSpawn4"));
 		//Sorts them by number as key from when the server initialized
 		
 		/*if (resourceNodes.Length == 0)
