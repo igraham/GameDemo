@@ -23,7 +23,6 @@ public class ServerPlayerController : MonoBehaviour
 	void OnNetworkInstantiate (NetworkMessageInfo info)
 	{
 		radarDot = transform.FindChild("RadarDot").gameObject;
-		GameObject[] spawns = GameObject.FindGameObjectsWithTag ("PlayerSpawn");
 		//Finds all the nodes
 		//print ("Test Run1");
 		resourceNodes = GameObject.FindGameObjectsWithTag ("ResourceNode");
@@ -32,15 +31,19 @@ public class ServerPlayerController : MonoBehaviour
 			ResourceNodeScript nodeScript = (ResourceNodeScript)node.GetComponent (typeof(ResourceNodeScript));
 			sortedNodeList.Add (nodeScript.resourceNodeNumber, node);
 		}
-		
+		List<GameObject> spawnOrder = new List<GameObject>();
+		spawnOrder.Add (GameObject.Find ("PlayerSpawnPoint1"));
+		spawnOrder.Add (GameObject.Find ("PlayerSpawnPoint2"));
+		spawnOrder.Add (GameObject.Find ("PlayerSpawnPoint3"));
+		spawnOrder.Add (GameObject.Find ("PlayerSpawnPoint4"));
 		//Sorts them by number as key from when the server initialized
 		
-		if (resourceNodes.Length == 0)
+		/*if (resourceNodes.Length == 0)
 		{
 			//print ("Empty");
-		}
+		}*/
 		float dist = float.MaxValue;
-		foreach (GameObject obj in spawns)
+		foreach (GameObject obj in spawnOrder)
 		{
 			if (Vector3.Distance (obj.transform.position, transform.position) < dist)
 			{
@@ -48,14 +51,14 @@ public class ServerPlayerController : MonoBehaviour
 				spawnLocation = obj;
 			}
 		}
-		
 		//Change the color of the tank's main pieces
 		Color c;
-		for (int i = 0; i< spawns.Length; i++)
+		for (int i = 0; i< spawnOrder.Count; i++)
 		{
-			if (spawns [i] == spawnLocation)
+			if (spawnOrder[i] == spawnLocation)
 			{
-				c = tankColor [i];
+
+				c = tankColor[i];
 				foreach (GameObject obj in pieceChange)
 				{
 					obj.renderer.material.color = c;
